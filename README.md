@@ -20,7 +20,7 @@ Aplicación web para la gestión de declaraciones de rente y salas virtuales. Pe
 1. Clonar el repositorio
 
   ```bash
-  git clone [url-del-repositorio]
+  git clone https://github.com/Jaycom17/app-cooperativa-niif.git
   ```
 
 2. Instalar dependencias
