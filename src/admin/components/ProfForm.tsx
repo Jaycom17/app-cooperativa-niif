@@ -7,8 +7,8 @@ import { MdCreate } from "react-icons/md";
 
 interface ProfFormProps {
     profId?: string;
-    onRefresh: () => void;
-    setOpen: (open: boolean) => void;
+    onRefresh?: () => void;
+    setOpen?: (open: boolean) => void;
 }
 
 const ProfForm = ({ profId, onRefresh, setOpen }: ProfFormProps) => {

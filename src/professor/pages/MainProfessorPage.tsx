@@ -1,5 +1,5 @@
 import Room from "../components/Room";
-import TeacherNavbar from "../components/Navbar";
+import Navbar from "../components/Navbar";
 import { useState, useEffect } from "react";
 import InfoBubble from "../../components/InfoBubble";
 import { IoIosArrowDown } from "react-icons/io";
@@ -92,7 +92,7 @@ const MainProfessorPage = () => {
 
   return (
     <>
-      <TeacherNavbar />
+      <Navbar />
       <main className="flex flex-col items-center min-h-screen bg-background">
         {/**Aquí, en esta sección la idea sería poner los filtros (Barra de busqueda, ordenar por?) */}
         <section className="flex justify-between items-center w-11/12 mt-5">

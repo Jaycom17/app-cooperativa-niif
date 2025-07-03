@@ -1,4 +1,4 @@
-export interface Professor {
+export interface ProfessorModel {
     usuID: string;
     usuName: string;
     usuEmail: string;

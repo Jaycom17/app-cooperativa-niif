@@ -2,10 +2,11 @@ import Navbar from '../components/Navbar';
 import { useState, useEffect } from 'react';
 import Professor from '../components/Professor';
 import { FaSearch } from "react-icons/fa";
+import type { ProfessorModel } from '../models/Professor';
 
 
 const MainAdminPage = () => {
-  const [professors, setProfessors] = useState([]);
+  const [professors, setProfessors] = useState<ProfessorModel[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
 
     const getProfessors = async () => {
@@ -38,7 +39,7 @@ const MainAdminPage = () => {
     });
   };
 
-  const handleInputChange = (e) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value);
   };
 

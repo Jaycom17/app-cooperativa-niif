@@ -5,7 +5,7 @@ import { Link, useNavigate } from "react-router-dom";
 
 import AccountDropdown from "../../components/AccountDropdown";
 
-const TeacherNavbarTW = () => {
+const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
 
   const navigate = useNavigate();
@@ -109,4 +109,4 @@ const TeacherNavbarTW = () => {
   );
 };
 
-export default TeacherNavbarTW;
+export default Navbar;

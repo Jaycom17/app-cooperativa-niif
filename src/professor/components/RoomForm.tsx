@@ -9,8 +9,8 @@ import type { RoomModel } from "../models/Room";
 interface RoomFormProps {
     roomId?: string;
     usuId: string;
-    onRefresh: () => void;
-    setOpen: (open: boolean) => void;
+    onRefresh?: () => void;
+    setOpen?: (open: boolean) => void;
 }
 
 const RoomForm = ({roomId, usuId , onRefresh, setOpen}: RoomFormProps)=>{
@@ -93,8 +93,8 @@ const RoomForm = ({roomId, usuId , onRefresh, setOpen}: RoomFormProps)=>{
           const res = response as { status: number; data: any };
           if(res.status === 201){
             alert("Se ha actualizado la sala");
-            onRefresh();
-            setOpen(false)
+            onRefresh!();
+            setOpen!(false)
           }else{
             alert("Error al actualizar la sala");
           }
