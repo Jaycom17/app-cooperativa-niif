@@ -19,7 +19,10 @@ const Room = ({ room, usuId, onRefresh }: RoomProps) => {
   const [formOpen, setFormOpen] = useState(false);
 
   //TODO: cambiar el tipo de roomStatus
-  const updateRoomState = (roomData: {roomStatus: string}, roomId: string) => {
+  const updateRoomState = (
+    roomData: { roomStatus: string },
+    roomId: string
+  ) => {
     // Simulate an API call to update the room state
     return new Promise((resolve, _reject) => {
       setTimeout(() => {
@@ -27,6 +30,7 @@ const Room = ({ room, usuId, onRefresh }: RoomProps) => {
       }, 1000);
     });
   };
+  
   const deleteRoom = (roomId: string) => {
     // Simulate an API call to delete the room
     return new Promise((resolve, _reject) => {
@@ -142,14 +146,16 @@ const Room = ({ room, usuId, onRefresh }: RoomProps) => {
         </button>
       </div>
 
-      <FloatingContainer open={formOpen} setOpen={setFormOpen}>
-        <RoomForm
-          roomId={room.roomId}
-          usuId={usuId}
-          onRefresh={onRefresh}
-          setOpen={setFormOpen}
-        />
-      </FloatingContainer>
+      {formOpen && (
+        <FloatingContainer open={formOpen} setOpen={setFormOpen}>
+          <RoomForm
+            room={room}
+            usuId={usuId}
+            onRefresh={onRefresh}
+            setOpen={setFormOpen}
+          />
+        </FloatingContainer>
+      )}
     </section>
   );
 };
