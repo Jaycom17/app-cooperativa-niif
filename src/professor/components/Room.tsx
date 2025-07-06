@@ -7,6 +7,8 @@ import RoomForm from "./RoomForm";
 import cutString from "../../utils/CropName";
 import { Link } from "react-router-dom";
 import type { RoomModel } from "../models/Room";
+import { RoomService } from "../services/room.service";
+import { formatDate } from "../../utils/Dates";
 
 interface RoomProps {
   room: RoomModel;
@@ -18,28 +20,6 @@ const Room = ({ room, usuId, onRefresh }: RoomProps) => {
   const [activated, setActivated] = useState(false);
   const [formOpen, setFormOpen] = useState(false);
 
-  //TODO: cambiar el tipo de roomStatus
-  const updateRoomState = (
-    roomData: { roomStatus: string },
-    roomId: string
-  ) => {
-    // Simulate an API call to update the room state
-    return new Promise((resolve, _reject) => {
-      setTimeout(() => {
-        resolve({ status: 201, data: { ...roomData, roomId: roomId } });
-      }, 1000);
-    });
-  };
-  
-  const deleteRoom = (roomId: string) => {
-    // Simulate an API call to delete the room
-    return new Promise((resolve, _reject) => {
-      setTimeout(() => {
-        resolve({ status: 201, data: { message: "Sala eliminada" } });
-      }, 1000);
-    });
-  };
-
   useEffect(() => {
     setActivated(room.roomStatus.toLowerCase() === "open");
   }, [room.roomStatus]);
@@ -47,19 +27,11 @@ const Room = ({ room, usuId, onRefresh }: RoomProps) => {
   const toggleActivated = () => {
     const roomStatus = !activated ? "open" : "closed";
     try {
-      updateRoomState({ roomStatus }, room.roomId);
+      RoomService.updateRoomState({ roomStatus }, room.roomId);
       setActivated(!activated);
     } catch (error) {
       console.error("Error al actualizar el estado de la sala:", error);
     }
-  };
-
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    const year = date.getFullYear();
-    const month = ("0" + (date.getMonth() + 1)).slice(-2);
-    const day = ("0" + (date.getDate() + 1)).slice(-2);
-    return `${day} / ${month} / ${year}`;
   };
 
   const handleDelete = () => {
@@ -67,7 +39,7 @@ const Room = ({ room, usuId, onRefresh }: RoomProps) => {
       `¿Estás seguro de que deseas eliminar la sala ${room.roomName}?`
     );
     if (confirmDelete) {
-      deleteRoom(room.roomId)
+      RoomService.delete(room.roomId)
         .then((response) => {
           const res = response as { status: number; data?: any };
           if (res.status === 201) {

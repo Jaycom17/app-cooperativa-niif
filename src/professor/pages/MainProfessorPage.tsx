@@ -3,6 +3,7 @@ import Navbar from "../components/Navbar";
 import { useState, useEffect } from "react";
 import InfoBubble from "../../components/InfoBubble";
 import { IoIosArrowDown } from "react-icons/io";
+import { RoomService } from "../services/room.service";
 
 import type { RoomModel } from "../models/Room";
 
@@ -14,51 +15,7 @@ const MainProfessorPage = () => {
   const dateInfo = "La fecha se encuentra en formato: - Día / Mes / Año";
 
   const getRooms = () => {
-    // Simulate an API call to get rooms
-    return new Promise((resolve, _reject) => {
-      setTimeout(() => {
-        resolve({
-          status: 201,
-          data: [
-            {
-              roomID: "1",
-              roomName: "Sala A",
-              roomPassword: "1234",
-              roomDate: "2023-10-01",
-              roomStatus: "open",
-            },
-            {
-              roomID: "2",
-              roomName: "Sala B",
-              roomPassword: "5678",
-              roomDate: "2023-10-02",
-              roomStatus: "closed",
-            },
-            // Add more rooms as needed
-          ],
-        });
-      }, 1000);
-    });
-  };
-
-  useEffect(() => {
-    getRooms()
-      .then((response) => {
-        const res = response as { status: number; data: any[] };
-        if (res.status === 201) {
-          const sortedRooms = res.data.sort((a, b) =>
-            a.roomName.localeCompare(b.roomName)
-          );
-          setRooms(sortedRooms);
-        }
-      })
-      .catch(() => {
-        alert("Error al cargar las salas");
-      });
-  }, []);
-
-  const refreshRooms = () => {
-    getRooms()
+    RoomService.findAll()
       .then((response) => {
         const res = response as { status: number; data: any[] };
         if (res.status === 201) {
@@ -69,6 +26,10 @@ const MainProfessorPage = () => {
         alert("Error al cargar las salas");
       });
   };
+
+  useEffect(() => {
+    getRooms();
+  }, []);  
 
   const orderByDate = () => {
     const sortedRooms = [...rooms].sort((a, b) =>
@@ -125,7 +86,7 @@ const MainProfessorPage = () => {
         <section className="w-11/12 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 my-5 mx-auto justify-items-center">
           {/* TODO: Verificar lo del usuId */}
           {rooms.map((room) => (
-            <Room key={room.roomId} room={room} usuId={"someUsuId"} onRefresh={refreshRooms}/>
+            <Room key={room.roomId} room={room} usuId={"someUsuId"} onRefresh={getRooms}/>
           ))}
         </section>
       </main>

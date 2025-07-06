@@ -55,4 +55,47 @@ export const RoomService = {
         });
       }, 500);
     }),
+  delete: (roomId: string): Promise<Response<{ message: string }>> =>
+    new Promise((resolve, _reject) => {
+      setTimeout(() => {
+        resolve({
+          status: 200,
+          data: { message: "Sala eliminada" },
+        });
+      }, 500);
+    }),
+  findAll: (): Promise<Response<RoomModel[]>> =>
+    new Promise((resolve, _reject) => {
+      setTimeout(() => {
+        resolve({
+          status: 200,
+          data: [
+            {
+              roomId: "1",
+              roomName: "Sala A",
+              roomPassword: "1234",
+              roomDate: "2023-10-01",
+              roomStatus: "open",
+              usuId: "usu123",
+            },
+            {
+              roomId: "2",
+              roomName: "Sala B",
+              roomPassword: "5678",
+              roomDate: "2023-10-02",
+              roomStatus: "closed",
+              usuId: "usu456",
+            },
+            // Add more rooms as needed
+          ],
+        });
+      }, 1000);
+    }),
+  updateRoomState: (roomData: { roomStatus: string }, roomId: string) =>
+    // Simulate an API call to update the room state
+    new Promise((resolve, _reject) => {
+      setTimeout(() => {
+        resolve({ status: 201, data: { ...roomData, roomId: roomId } });
+      }, 1000);
+    }),
 };
