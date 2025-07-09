@@ -2,16 +2,12 @@ import { useState, useEffect } from "react";
 import { IoCaretBackSharp } from "react-icons/io5";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
-
-const OPTIONS = {
-  SI: "SI",
-  NO: "NO",
-  NOTHING: "NOTHING",
-};
+import { OPTIONS } from "../utils/Options";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { StudentSchema, type StudentModel } from "../models/Student";
 
 function MiddlewareStudent() {
   const [firstTime, setFirstTime] = useState(OPTIONS.NOTHING);
-
   const [animationClass, setAnimationClass] = useState("");
 
   const { leaveRoom, currentRoom } = {
@@ -20,8 +16,8 @@ function MiddlewareStudent() {
   };
   const { student, checkStudent, sStudent, studentError } = {
     student: null, // Placeholder for the student state
-    checkStudent: async (data) => {}, // Placeholder for the checkStudent function
-    sStudent: async (cedula) => {}, // Placeholder for the sStudent function
+    checkStudent: async (data: StudentModel) => {}, // Placeholder for the checkStudent function
+    sStudent: async (cedula: string) => {}, // Placeholder for the sStudent function
     studentError: null, // Placeholder for the studentError state
   };
 
@@ -31,7 +27,9 @@ function MiddlewareStudent() {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm();
+  } = useForm({
+    resolver: zodResolver(StudentSchema),
+  });
 
   useEffect(() => {
     if (!currentRoom) {
@@ -41,22 +39,18 @@ function MiddlewareStudent() {
     if (student) {
       navigate("/student");
     }
-  }),
-    [student];
-
-  const onSubmitNew = async (data) => {
-    await checkStudent(data);
-  };
-
-  const onSubmitSaved = async (data) => {
-    await sStudent(data.stuCedula);
-  };
-
-  useEffect(() => {
-    console.log(student);
   }, [student]);
 
-  const handleSetFirstTime = (option) => {
+  const onSubmit = async (data: StudentModel) => {
+    console.log(data)
+    if (firstTime === OPTIONS.SI) {
+      await checkStudent(data);
+    } else if (firstTime === OPTIONS.NO) {
+      await sStudent(data.stuCedula);
+    }
+  };
+
+  const handleSetFirstTime = (option: string) => {
     if (option === OPTIONS.SI) {
       setAnimationClass("animate-slide-from-top");
     } else if (option === OPTIONS.NO) {
@@ -98,12 +92,16 @@ function MiddlewareStudent() {
       )}
 
       {firstTime === OPTIONS.NO && (
-        <div className={`flex flex-col items-center p-3 ${animationClass}`}>
-          <h2 className="font-semibold text-3xl">Bienvenido a la sala</h2>
+        <div
+          className={`flex w-full sm:w-1/2 md:w-1/2 lg:w-1/3 xl:w-1/5 flex-col items-center p-3 ${animationClass}`}
+        >
+          <h2 className="font-semibold text-3xl text-center">
+            Bienvenido a la sala
+          </h2>
           <p className="text-center mt-3">A continuación, escribe tu cedula.</p>
           <form
-            className="flex flex-col w-full items-center gap-2"
-            onSubmit={handleSubmit(onSubmitSaved)}
+            className="flex flex-col w-full sm:w-2xl items-center gap-2"
+            onSubmit={handleSubmit(onSubmit)}
           >
             {studentError && (
               <p className="text-[red] text-sm bg-transparent">
@@ -112,12 +110,12 @@ function MiddlewareStudent() {
             )}
             <input
               type="number"
-              className="w-1/2 p-2 rounded-md border border-gray-300 mt-3 text-black"
-              {...register("stuCedula", { required: true })}
+              className="w-1/2 p-2 rounded-md border border-gray-300 mt-3 text-white"
+              {...register("stuCedula")}
             />
             {errors.stuCedula && (
               <p className="text-[red] text-sm bg-transparent">
-                Debe ingresar una cedula
+                {errors.stuCedula.message || "Debe ingresar una cedula"}
               </p>
             )}
             <button
@@ -140,15 +138,19 @@ function MiddlewareStudent() {
       )}
 
       {firstTime === OPTIONS.SI && (
-        <div className={`flex flex-col items-center p-3 ${animationClass}`}>
-          <h2 className="font-semibold text-3xl">Bienvenido a la sala</h2>
+        <div
+          className={`flex w-full sm:w-1/2 md:w-1/2 lg:w-1/3 xl:w-1/5 flex-col items-center p-3 ${animationClass}`}
+        >
+          <h2 className="font-semibold text-3xl text-center">
+            Bienvenido a la sala
+          </h2>
           <p className="text-center mt-3">
             A continuación escribe tu numero de cedula, con el cual deseas
             registrarte en la sala.
           </p>
           <form
-            className="flex flex-col w-full items-center gap-2"
-            onSubmit={handleSubmit(onSubmitNew)}
+            className="flex flex-col w-full sm:w-2xl items-center gap-2"
+            onSubmit={handleSubmit(onSubmit)}
           >
             {studentError && (
               <p className="text-[red] text-sm bg-transparent">
@@ -157,12 +159,12 @@ function MiddlewareStudent() {
             )}
             <input
               type="number"
-              className="w-1/2 p-2 rounded-md border border-gray-300 mt-3 text-black"
-              {...register("stuCedula", { required: true })}
+              className="w-1/2 p-2 rounded-md border border-gray-300 mt-3 text-white"
+              {...register("stuCedula")}
             />
             {errors.stuCedula && (
               <p className="text-[red] text-sm bg-transparent">
-                Debe ingresar una cedula
+                {errors.stuCedula.message || "Debe ingresar una cedula"}
               </p>
             )}
             <button

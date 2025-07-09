@@ -2,18 +2,18 @@ import Navbar from '../components/Navbar';
 import { useState, useEffect } from 'react';
 import Professor from '../components/Professor';
 import { FaSearch } from "react-icons/fa";
-import type { ProfessorModel } from '../models/Professor';
+import type { UserModel } from '../models/User';
 
 
 const MainAdminPage = () => {
-  const [professors, setProfessors] = useState<ProfessorModel[]>([]);
+  const [professors, setProfessors] = useState<UserModel[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
 
     const getProfessors = async () => {
         // Simulate an API call to fetch professors
         return { status: 200, data: [
-            { usuID: '1', usuName: 'John Doe', usuEmail: 'John@email.com'},
-            { usuID: '2', usuName: 'Jane Smith', usuEmail: 'Jane@email.com'}]
+            { usuId: '1', usuName: 'John Doe', usuEmail: 'John@email.com'},
+            { usuId: '2', usuName: 'Jane Smith', usuEmail: 'Jane@email.com'}]
         };
     };
 
@@ -61,7 +61,7 @@ const MainAdminPage = () => {
       </div>
       <section className="w-11/12 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 my-5 mx-auto justify-items-center">
         {filteredProfessors.map((professor) => (
-          <Professor key={professor.usuID} professor={professor} onRefresh={refreshProfessors} />
+          <Professor key={professor.usuId} professor={professor} onRefresh={refreshProfessors} />
         ))}
       </section>
     </main>

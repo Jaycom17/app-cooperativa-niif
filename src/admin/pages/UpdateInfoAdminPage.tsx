@@ -5,10 +5,11 @@ import { IoEyeOffOutline, IoEyeOutline } from "react-icons/io5";
 import { FaCheckCircle } from "react-icons/fa";
 import { MdCreate } from "react-icons/md";
 import logo from '../../assets/LogoUniversidadCooperativa.png'
-
+import { zodResolver } from "@hookform/resolvers/zod";
+import { UserEditSchema, type UserFormData } from "../models/User";
+import { PasswordFields } from "../utils/UserFields";
 
 function UpdateInfoAdminPage() {
-  const [passwordMatch, setPasswordMatch] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
   const [showPassword2, setShowPassword2] = useState(false);
   
@@ -17,7 +18,9 @@ function UpdateInfoAdminPage() {
     handleSubmit,
     setValue,
     formState: { errors },
-  } = useForm();
+  } = useForm({
+    resolver: zodResolver(UserEditSchema)
+  });
 
 
   const profile = async () => {
@@ -62,19 +65,14 @@ function UpdateInfoAdminPage() {
       });
   }, [setValue]);
 
-  const togglePasswordVisibility = (field) => {
-    if(field === 1) {setShowPassword(!showPassword);}
-    else if(field === 2){setShowPassword2(!showPassword2);}
+
+  //TODO: verificar si se puede sacar en un hook aparte ya que se repite en varios componentes
+  const togglePasswordVisibility = (field: PasswordFields) => {
+    if(field === PasswordFields.Password) {setShowPassword(!showPassword);}
+    else if(field === PasswordFields.ConfirmPassword){setShowPassword2(!showPassword2);}
   };
 
-  const onSubmit = (data) => {
-    if (data.usuPassword !== data.confirmPassword) {
-      setPasswordMatch(false);
-      setTimeout(() => {
-        setPasswordMatch(true);
-      }, 5000);
-      return;
-    }
+  const onSubmit = (data: UserFormData) => {
 
     const userData = {
       usuName: data.usuName,
@@ -117,11 +115,11 @@ function UpdateInfoAdminPage() {
                 type="text"
                 className="w-full p-2.5 rounded-md text-xl text-unicoop bg-background text-center border-solid border-unicoop border"
                 placeholder="Nombre"
-                {...register("usuName", { required: true })}
+                {...register("usuName")}
               />
               {errors.usuName && (
                 <p className="text-red-500 text-sm font-semibold">
-                  El nombre no puede quedar vacío
+                  {errors.usuName.message || "El nombre no puede quedar vacío"}
                 </p>
               )}
             </div>
@@ -130,31 +128,25 @@ function UpdateInfoAdminPage() {
                 type="email"
                 className="w-full p-2.5 rounded-md text-xl text-unicoop bg-background text-center border-solid border-unicoop border"
                 placeholder="Correo electronico"
-                {...register("usuEmail", { required: true })}
+                {...register("usuEmail")}
               />
               {errors.usuEmail && (
                 <p className="text-red-500 text-sm font-semibold">
-                  El email no puede quedar vacío
+                  {errors.usuEmail.message || "El correo electrónico no es válido"}
                 </p>
               )}
             </div>
           </section>
-
-          {!passwordMatch && (
-            <p className="text-red-500 text-sm font-semibold">
-              Las contraseñas no coinciden
-            </p>
-          )}
           <div className="relative w-11/12">
             <input
               type={showPassword ? "text" : "password"}
               className="w-full p-2.5 rounded-md text-xl text-unicoop bg-background text-center border-solid border-unicoop border"
               placeholder="Contraseña"
-              {...register("usuPassword", { required: true })}
+              {...register("usuPassword")}
             />
             <button
               type="button"
-              onClick={() => togglePasswordVisibility(1)}
+              onClick={() => togglePasswordVisibility(PasswordFields.Password)}
               className="absolute inset-y-0 right-0 flex items-center px-2 text-xl text-unicoop hover:text-unicoop-blue duration-150"
             >
               {showPassword ? <IoEyeOffOutline /> : <IoEyeOutline />}
@@ -162,7 +154,7 @@ function UpdateInfoAdminPage() {
           </div>
           {errors.usuPassword && (
             <p className="text-red-500 text-sm font-semibold">
-              Debe ingresar una contraseña
+              {errors.usuPassword.message || "La contraseña es obligatoria y debe tener entre 6 y 50 caracteres"}
             </p>
           )}
           <div className="relative w-11/12">
@@ -170,11 +162,11 @@ function UpdateInfoAdminPage() {
               type={showPassword2 ? "text" : "password"}
               className="w-full p-2.5 rounded-md text-xl text-unicoop bg-background text-center border-solid border-unicoop border"
               placeholder="Repita la contraseña"
-              {...register("confirmPassword", { required: true })}
+              {...register("confirmPassword")}
             />
             <button
               type="button"
-              onClick={() => togglePasswordVisibility(2)}
+              onClick={() => togglePasswordVisibility(PasswordFields.ConfirmPassword)}
               className="absolute inset-y-0 right-0 flex items-center px-2 text-xl text-unicoop hover:text-unicoop-blue duration-150"
             >
               {showPassword2 ? <IoEyeOffOutline /> : <IoEyeOutline />}
@@ -182,7 +174,7 @@ function UpdateInfoAdminPage() {
           </div>
           {errors.confirmPassword && (
             <p className="text-red-500 text-sm font-semibold">
-              Debe repetir la contraseña
+              {errors.confirmPassword.message || "La confirmación de contraseña es obligatoria y debe tener entre 6 y 50 caracteres"}
             </p>
           )}
           <button type="submit" className="flex items-center p-1.5 mt-4 gap-1 bg-buttons-update-green hover:bg-buttons-update-green-h text-unicoop duration-150 rounded" >

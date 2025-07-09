@@ -10,18 +10,19 @@ const Navbar = () => {
 
     const navigate = useNavigate();
 
+    //TODO: viene del estado global, pero se puede mejorar
     const singout = () => {
         localStorage.removeItem("token");
         localStorage.removeItem("user");
         navigate("/login");
     };
 
-    const navRef = useRef(null);
+    const navRef = useRef<HTMLDivElement>(null);
 
     // Función para cerrar el menú desplegable al hacer clic fuera de él
     useEffect(() => {
-        function handleClickOutside(event) {
-            if (navRef.current && !navRef.current.contains(event.target)) {
+        function handleClickOutside(event: MouseEvent) {
+            if (navRef.current && event.target && !navRef.current.contains(event.target as Node)) {
                 setIsMenuOpen(false);
             }
         }
