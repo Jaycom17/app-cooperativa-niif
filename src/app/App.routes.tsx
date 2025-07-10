@@ -9,6 +9,7 @@ import CreateProfessorPage from "../admin/pages/CreateProfessorPage";
 import CreateRoomPage from "../professor/pages/CreateRoomPage";
 import ResetPasswordPage from "../professor/pages/ResetPasswordPage";
 import UpdateInfoAdminPage from "../admin/pages/UpdateInfoAdminPage";
+import Form110 from "../forms/pages/Form110";
 
 export const AppRoutes = () => {
   const routes = [
@@ -52,6 +53,10 @@ export const AppRoutes = () => {
       element: <UpdateInfoAdminPage />,
       path: "/updateinfoadmin",
     },
+    {
+      element: <Form110 />,
+      path: "/form110"
+    }
   ];
 
   return useRoutes(routes);

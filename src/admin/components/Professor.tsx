@@ -4,10 +4,10 @@ import { useState } from "react";
 import FloatingContainer from "../../components/FloatingContainer";
 import ProfForm from "./ProfForm";
 import cutString from "../../utils/CropName";
-import type { ProfessorModel } from "../models/User";
+import type { UserModel } from "../models/User";
 
 interface ProfessorProps {
-  professor: ProfessorModel;
+  professor: UserModel;
   onRefresh: () => void;
 }
 
