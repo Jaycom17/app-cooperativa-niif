@@ -13,11 +13,13 @@ const TabBar = ({ tabs, activeTab, setActiveTab, onReport = false }: TabBarProps
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const asideRef = useRef(null);
 
-  // Función para cerrar el menú desplegable al hacer clic fuera de él
   useEffect(() => {
-    function handleClickOutside(event) {
-      if (asideRef.current && !asideRef.current.contains(event.target)) {
-        setIsMenuOpen(false);
+    function handleClickOutside(event: MouseEvent) {
+      if (
+      asideRef.current &&
+      !(asideRef.current as HTMLElement).contains(event.target as Node)
+      ) {
+      setIsMenuOpen(false);
       }
     }
     document.addEventListener("mousedown", handleClickOutside);

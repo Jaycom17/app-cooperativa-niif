@@ -10,6 +10,8 @@ import CreateRoomPage from "../professor/pages/CreateRoomPage";
 import ResetPasswordPage from "../professor/pages/ResetPasswordPage";
 import UpdateInfoAdminPage from "../admin/pages/UpdateInfoAdminPage";
 import Form110 from "../forms/pages/Form110";
+import ActivosFijosForm from "../forms/pages/ActivosFijosForm";
+import ESFpatrimonioForm from "../forms/pages/ESFPatrimonioForm";
 
 export const AppRoutes = () => {
   const routes = [
@@ -56,7 +58,15 @@ export const AppRoutes = () => {
     {
       element: <Form110 />,
       path: "/form110"
-    }
+    },
+    {
+      element: <ActivosFijosForm />,
+      path: "/activosfijos"
+    },
+    {
+      element: <ESFpatrimonioForm />,
+      path: "/esfpatrimonio"
+    },
   ];
 
   return useRoutes(routes);

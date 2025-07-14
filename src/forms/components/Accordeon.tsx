@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { IoIosArrowDown } from "react-icons/io";
 import { GrSubtractCircle, GrAddCircle  } from "react-icons/gr";
 
@@ -39,19 +39,19 @@ const Accordeon = ({title, children, arrayIndex, onAdd, onQuit, path}: Accordeon
     };
 
     return(
-        <article className={`${open ? "mb-2": ""}`}>
+        <article className={`${open ? "mb-2": "mb-1"}`}>
             {arrayIndex === '0' && (
                 <div className="flex gap-4 justify-center my-3 text-unicoop">
                     <button className="flex flex-row items-center justify-center gap-1 bg-buttons-update-green hover:bg-buttons-update-green-h p-2 rounded-3xl w-24 duration-150" onClick={()=>onAdd(path)}><GrAddCircle/> Más</button>
                     <button className="flex flex-row items-center justify-center gap-1 bg-buttons-delete-red hover:bg-buttons-delete-red-h p-2 rounded-3xl duration-150" onClick={()=>onQuit(path)}><GrSubtractCircle /> Menos</button>
                 </div>
             )}
-            <button className={`flex justify-between items-center text-lg w-full hover:bg-gray-200 duration-150 p-3 border-b-2 ${open ? "text-blue-500 font-semibold bg-gray-100": "text-black bg-white"}`} onClick={handleOpen} aria-expanded={open} aria-controls="accordion-contenido">
+            <button className={`flex justify-between  items-center text-lg w-full hover:bg-gray-400 duration-150 p-3 border-b-2 ${open ? "font-semibold bg-gray-400": "text-black bg-gray-300"}`} onClick={handleOpen} aria-expanded={open} aria-controls="accordion-contenido">
                 <h2>{title}</h2>
                 <IoIosArrowDown className={`md:text-lg transition-all duration-300 ${open ? 'rotate-180':''}`}/>
             </button>
             <div className={`ml-3 overflow-hidden ${open ? 'max-h-full' : 'max-h-0'}`}>
-                <div className={`${children[0] && children[0].type === "div" && "grid grid-cols-3 gap-2  p-2"}`}>
+                <div className={`${Array.isArray(children) && React.Children.toArray(children)[0] && (React.Children.toArray(children)[0] as React.ReactElement).type === "div" ? "grid grid-cols-3 gap-2  p-2" : ""}`}>
                     {children}
                 </div>
             </div>
