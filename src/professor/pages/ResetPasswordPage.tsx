@@ -1,9 +1,9 @@
-import Navbar from "../components/Navbar";
 import { useForm } from "react-hook-form";
 import { useState } from "react";
 import { MdCreate } from "react-icons/md";
 import { FaCheckCircle } from "react-icons/fa";
 import { IoEyeOffOutline, IoEyeOutline } from "react-icons/io5";
+import ProfessorLayout from "../../components/templates/ProfessorLayout";
 
 import { type PasswordModel, PasswordSchema } from "../models/Password";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -19,7 +19,6 @@ function ResetPasswordPage() {
   const [showPassword2, setShowPassword2] = useState(false);
   const [showPassword3, setShowPassword3] = useState(false);
 
-  //TODO: cambiar lo de 1,2,3 a un mejor manejo de estados
   const togglePasswordVisibility = (field: PasswordFields) => {
     if (field === PasswordFields.OldPassword) {
       setShowPassword(!showPassword);
@@ -54,8 +53,7 @@ function ResetPasswordPage() {
     }
   };
   return (
-    <>
-      <Navbar />
+    <ProfessorLayout>
       <main className="w-full h-screen flex flex-col justify-center items-center bg-background text-white">
         <img
           src={logo}
@@ -139,7 +137,7 @@ function ResetPasswordPage() {
           </button>
         </form>
       </main>
-    </>
+    </ProfessorLayout>
   );
 }
 

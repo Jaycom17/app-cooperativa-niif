@@ -1,9 +1,9 @@
 import Room from "../components/Room";
-import Navbar from "../components/Navbar";
 import { useState, useEffect } from "react";
-import InfoBubble from "../../components/InfoBubble";
+import InfoBubble from "../../components/atoms/InfoBubble";
 import { IoIosArrowDown } from "react-icons/io";
 import { RoomService } from "../services/room.service";
+import ProfessorLayout from "../../components/templates/ProfessorLayout";
 
 import type { RoomModel } from "../models/Room";
 
@@ -18,9 +18,7 @@ const MainProfessorPage = () => {
     RoomService.findAll()
       .then((response) => {
         const res = response as { status: number; data: any[] };
-        if (res.status === 201) {
-          setRooms(res.data);
-        }
+        setRooms(res.data);
       })
       .catch(() => {
         alert("Error al cargar las salas");
@@ -52,8 +50,7 @@ const MainProfessorPage = () => {
   };
 
   return (
-    <>
-      <Navbar />
+    <ProfessorLayout>
       <main className="flex flex-col items-center min-h-screen bg-background">
         {/**Aquí, en esta sección la idea sería poner los filtros (Barra de busqueda, ordenar por?) */}
         <section className="flex justify-between items-center w-11/12 mt-5">
@@ -90,7 +87,7 @@ const MainProfessorPage = () => {
           ))}
         </section>
       </main>
-    </>
+    </ProfessorLayout>
   );
 };
 

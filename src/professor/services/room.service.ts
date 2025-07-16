@@ -89,7 +89,7 @@ export const RoomService = {
             // Add more rooms as needed
           ],
         });
-      }, 1000);
+      }, 300);
     }),
   updateRoomState: (roomData: { roomStatus: string }, roomId: string) =>
     // Simulate an API call to update the room state

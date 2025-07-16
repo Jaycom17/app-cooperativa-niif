@@ -1,6 +1,5 @@
 import { useForm } from "react-hook-form";
 import { useState, useEffect } from "react";
-import Navbar from "../components/Navbar";
 import { IoEyeOffOutline, IoEyeOutline } from "react-icons/io5";
 import { FaCheckCircle } from "react-icons/fa";
 import { MdCreate } from "react-icons/md";
@@ -8,6 +7,7 @@ import logo from '../../assets/LogoUniversidadCooperativa.png'
 import { zodResolver } from "@hookform/resolvers/zod";
 import { UserEditSchema, type UserFormData } from "../models/User";
 import { PasswordFields } from "../utils/UserFields";
+import AdminLayout from "../../components/templates/AdminLayout";
 
 function UpdateInfoAdminPage() {
   const [showPassword, setShowPassword] = useState(false);
@@ -38,7 +38,7 @@ function UpdateInfoAdminPage() {
     });
   };
 
-  const updateAdmin = async (userData) => {
+  const updateAdmin = async (userData: UserFormData) => {
     // Simulate an API call to update admin data
     return new Promise((resolve, reject) => {
       setTimeout(() => {
@@ -54,8 +54,9 @@ function UpdateInfoAdminPage() {
   useEffect(() => {
     profile()
       .then((response) => {
-        if (response.status === 200) {
-          const userData = response.data;
+        const res = response as { status: number; data: { usuName: string; usuEmail: string } };
+        if (res.status === 200) {
+          const userData = res.data;
           setValue("usuName", userData.usuName);
           setValue("usuEmail", userData.usuEmail);
         }
@@ -81,7 +82,8 @@ function UpdateInfoAdminPage() {
     };
 
     updateAdmin(userData).then((response) => {
-      if (response.status === 200) {
+      const res = response as { status: number };
+      if (res.status === 200) {
           alert("Se han actualizado los datos del usuario");
       } else {
           alert("Error al actualizar los datos del usuario");
@@ -92,8 +94,7 @@ function UpdateInfoAdminPage() {
   };
 
   return (
-    <>
-      <Navbar />
+    <AdminLayout>
       <main className="w-full h-screen flex flex-col justify-center items-center bg-background text-white">
         <img src={logo} alt="logo universidad cooperativa" className="w-11/12 sm:w-96"/>
         <form
@@ -182,7 +183,7 @@ function UpdateInfoAdminPage() {
             </button>
         </form>
       </main>
-    </>
+    </AdminLayout>
   );
 }
 

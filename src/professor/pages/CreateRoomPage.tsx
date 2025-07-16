@@ -1,6 +1,6 @@
-import Navbar from "../components/Navbar";
 import RoomForm from "../components/RoomForm";
-import InfoBubble from "../../components/InfoBubble";
+import InfoBubble from "../../components/atoms/InfoBubble";
+import ProfessorLayout from "../../components/templates/ProfessorLayout";
 
 const CreateRoomPage = () => {
   const user = {
@@ -11,8 +11,7 @@ const CreateRoomPage = () => {
     "La sala se crea con estado inactivo por defecto. Recuerda activarla :)";
 
   return (
-    <>
-      <Navbar />
+    <ProfessorLayout>
       <main className="w-full min-h-screen bg-background flex justify-center items-center flex-col">
         <article className="px-5 md:px-32 lg:px-60 xl:px-80 mb-5 text-center text-unicoop">
           <h1 className="font-bold text-4xl mb-3">CREAR SALA</h1>
@@ -32,7 +31,7 @@ const CreateRoomPage = () => {
           <RoomForm usuId={user.usuID} />
         </section>
       </main>
-    </>
+    </ProfessorLayout>
   );
 };
 

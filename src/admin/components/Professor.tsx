@@ -1,7 +1,7 @@
 import { FaRegTrashAlt } from "react-icons/fa";
 import { FaPencilAlt } from "react-icons/fa";
 import { useState } from "react";
-import FloatingContainer from "../../components/FloatingContainer";
+import FloatingContainer from "../../components/atoms/FloatingContainer";
 import ProfForm from "./ProfForm";
 import cutString from "../../utils/CropName";
 import type { UserModel } from "../models/User";

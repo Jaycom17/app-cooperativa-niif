@@ -1,10 +1,9 @@
-import Navbar from "../components/Navbar";
 import ProfForm from "../components/ProfForm";
+import AdminLayout from "../../components/templates/AdminLayout";
 
 function CreateProfessorPage() {
   return (
-    <>
-      <Navbar />
+    <AdminLayout>
       <main className="w-full min-h-screen bg-background flex justify-center items-center flex-col">
         <article className="px-5 md:px-32 lg:px-60 xl:px-80 mb-5 text-center text-unicoop">
           <h1 className="font-bold text-4xl mb-3">CREAR PROFESOR</h1>
@@ -15,7 +14,7 @@ function CreateProfessorPage() {
           <ProfForm/>
         </section>
       </main>
-    </>
+    </AdminLayout>
   );
 }
 
