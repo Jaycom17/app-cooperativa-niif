@@ -1,8 +1,9 @@
 import { MdCreate } from "react-icons/md";
 import { MdAddHome } from "react-icons/md";
 import { FaCheckCircle } from "react-icons/fa";
-import { useRoomForm } from "../hooks/useRoomForm";
-import type { RoomModel } from "../models/Room";
+import { useRoomForm } from "../../hooks/useRoomForm";
+import type { RoomModel } from "../../models/Room";
+import InputForm from "../../../components/atoms/InputForm";
 
 interface RoomFormProps {
   room?: RoomModel;
@@ -41,32 +42,22 @@ const RoomForm = ({ room, usuId, onRefresh, setOpen }: RoomFormProps) => {
 
       <section className="flex flex-col md:flex-row gap-3 w-11/12 mt-3">
         <div className="w-full flex flex-col items-center">
-          <input
+          <InputForm
             type="text"
-            className="w-full p-2.5 rounded-md text-xl text-unicoop bg-background text-center border-solid border-unicoop border"
             placeholder="Nombre"
-            {...register("roomName", { required: true })}
+            register={register}
+            errors={errors}
+            inputName="roomName"
           />
-          {errors.roomName && (
-            <p className="text-red-500 text-sm font-semibold">
-              {errors.roomName.message ||
-                "El nombre de la sala no puede quedar vacío"}
-            </p>
-          )}
         </div>
         <div className="w-full flex flex-col items-center">
-          <input
+          <InputForm
             type="text"
-            className="w-full p-2.5 rounded-md text-xl text-unicoop bg-background text-center border-solid border-unicoop border"
             placeholder="Código"
-            {...register("roomPassword", { required: true })}
+            register={register}
+            errors={errors}
+            inputName="roomPassword"
           />
-          {errors.roomPassword && (
-            <p className="text-red-500 text-sm font-semibold">
-              {errors.roomPassword.message ||
-                "El código de la sala no puede quedar vacío"}
-            </p>
-          )}
         </div>
       </section>
       <button

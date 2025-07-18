@@ -1,5 +1,5 @@
-import ProfForm from "../components/ProfForm";
-import AdminLayout from "../../components/templates/AdminLayout";
+import ProfForm from "../components/organisms/ProfForm";
+import AdminLayout from "../components/templates/AdminLayout";
 
 function CreateProfessorPage() {
   return (

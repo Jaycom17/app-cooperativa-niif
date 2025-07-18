@@ -2,13 +2,13 @@ import { FaRegTrashAlt } from "react-icons/fa";
 import { FaPencilAlt } from "react-icons/fa";
 import { FaEye } from "react-icons/fa";
 import { useState, useEffect } from "react";
-import FloatingContainer from "../../components/atoms/FloatingContainer";
+import FloatingContainer from "../../../components/atoms/FloatingContainer";
 import RoomForm from "./RoomForm";
-import cutString from "../../utils/CropName";
+import cutString from "../../../utils/CropName";
 import { Link } from "react-router-dom";
-import type { RoomModel } from "../models/Room";
-import { RoomService } from "../services/room.service";
-import { formatDate } from "../../utils/Dates";
+import type { RoomModel } from "../../models/Room";
+import { RoomService } from "../../services/room.service";
+import { formatDate } from "../../../utils/Dates";
 
 interface RoomProps {
   room: RoomModel;

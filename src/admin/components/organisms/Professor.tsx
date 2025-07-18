@@ -1,10 +1,10 @@
 import { FaRegTrashAlt } from "react-icons/fa";
 import { FaPencilAlt } from "react-icons/fa";
 import { useState } from "react";
-import FloatingContainer from "../../components/atoms/FloatingContainer";
+import FloatingContainer from "../../../components/atoms/FloatingContainer";
 import ProfForm from "./ProfForm";
-import cutString from "../../utils/CropName";
-import type { UserModel } from "../models/User";
+import cutString from "../../../utils/CropName";
+import type { UserModel } from "../../models/User";
 
 interface ProfessorProps {
   professor: UserModel;
@@ -25,11 +25,9 @@ const Professor = ({ professor, onRefresh }: ProfessorProps) => {
     );
     if (confirmDelete) {
       deleteProfessor(profId)
-        .then((response) => {
-          if (response.status === 200) {
-            alert("Se ha eliminado el profesor correctamente");
-            onRefresh();
-          }
+        .then((_res) => {
+          alert("Se ha eliminado el profesor correctamente");
+          onRefresh();
         })
         .catch(() => {
           alert("Error al eliminar al profesor");

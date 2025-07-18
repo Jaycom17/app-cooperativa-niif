@@ -1,6 +1,6 @@
-import RoomForm from "../components/RoomForm";
+import RoomForm from "../components/organisms/RoomForm";
 import InfoBubble from "../../components/atoms/InfoBubble";
-import ProfessorLayout from "../../components/templates/ProfessorLayout";
+import ProfessorLayout from "../components/templates/ProfessorLayout";
 
 const CreateRoomPage = () => {
   const user = {

@@ -1,6 +1,7 @@
 import { useForm } from "react-hook-form";
 import { IoMdLogIn } from "react-icons/io";
-import type { Code } from "../models/Code";
+import type { Code } from "../../models/Code";
+import InputForm from "../../../components/atoms/InputForm";
 
 interface StudentLogFormProps {
   onSubmit: (data: Code) => void;
@@ -27,17 +28,15 @@ function StudentLogForm({ onSubmit }: StudentLogFormProps) {
       {roomError && (
         <p className="text-[red] text-sm bg-transparent">{roomError}</p>
       )}
-      <input
+      <div className="w-11/12">
+        <InputForm
         type="text"
         placeholder="Código de la sala"
-        className="w-11/12 p-2.5 rounded-md text-xl text-unicoop text-center bg-background border-solid border-unicoop border"
-        {...register("roomPassword", { required: true })}
+        register={register}
+        errors={errors}
+        inputName="roomPassword"
       />
-      {errors.roomPassword && (
-        <p className="text-[red] text-sm bg-transparent">
-          Debes ingresar el código de la sala
-        </p>
-      )}
+      </div>
       <button
         className="bg-buttons-login text-unicoop-white w-11/12 p-2.5 rounded-md my-4 hover:bg-gray-600 focus:ring-2 transition-colors duration-200 ease-in font-medium"
         disabled={isSubmitting}

@@ -1,5 +1,5 @@
 import { Link, useNavigate } from "react-router-dom";
-import StudentLogForm from "../components/StudentLogForm";
+import StudentLogForm from "../components/organisms/StudentLogForm";
 import logo from "../../assets/LogoUniversidadCooperativa.png";
 import type { Code } from "../models/Code";
 

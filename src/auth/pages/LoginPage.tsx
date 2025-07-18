@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import logo from "../../assets/LogoUniversidadCooperativa.png";
 
-import UsersLogForm from "../components/UsersLogForm";
+import UsersLogForm from "../components/organisms/UsersLogForm";
 import type { LoginModel } from "../models/Login";
 
 function LoginPage() {

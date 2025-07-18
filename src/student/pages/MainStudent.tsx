@@ -1,5 +1,5 @@
-import StudentLayout from "../../layout/StudentLayout";
-import FormItem from "../components/FormItem";
+import StudentLayout from "../components/templates/StudentLayout";
+import FormItem from "../components/atoms/FormItem";
 import logo from '../../assets/LogoUniversidadCooperativa.png'
 
 

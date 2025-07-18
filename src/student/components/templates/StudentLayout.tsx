@@ -1,4 +1,4 @@
-import AsideStudent from "./components/AsideStudent";
+import AsideStudent from "../organisms/AsideStudent";
 
 function StudentLayout({ children }: { children: React.ReactNode }) {
   return (

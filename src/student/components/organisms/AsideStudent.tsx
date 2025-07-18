@@ -8,8 +8,8 @@ function AsideStudent() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const asideRef = useRef<HTMLElement | null>(null);
 
-  const leaveRoom = () => {};
-  const logout = () => {};
+  const leaveRoom = () => { };
+  const logout = () => { };
 
   const handleLeaveRoom = async () => {
     leaveRoom();
@@ -54,9 +54,8 @@ function AsideStudent() {
         <MdMenu className="text-2xl" />
       </button>
       <aside
-        className={`fixed md:relative overflow-auto top-0 min-h-screen h-full w-[200px] bg-primary md:translate-x-0 transition-transform duration-150 ${
-          isMenuOpen ? "translate-x-0" : "-translate-x-full"
-        }`}
+        className={`fixed md:relative overflow-auto top-0 min-h-screen h-full w-[200px] bg-primary md:translate-x-0 transition-transform duration-150 ${isMenuOpen ? "translate-x-0" : "-translate-x-full"
+          }`}
         ref={asideRef}
       >
         <button
