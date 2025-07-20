@@ -8,6 +8,7 @@ import { UserEditSchema, type UserFormData } from "../models/User";
 import AdminLayout from "../components/templates/AdminLayout";
 import InputForm from "../../components/atoms/InputForm";
 import PasswordInput from "../../components/atoms/PasswordInput";
+import { AdminService } from "../services/admin.service";
 
 function UpdateInfoAdminPage() {
 
@@ -36,19 +37,6 @@ function UpdateInfoAdminPage() {
     });
   };
 
-  const updateAdmin = async (userData: UserFormData) => {
-    // Simulate an API call to update admin data
-    return new Promise((resolve, reject) => {
-      setTimeout(() => {
-        if (userData.usuName && userData.usuEmail && userData.usuPassword) {
-          resolve({ status: 200 });
-        } else {
-          reject(new Error("Error updating admin data"));
-        }
-      }, 1000);
-    });
-  };
-
   useEffect(() => {
     profile()
       .then((response) => {
@@ -70,7 +58,7 @@ function UpdateInfoAdminPage() {
       usuPassword: data.usuPassword,
     };
 
-    updateAdmin(userData).then((_res) => {
+    AdminService.updateAdmin(userData).then((_res) => {
       alert("Se han actualizado los datos del usuario");
     }).catch(() => {
       alert("Error al actualizar los datos del usuario");

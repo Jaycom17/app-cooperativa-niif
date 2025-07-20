@@ -8,6 +8,7 @@ import { type UserModel, type UserFormData, UserEditSchema, UserCreateSchema } f
 import { zodResolver } from "@hookform/resolvers/zod";
 import InputForm from "../../../components/atoms/InputForm";
 import PasswordInput from "../../../components/atoms/PasswordInput";
+import { ProfessorService } from "../../services/professor.service";
 
 interface ProfFormProps {
   professor?: UserModel;
@@ -19,13 +20,6 @@ const ProfForm = ({ professor, onRefresh, setOpen }: ProfFormProps) => {
   const isUpdate = Boolean(professor);
 
   const navigate = useNavigate();
-
-  const createProfessor = async (data: Omit<UserModel, "usuId">): Promise<{ status: number }> => {
-    return { status: 200 };
-  };
-  const updateProfessor = async (id: string, data: Omit<UserModel, "usuId">): Promise<{ status: number }> => {
-    return { status: 200 };
-  };
 
   const {
     register,
@@ -52,7 +46,7 @@ const ProfForm = ({ professor, onRefresh, setOpen }: ProfFormProps) => {
     }
 
     if (isUpdate) {
-      updateProfessor(professor!.usuId, professorData).then((_res) => {
+      ProfessorService.updateProfessor(professor!.usuId, professorData).then((_res) => {
         alert("Se han actualizado los datos del profesor");
         onRefresh!();
         setOpen!(false);
@@ -61,7 +55,7 @@ const ProfForm = ({ professor, onRefresh, setOpen }: ProfFormProps) => {
       })
     }
     else {
-      createProfessor(professorData).then((_res) => {
+      ProfessorService.createProfessor(professorData).then((_res) => {
         alert("Profesor creado exitosamente");
         navigate("/admin");
       }).catch(() => {

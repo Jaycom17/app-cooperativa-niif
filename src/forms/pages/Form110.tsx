@@ -1,4 +1,4 @@
-    import StudentLayout from '../../student/components/templates/StudentLayout';
+    import StudentLayout from '../../components/templates/StudentLayout';
     import Form110Values from '../components/Form110Values';
     import Accordeon from '../components/Accordeon';
     import TabBar from '../components/TabBar';

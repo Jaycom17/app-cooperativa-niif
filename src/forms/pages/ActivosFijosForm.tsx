@@ -1,4 +1,4 @@
-import StudentLayout from "../../student/components/templates/StudentLayout";
+import StudentLayout from "../../components/templates/StudentLayout";
 import ActivosFijosValues from "../components/Form110Values";
 import ActivosFijosTotals from "../components/ActivosFijosTotals";
 import basicInformation from '../models/ActivosFijos.json';

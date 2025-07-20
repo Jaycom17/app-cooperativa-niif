@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import basicInformation from '../models/ESFPatrimonio.json';
 import ESFvalues from '../components/Form110Values';
-import AsideStudent from '../../student/components/organisms/AsideStudent';
+import AsideStudent from '../../components/organisms/AsideStudent';
 
 const ESFpatrimonioForm = () => {
   const [data, setData] = useState(basicInformation);

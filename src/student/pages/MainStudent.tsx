@@ -1,4 +1,4 @@
-import StudentLayout from "../components/templates/StudentLayout";
+import StudentLayout from "../../components/templates/StudentLayout";
 import FormItem from "../components/atoms/FormItem";
 import logo from '../../assets/LogoUniversidadCooperativa.png'
 

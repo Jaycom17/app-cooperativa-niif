@@ -3,31 +3,19 @@ import Professor from "../components/organisms/Professor";
 import { FaSearch } from "react-icons/fa";
 import type { UserModel } from "../models/User";
 import AdminLayout from "../components/templates/AdminLayout";
+import { ProfessorService } from "../services/professor.service";
 
 const MainAdminPage = () => {
   const [professors, setProfessors] = useState<UserModel[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
 
-  const getProfessors = async () => {
-    // Simulate an API call to fetch professors
-    return {
-      status: 200,
-      data: [
-        { usuId: "1", usuName: "John Doe", usuEmail: "John@email.com" },
-        { usuId: "2", usuName: "Jane Smith", usuEmail: "Jane@email.com" },
-      ],
-    };
-  };
-
-   const loadProfessors = () => {
-    getProfessors()
+  const loadProfessors = () => {
+    ProfessorService.getProfessors()
       .then((response) => {
-        if (response.status === 200) {
-          const sortedProfessors = response.data.sort((a, b) =>
-            a.usuName.localeCompare(b.usuName)
-          );
-          setProfessors(sortedProfessors);
-        }
+        const sortedProfessors = response.data.sort((a, b) =>
+          a.usuName.localeCompare(b.usuName)
+        );
+        setProfessors(sortedProfessors);
       })
       .catch(() => {
         alert("Error al cargar los profesores");

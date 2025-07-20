@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { OPTIONS } from "../utils/Options";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { StudentSchema, type StudentModel } from "../models/Student";
+import InputForm from "../../components/atoms/InputForm";
 
 function MiddlewareStudent() {
   const [firstTime, setFirstTime] = useState(OPTIONS.NOTHING);
@@ -108,16 +109,13 @@ function MiddlewareStudent() {
                 {studentError}
               </p>
             )}
-            <input
+            <InputForm
               type="number"
-              className="w-1/2 p-2 rounded-md border border-gray-300 mt-3 text-white"
-              {...register("stuCedula")}
+              register={register}
+              errors={errors}
+              placeholder="Cedula"
+              inputName="stuCedula"
             />
-            {errors.stuCedula && (
-              <p className="text-[red] text-sm bg-transparent">
-                {errors.stuCedula.message || "Debe ingresar una cedula"}
-              </p>
-            )}
             <button
               type="submit"
               className="p-2 bg-buttons-login w-24 text-unicoop rounded-md hover:bg-gray-600 duration-150 focus:ring-2 transition-colors ease-in font-medium"
@@ -157,16 +155,13 @@ function MiddlewareStudent() {
                 {studentError}
               </p>
             )}
-            <input
+            <InputForm
               type="number"
-              className="w-1/2 p-2 rounded-md border border-gray-300 mt-3 text-white"
-              {...register("stuCedula")}
+              register={register}
+              errors={errors}
+              placeholder="Cedula"
+              inputName="stuCedula"
             />
-            {errors.stuCedula && (
-              <p className="text-[red] text-sm bg-transparent">
-                {errors.stuCedula.message || "Debe ingresar una cedula"}
-              </p>
-            )}
             <button
               type="submit"
               className="p-2 bg-buttons-login w-24 text-unicoop rounded-md hover:bg-gray-600 duration-150 focus:ring-2 transition-colors ease-in font-medium"

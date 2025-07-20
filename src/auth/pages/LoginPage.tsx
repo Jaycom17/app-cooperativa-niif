@@ -5,7 +5,6 @@ import UsersLogForm from "../components/organisms/UsersLogForm";
 import type { LoginModel } from "../models/Login";
 
 function LoginPage() {
-  //TODO: cambiar el tipo de datos de values
   const onSubmit = async (values: LoginModel) => {
     console.log(values);
   };
