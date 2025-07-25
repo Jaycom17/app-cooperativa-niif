@@ -4,9 +4,17 @@ import logo from "../../assets/LogoUniversidadCooperativa.png";
 import UsersLogForm from "../components/organisms/UsersLogForm";
 import type { LoginModel } from "../models/Login";
 
+import { useAuthStore } from "../../stores/AuthStore";
+
+import { useAuthNavigate } from "../hooks/useAuthNavigate";
+
 function LoginPage() {
+  const { signin } = useAuthStore();
+
+  useAuthNavigate();
+
   const onSubmit = async (values: LoginModel) => {
-    console.log(values);
+    await signin(values);
   };
 
   return (

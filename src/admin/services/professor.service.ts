@@ -1,41 +1,21 @@
 import type { UserModel } from "../models/User";
+import axiosInstance from "../../config/axios";
 
-type ProfessorDTO = Omit<UserModel, "usuId">;
+type ProfessorDTO = Omit<UserModel, "usuID">;
 
 export const ProfessorService = {
-  getProfessors: (): Promise<{ status: number; data: UserModel[] }> =>
-    new Promise((resolve) => {
-      setTimeout(() => {
-        resolve({
-          status: 200,
-          data: [
-            {
-              usuId: "1",
-              usuName: "John Doe",
-              usuEmail: "john.doe@example.com",
-            },
-            {
-              usuId: "2",
-              usuName: "Jane Smith",
-              usuEmail: "jane.smith@example.com",
-            },
-          ],
-        });
-      }, 1000);
-    }),
-  createProfessor: (professorData: ProfessorDTO): Promise<{ status: number }> =>
-    new Promise((resolve, reject) => {
-      setTimeout(() => {
-        resolve({ status: 200 });
-      }, 1000);
-    }),
-  updateProfessor: (
-    id: string,
-    professorData: ProfessorDTO
-  ): Promise<{ status: number }> =>
-    new Promise((resolve, reject) => {
-      setTimeout(() => {
-        resolve({ status: 200 });
-      }, 1000);
-    }),
+  getProfessors: async (): Promise<UserModel[]> => {
+    const response = await axiosInstance.get("/users/professor");
+    return response.data;
+  },
+  createProfessor: (professorData: ProfessorDTO): Promise<void> => {
+    return axiosInstance.post("/users/professor", professorData);
+  },
+  updateProfessor: (id: string, professorData: ProfessorDTO): Promise<void> => {
+    return axiosInstance.put(`/users/professor/${id}`, professorData);
+  },
+  //TODO: verificar si esa es la ruta correcta
+  deleteProfessor: (id: string): Promise<void> => {
+    return axiosInstance.delete(`/users/professor/${id}`);
+  },
 };

@@ -40,7 +40,7 @@ function UsersLogForm({ onSubmit }: UsersLogFormProps) {
         placeholder="Correo electrónico"
         register={register}
         errors={errors}
-        inputName="usuEmail"
+        inputName="email"
       />
       </div>
       <div className="w-11/12">
@@ -48,7 +48,7 @@ function UsersLogForm({ onSubmit }: UsersLogFormProps) {
           placeholder="Contraseña"
           register={register}
           errors={errors}
-          inputName="usuPassword"
+          inputName="password"
         />
       </div>
       <button

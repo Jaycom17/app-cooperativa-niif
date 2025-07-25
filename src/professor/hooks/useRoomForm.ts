@@ -33,7 +33,6 @@ export function useRoomForm({
   });
 
   useEffect(() => {
-    console.log(room || "No roomId provided");
     if (!room) return;
 
     setValue("roomName", room.roomName);

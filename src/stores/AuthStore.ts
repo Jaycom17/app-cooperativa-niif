@@ -1,14 +1,19 @@
 // store/useAuthStore.ts
 import { create } from "zustand";
-import { login, logout, profile } from "../services/login.service";
-import { User, LoginInput } from "../types/auth";
+import { LoginService } from "../auth/services/login.service";
+import type { LoginModel } from "../auth/models/Login";
+
+interface User {
+  usuID: string;
+  usuRole: string;
+}
 
 interface AuthState {
   user: User | null;
   loading: boolean;
   loginError: string | null;
   checkLogin: () => Promise<void>;
-  signin: (data: LoginInput) => Promise<void>;
+  signin: (data: LoginModel) => Promise<void>;
   signout: () => void;
 }
 
@@ -19,7 +24,7 @@ export const useAuthStore = create<AuthState>((set) => ({
 
   checkLogin: async () => {
     try {
-      const res = await profile();
+      const res = await LoginService.profile();
       if (res.data) {
         set({ user: res.data, loading: false });
       } else {
@@ -32,12 +37,12 @@ export const useAuthStore = create<AuthState>((set) => ({
 
   signin: async (data) => {
     try {
-      const res = await login(data);
+      const res = await LoginService.login(data);
       set({ user: res.data, loginError: null });
     } catch (err) {
       console.error(err);
       set({ loginError: "Usuario o contraseña incorrectos" });
-      
+
       setTimeout(() => {
         set({ loginError: null });
       }, 5000);
@@ -45,9 +50,7 @@ export const useAuthStore = create<AuthState>((set) => ({
   },
 
   signout: () => {
-    const result = logout();
-    if (result) {
-      set({ user: null, loading: false });
-    }
+    LoginService.logout();
+    set({ user: null, loading: false });
   },
 }));

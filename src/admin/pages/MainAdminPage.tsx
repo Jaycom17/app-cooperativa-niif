@@ -11,8 +11,8 @@ const MainAdminPage = () => {
 
   const loadProfessors = () => {
     ProfessorService.getProfessors()
-      .then((response) => {
-        const sortedProfessors = response.data.sort((a, b) =>
+      .then((data) => {
+        const sortedProfessors = data.sort((a, b) =>
           a.usuName.localeCompare(b.usuName)
         );
         setProfessors(sortedProfessors);
@@ -49,7 +49,7 @@ const MainAdminPage = () => {
         <section className="w-11/12 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 my-5 mx-auto justify-items-center">
           {filteredProfessors.map((professor) => (
             <Professor
-              key={professor.usuId}
+              key={professor.usuID}
               professor={professor}
               onRefresh={loadProfessors}
             />

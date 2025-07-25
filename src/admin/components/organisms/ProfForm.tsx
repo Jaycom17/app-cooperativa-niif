@@ -46,7 +46,7 @@ const ProfForm = ({ professor, onRefresh, setOpen }: ProfFormProps) => {
     }
 
     if (isUpdate) {
-      ProfessorService.updateProfessor(professor!.usuId, professorData).then((_res) => {
+      ProfessorService.updateProfessor(professor!.usuID, professorData).then((_res) => {
         alert("Se han actualizado los datos del profesor");
         onRefresh!();
         setOpen!(false);
@@ -55,7 +55,7 @@ const ProfForm = ({ professor, onRefresh, setOpen }: ProfFormProps) => {
       })
     }
     else {
-      ProfessorService.createProfessor(professorData).then((_res) => {
+      ProfessorService.createProfessor(professorData).then(() => {
         alert("Profesor creado exitosamente");
         navigate("/admin");
       }).catch(() => {

@@ -1,6 +1,7 @@
 import type { UserModel } from "../models/User";
+import axiosInstance from "../../config/axios";
 
-type AdminDTO = Omit<UserModel, "usuId">;
+type AdminDTO = Omit<UserModel, "usuID">;
 
 export const AdminService = {
   updateAdmin: (userData: AdminDTO): Promise<{ status: number }> =>

@@ -5,6 +5,7 @@ import FloatingContainer from "../../../components/atoms/FloatingContainer";
 import ProfForm from "./ProfForm";
 import cutString from "../../../utils/CropName";
 import type { UserModel } from "../../models/User";
+import { ProfessorService } from "../../services/professor.service";
 
 interface ProfessorProps {
   professor: UserModel;
@@ -14,17 +15,12 @@ interface ProfessorProps {
 const Professor = ({ professor, onRefresh }: ProfessorProps) => {
   const [formOpen, setFormOpen] = useState(false);
 
-  const deleteProfessor = async (profId: string) => {
-    // Simulate an API call to delete the professor
-    return { status: 200, data: { message: "Profesor eliminado" } };
-  };
-
   const handleDelete = (profId: string) => {
     const confirmDelete = window.confirm(
       `¿Estás seguro de que deseas eliminar al profesor ${professor.usuName}?`
     );
     if (confirmDelete) {
-      deleteProfessor(profId)
+      ProfessorService.deleteProfessor(profId)
         .then((_res) => {
           alert("Se ha eliminado el profesor correctamente");
           onRefresh();
@@ -55,7 +51,7 @@ const Professor = ({ professor, onRefresh }: ProfessorProps) => {
           <FaPencilAlt className="bg-transparent" /> Actualizar
         </button>
         <button
-          onClick={() => handleDelete(professor.usuId)}
+          onClick={() => handleDelete(professor.usuID)}
           className="flex items-center p-1.5 bg-buttons-delete-red hover:bg-buttons-delete-red-h duration-150 rounded"
         >
           <FaRegTrashAlt className="bg-transparent" /> Eliminar
