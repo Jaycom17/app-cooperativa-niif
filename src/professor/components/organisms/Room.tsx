@@ -25,9 +25,9 @@ const Room = ({ room, usuId, onRefresh }: RoomProps) => {
   }, [room.roomStatus]);
 
   const toggleActivated = () => {
-    const roomStatus = !activated ? "open" : "closed";
+    const roomState = !activated ? "open" : "closed";
     try {
-      RoomService.updateRoomState({ roomStatus }, room.roomId);
+      RoomService.updateRoomState({ roomState }, room.roomID);
       setActivated(!activated);
     } catch (error) {
       console.error("Error al actualizar el estado de la sala:", error);
@@ -39,13 +39,10 @@ const Room = ({ room, usuId, onRefresh }: RoomProps) => {
       `¿Estás seguro de que deseas eliminar la sala ${room.roomName}?`
     );
     if (confirmDelete) {
-      RoomService.delete(room.roomId)
-        .then((response) => {
-          const res = response as { status: number; data?: any };
-          if (res.status === 201) {
-            alert("Se ha eliminado la sala correctamente");
-            onRefresh();
-          }
+      RoomService.delete(room.roomID)
+        .then(() => {
+          alert("Se ha eliminado la sala correctamente");
+          onRefresh();
         })
         .catch(() => {
           alert("Error al eliminar la sala");
@@ -105,7 +102,7 @@ const Room = ({ room, usuId, onRefresh }: RoomProps) => {
           <FaPencilAlt className="bg-transparent mr-1" /> Actualizar
         </button>
         <Link
-          to={`/roomreport/${room.roomId}`}
+          to={`/roomreport/${room.roomID}`}
           className="flex items-center p-1.5 bg-buttons-login hover:bg-[#696969] duration-150 rounded"
         >
           <FaEye className="bg-transparent mr-1" /> Revisar

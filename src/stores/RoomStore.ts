@@ -1,14 +1,18 @@
 // store/useRoomStore.ts
 import { create } from "zustand";
-import { validateRoom } from "../services/room.service";
-import { Room, RoomInput } from "../types/room";
+import { RoomService } from "../professor/services/room.service";
+
+
+interface currentRoom {
+  roomID: string;
+}
 
 interface RoomState {
-  currentRoom: Room | null;
+  currentRoom: currentRoom | null;
   loading: boolean;
   roomError: string | null;
   initCheck: () => Promise<void>;
-  checkRoom: (room: RoomInput) => Promise<void>;
+  checkRoom: (room: { roomPassword: string }) => Promise<void>;
   leaveRoom: () => void;
 }
 
@@ -26,33 +30,29 @@ export const useRoomStore = create<RoomState>((set) => ({
       }
 
       const roomData = JSON.parse(stored);
-      const res = await validateRoom({ roomPassword: roomData.roomPassword });
+      const res = await RoomService.validatePassword(roomData.roomPassword);
 
-      if (!res.data.roomID) {
+      if (!res.roomID) {
         localStorage.removeItem("room");
         set({ loading: false });
         return;
       }
 
-      set({ currentRoom: res.data, loading: false });
+      set({ currentRoom: res, loading: false });
     } catch {
       set({ loading: false });
     }
   },
 
-  checkRoom: async (room) => {
+  checkRoom: async (roomInput) => {
     try {
-      const res = await validateRoom(room);
-      if (!res.data.roomID) {
-        set({ roomError: res.data.message || "Código de sala incorrecto" });
-        return;
-      }
+      const room = await RoomService.validatePassword(roomInput.roomPassword);
+      console.log(room)
 
-      set({ currentRoom: res.data, roomError: null });
-      localStorage.setItem("room", JSON.stringify(res.data));
-    } catch (err) {
-      console.error(err);
-      set({ roomError: "Código de sala incorrecto" });
+      set({ currentRoom: room, roomError: null });
+      localStorage.setItem("room", JSON.stringify(room));
+    } catch (err: any) {
+      set({ roomError: err.response.data.error.message || "Código de sala incorrecto" });
 
       setTimeout(() => {
         set({ roomError: null });

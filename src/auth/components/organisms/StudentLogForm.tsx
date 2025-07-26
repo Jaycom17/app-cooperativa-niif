@@ -2,19 +2,23 @@ import { useForm } from "react-hook-form";
 import { IoMdLogIn } from "react-icons/io";
 import type { Code } from "../../models/Code";
 import InputForm from "../../../components/atoms/InputForm";
+import { CodeSchema } from "../../models/Code";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 interface StudentLogFormProps {
   onSubmit: (data: Code) => void;
+  roomError: string | null;
 }
 
-function StudentLogForm({ onSubmit }: StudentLogFormProps) {
-  const roomError = false; // TODO: Replace with actual error state from context or props
+function StudentLogForm({ onSubmit, roomError }: StudentLogFormProps) {
 
   const {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
-  } = useForm<{ roomPassword: string }>();
+  } = useForm({
+    resolver: zodResolver(CodeSchema),
+  });
 
   return (
     <form

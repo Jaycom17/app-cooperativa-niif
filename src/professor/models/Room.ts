@@ -1,14 +1,13 @@
 import { z } from "zod";
 
 export interface RoomModel {
-  roomId: string;
+  roomID: string;
   roomName: string;
   roomPassword: string;
   roomDate: string;
   roomStatus: "open" | "closed";
   usuId: string;
 }
-
 
 export const RoomSchema = z.object({
   roomName: z
@@ -18,7 +17,12 @@ export const RoomSchema = z.object({
   roomPassword: z
     .string()
     .trim()
-    .min(1, { message: "El código de la sala es obligatorio" }),
+    .min(6, {
+      message: "El código de la sala debe tener al menos 6 caracteres.",
+    })
+    .max(100, {
+      message: "El código de la sala no puede tener más de 100 caracteres.",
+    }),
 });
 
 export type RoomFormSchema = z.infer<typeof RoomSchema>;

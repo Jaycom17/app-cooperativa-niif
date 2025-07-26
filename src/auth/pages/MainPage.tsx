@@ -2,13 +2,19 @@ import { Link, useNavigate } from "react-router-dom";
 import StudentLogForm from "../components/organisms/StudentLogForm";
 import logo from "../../assets/LogoUniversidadCooperativa.png";
 import type { Code } from "../models/Code";
+import { useRoomStore } from "../../stores/RoomStore";
 
 function MainPage() {
+
+  const { checkRoom, roomError, currentRoom } = useRoomStore();
 
   const navigate = useNavigate();
 
   const onSubmit = async (values: Code) => {
-    console.log(values);
+    await checkRoom(values);
+    if (!currentRoom) {
+      return;
+    }
     navigate("/middlewarestudent");
   };
 
@@ -20,7 +26,7 @@ function MainPage() {
         className="w-11/12 md:w-96"
       />
       <section className="p-6 w-11/12 md:w-[400px] bg-unicoop-black rounded-lg">
-        <StudentLogForm onSubmit={onSubmit} />
+        <StudentLogForm onSubmit={onSubmit} roomError={roomError} />
       </section>
       <p className="text-unicoop mt-5 font-medium text-center">
         ¿No eres un estudiante?{" "}

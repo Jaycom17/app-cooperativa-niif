@@ -16,9 +16,8 @@ const MainProfessorPage = () => {
 
   const getRooms = () => {
     RoomService.findAll()
-      .then((response) => {
-        const res = response as { status: number; data: any[] };
-        setRooms(res.data);
+      .then((rooms) => {
+        setRooms(rooms);
       })
       .catch(() => {
         alert("Error al cargar las salas");
@@ -83,7 +82,7 @@ const MainProfessorPage = () => {
         <section className="w-11/12 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 my-5 mx-auto justify-items-center">
           {/* TODO: Verificar lo del usuId */}
           {rooms.map((room) => (
-            <Room key={room.roomId} room={room} usuId={"someUsuId"} onRefresh={getRooms}/>
+            <Room key={room.roomID} room={room} usuId={"someUsuId"} onRefresh={getRooms}/>
           ))}
         </section>
       </main>

@@ -2,14 +2,14 @@
 import { create } from "zustand";
 import { studentProfile, logoutStudent } from "../services/login.service";
 import { createStudent, searchStudent } from "../services/student.service";
-import { Student, StudentInput } from "../types/student";
+import type { StudentModel } from "../student/models/Student";
 
 interface StudentState {
-  student: Student | null;
+  student: StudentModel | null;
   loading: boolean;
   studentError: string | null;
   initStudent: () => Promise<void>;
-  checkStudent: (student: StudentInput) => Promise<void>;
+  checkStudent: (student: StudentModel) => Promise<void>;
   sStudent: (cedula: string) => Promise<void>;
   logout: () => boolean;
 }

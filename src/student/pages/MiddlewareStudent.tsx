@@ -6,21 +6,15 @@ import { OPTIONS } from "../utils/Options";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { StudentSchema, type StudentModel } from "../models/Student";
 import InputForm from "../../components/atoms/InputForm";
+import { useStudentStore } from "../../stores/StudentStore";
+import { useRoomStore } from "../../stores/RoomStore";
 
 function MiddlewareStudent() {
   const [firstTime, setFirstTime] = useState(OPTIONS.NOTHING);
   const [animationClass, setAnimationClass] = useState("");
 
-  const { leaveRoom, currentRoom } = {
-    leaveRoom: () => {}, // Placeholder for the actual leaveRoom function
-    currentRoom: "sivb9quweb983128h", // Placeholder for the currentRoom state
-  };
-  const { student, checkStudent, sStudent, studentError } = {
-    student: null, // Placeholder for the student state
-    checkStudent: async (data: StudentModel) => {}, // Placeholder for the checkStudent function
-    sStudent: async (cedula: string) => {}, // Placeholder for the sStudent function
-    studentError: null, // Placeholder for the studentError state
-  };
+  const { leaveRoom, currentRoom } = useRoomStore();
+  const { student, checkStudent, sStudent, studentError } = useStudentStore();
 
   const navigate = useNavigate();
 

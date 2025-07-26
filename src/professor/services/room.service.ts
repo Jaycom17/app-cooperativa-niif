@@ -22,10 +22,15 @@ export const RoomService = {
   delete: (roomId: string): Promise<{ message: string }> =>{
     return axiosInstance.delete(`/rooms/${roomId}`);
   },
-  findAll: (): Promise<RoomModel[]> =>{
-    return axiosInstance.get("/rooms");
+  findAll: async (): Promise<RoomModel[]> =>{
+    const response = await axiosInstance.get("/rooms");
+    return response.data;
   },
-  updateRoomState: (roomData: { roomStatus: string }, roomId: string) =>{
-    return axiosInstance.put(`/rooms/${roomId}/state`, roomData);
+  updateRoomState: (roomData: { roomState: string }, roomID: string) =>{
+    axiosInstance.put(`/rooms/change-state/${roomID}`, roomData);
   },
+  validatePassword: async (roomPassword: string): Promise<{roomID: string, stuID: string}> => {
+    const response = await axiosInstance.post(`/rooms/validate-password`, { roomPassword });
+    return response.data;
+  }
 };
