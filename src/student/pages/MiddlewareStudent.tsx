@@ -27,6 +27,7 @@ function MiddlewareStudent() {
   });
 
   useEffect(() => {
+    console.log(currentRoom, student);
     if (!currentRoom) {
       navigate("/");
     }

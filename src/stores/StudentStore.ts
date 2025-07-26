@@ -1,7 +1,7 @@
 // store/useStudentStore.ts
 import { create } from "zustand";
-import { studentProfile, logoutStudent } from "../services/login.service";
-import { createStudent, searchStudent } from "../services/student.service";
+import { LoginService } from "../auth/services/login.service";
+import { StudentService } from "../student/services/student.service";
 import type { StudentModel } from "../student/models/Student";
 
 interface StudentState {
@@ -21,7 +21,7 @@ export const useStudentStore = create<StudentState>((set) => ({
 
   initStudent: async () => {
     try {
-      const res = await studentProfile();
+      const res = await LoginService.profile();
 
       if (res.statusText !== "OK") {
         set({ loading: false });
@@ -37,15 +37,16 @@ export const useStudentStore = create<StudentState>((set) => ({
   checkStudent: async (studentData) => {
     try {
       const room = localStorage.getItem("room");
-      if (!room) throw new Error("No hay sala activa");
+      if (!room) {
+        set({ loading: false });
+        return;
+      }
 
       const roomID = JSON.parse(room).roomID;
 
-      const res = await createStudent({ ...studentData, roomID });
+      const res = await StudentService.createStudent({ ...studentData, roomID });
 
-      if (res.statusText !== "Created") return;
-
-      set({ student: res.data, studentError: null });
+      set({ student: res, studentError: null });
     } catch (error: any) {
       set({
         studentError:
@@ -63,7 +64,7 @@ export const useStudentStore = create<StudentState>((set) => ({
 
       const roomID = JSON.parse(room).roomID;
 
-      const res = await searchStudent(cedula, roomID);
+      const res = await StudentService.getStudentByCedulaRoom(cedula, roomID);
 
       if (res.statusText !== "OK") return;
 
@@ -79,7 +80,7 @@ export const useStudentStore = create<StudentState>((set) => ({
   },
 
   logout: () => {
-    const result = logoutStudent();
+    const result = LoginService.logout();
 
     if (!result) return false;
 
