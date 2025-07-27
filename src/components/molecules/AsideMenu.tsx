@@ -8,7 +8,7 @@ interface AsideMenuProps {
   navRef: React.RefObject<HTMLDivElement | null>;
   setIsMenuOpen: (open: boolean) => void;
   navButtons: NavButton[];
-  singout: () => void;
+  handleSignout: () => void;
 }
 
 export function AsideMenu({
@@ -16,7 +16,7 @@ export function AsideMenu({
   navRef,
   setIsMenuOpen,
   navButtons,
-  singout,
+  handleSignout,
 }: AsideMenuProps) {
   return (
     <div
@@ -32,7 +32,7 @@ export function AsideMenu({
           onClick={() => setIsMenuOpen(false)}
           className="text-3xl bg-primary cursor-pointer hover:animate-spin-once hover:text-buttons-closing-red"
         />
-        <AccountDropdown onCerrarSesion={singout} />
+        <AccountDropdown onCerrarSesion={handleSignout} />
         {navButtons.map((data: NavButton, i: number) => (
           <Link
             to={data.to}

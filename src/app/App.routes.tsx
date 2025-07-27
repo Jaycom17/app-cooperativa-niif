@@ -12,6 +12,8 @@ import UpdateInfoAdminPage from "../admin/pages/UpdateInfoAdminPage";
 import Form110 from "../forms/pages/Form110";
 import ActivosFijosForm from "../forms/pages/ActivosFijosForm";
 import ESFpatrimonioForm from "../forms/pages/ESFPatrimonioForm";
+import ProtectedRoute from "../auth/components/templates/ProtectedRoute";
+import ProtectedRouteStudent from "../auth/components/templates/ProtectedRouteStudent";
 
 export const AppRoutes = () => {
   const routes = [
@@ -24,48 +26,63 @@ export const AppRoutes = () => {
       path: "/",
     },
     {
-      element: <MainStudent />,
-      path: "/student",
-    },
-    {
       element: <MiddlewareStudent />,
       path: "/middlewarestudent",
     },
     {
-      element: <MainAdminPage />,
-      path: "/admin",
+      element: <ProtectedRoute allowedRoles={["admin"]} />,
+      children: [
+        {
+          element: <MainAdminPage />,
+          path: "/admin",
+        },
+        {
+          element: <CreateProfessorPage />,
+          path: "/createprofessor",
+        },
+        {
+          element: <UpdateInfoAdminPage />,
+          path: "/updateinfoadmin",
+        },
+      ],
     },
     {
-      element: <MainProfessorPage />,
-      path: "/professor",
+      element: <ProtectedRoute allowedRoles={["professor"]} />,
+      children: [
+        {
+          element: <MainProfessorPage />,
+          path: "/professor",
+        },
+        {
+          element: <CreateRoomPage />,
+          path: "/createroom",
+        },
+        {
+          element: <ResetPasswordPage />,
+          path: "/resetpasswordteacher",
+        },
+      ],
     },
     {
-      element: <CreateProfessorPage />,
-      path: "/createprofessor",
-    },
-    {
-      element: <CreateRoomPage />,
-      path: "/createroom",
-    },
-    {
-      element: <ResetPasswordPage />,
-      path: "/resetpasswordteacher",
-    },
-    {
-      element: <UpdateInfoAdminPage />,
-      path: "/updateinfoadmin",
-    },
-    {
-      element: <Form110 />,
-      path: "/form110"
-    },
-    {
-      element: <ActivosFijosForm />,
-      path: "/activosfijos"
-    },
-    {
-      element: <ESFpatrimonioForm />,
-      path: "/esfpatrimonio"
+      element: <ProtectedRouteStudent allowedRoles={["student"]} />,
+      children: [
+        {
+          element: <MainStudent />,
+          path: "/student",
+        },
+        {
+          element: <Form110 />,
+          path: "/form110",
+        },
+        {
+          element: <ActivosFijosForm />,
+          path: "/activosfijos",
+        },
+        {
+          element: <ESFpatrimonioForm />,
+          path: "/esfpatrimonio",
+        },
+      ],
     },
   ];
 

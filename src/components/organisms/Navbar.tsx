@@ -5,6 +5,7 @@ import AccountDropdown from "../molecules/AccountDropdown";
 import { useNavigate } from "react-router-dom";
 import { AsideMenu } from "../molecules/AsideMenu";
 import type { NavButton } from "../types/componentsTypes";
+import { useAuthStore } from "../../stores/AuthStore";
 
 interface NavbarProps {
   navButtons: NavButton[];
@@ -17,10 +18,10 @@ const Navbar = ({ navButtons, title, navigateToUpdateInfo }: NavbarProps) => {
 
   const navigate = useNavigate();
 
-  //TODO: viene del estado global, pero se puede mejorar
-  const singout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("user");
+  const { signout } = useAuthStore();
+
+  const handleSignout = () => {
+    signout();
     navigate("/login");
   };
 
@@ -65,7 +66,7 @@ const Navbar = ({ navButtons, title, navigateToUpdateInfo }: NavbarProps) => {
           </Link>
         ))}
         <AccountDropdown
-          onCerrarSesion={singout}
+          onCerrarSesion={handleSignout}
           onActualizarDatos={() => navigate(navigateToUpdateInfo)}
         />
       </section>
@@ -75,7 +76,7 @@ const Navbar = ({ navButtons, title, navigateToUpdateInfo }: NavbarProps) => {
         navRef={navRef}
         setIsMenuOpen={setIsMenuOpen}
         navButtons={navButtons}
-        singout={singout}
+        handleSignout={handleSignout}
       />
     </nav>
   );

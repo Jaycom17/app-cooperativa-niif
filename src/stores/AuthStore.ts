@@ -24,24 +24,19 @@ export const useAuthStore = create<AuthState>((set) => ({
 
   checkLogin: async () => {
     try {
-      const res = await LoginService.profile();
-      if (res.data) {
-        set({ user: res.data, loading: false });
-      } else {
-        set({ loading: false });
-      }
-    } catch {
-      set({ loading: false });
+      const response = await LoginService.profile();
+      set({ user: response.data, loading: false });
+    } catch (error) {
+      set({ user: null, loading: false });
     }
   },
 
   signin: async (data) => {
     try {
       const res = await LoginService.login(data);
-      set({ user: res.data, loginError: null });
+      set({ user: res.data, loginError: null, loading: false });
     } catch (err) {
-      console.error(err);
-      set({ loginError: "Usuario o contraseña incorrectos" });
+      set({ loginError: "Usuario o contraseña incorrectos", loading: false });
 
       setTimeout(() => {
         set({ loginError: null });
@@ -49,8 +44,8 @@ export const useAuthStore = create<AuthState>((set) => ({
     }
   },
 
-  signout: () => {
-    LoginService.logout();
+  signout: async () => {
+    await LoginService.logout();
     set({ user: null, loading: false });
   },
 }));

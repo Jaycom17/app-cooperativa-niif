@@ -3,20 +3,33 @@ import StudentLogForm from "../components/organisms/StudentLogForm";
 import logo from "../../assets/LogoUniversidadCooperativa.png";
 import type { Code } from "../models/Code";
 import { useRoomStore } from "../../stores/RoomStore";
+import { useEffect, useRef } from "react";
 
 function MainPage() {
-
-  const { checkRoom, roomError, currentRoom } = useRoomStore();
+  const { checkRoom, roomError, currentRoom, initCheck } = useRoomStore();
+  const hasNavigatedRef = useRef(false);
 
   const navigate = useNavigate();
 
   const onSubmit = async (values: Code) => {
     await checkRoom(values);
+
     if (!currentRoom) {
       return;
     }
+
     navigate("/middlewarestudent");
   };
+
+  useEffect(() => {
+    initCheck();
+  }, [initCheck]);
+
+  useEffect(() => {
+    if (currentRoom && !hasNavigatedRef.current) {
+      navigate("/middlewarestudent");
+    }
+  }, [currentRoom, navigate]);
 
   return (
     <main className="flex flex-col mx-auto items-center min-h-screen place-content-center bg-background">

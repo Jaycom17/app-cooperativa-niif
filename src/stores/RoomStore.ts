@@ -11,7 +11,7 @@ interface RoomState {
   currentRoom: currentRoom | null;
   loading: boolean;
   roomError: string | null;
-  initCheck: () => Promise<void>;
+  initCheck: () => void;
   checkRoom: (room: { roomPassword: string }) => Promise<void>;
   leaveRoom: () => void;
 }
@@ -21,38 +21,39 @@ export const useRoomStore = create<RoomState>((set) => ({
   loading: true,
   roomError: null,
 
-  initCheck: async () => {
+  initCheck: () => {
     try {
       const stored = localStorage.getItem("room");
+
       if (!stored) {
-        set({ loading: false });
+        set({ loading: false, currentRoom: null });
         return;
       }
 
       const roomData = JSON.parse(stored);
-      const res = await RoomService.validatePassword(roomData.roomPassword);
 
-      if (!res.roomID) {
+      if (!roomData.roomID) {
         localStorage.removeItem("room");
-        set({ loading: false });
+        set({ loading: false, currentRoom: null });
         return;
       }
 
-      set({ currentRoom: res, loading: false });
+      set({ currentRoom: roomData, loading: false });
     } catch {
-      set({ loading: false });
+      set({ loading: false, currentRoom: null });
     }
   },
 
   checkRoom: async (roomInput) => {
     try {
       const room = await RoomService.validatePassword(roomInput.roomPassword);
-      console.log(room)
 
-      set({ currentRoom: room, roomError: null });
+      set({ currentRoom: room, roomError: null, loading: false });
+
       localStorage.setItem("room", JSON.stringify(room));
     } catch (err: any) {
-      set({ roomError: err.response.data.error.message || "Código de sala incorrecto" });
+      
+      set({ roomError: err.response.data.error.message || "Código de sala incorrecto", loading: false });
 
       setTimeout(() => {
         set({ roomError: null });
@@ -62,6 +63,6 @@ export const useRoomStore = create<RoomState>((set) => ({
 
   leaveRoom: () => {
     localStorage.removeItem("room");
-    set({ currentRoom: null });
+    set({ currentRoom: null, loading: false, roomError: null });
   },
 }));

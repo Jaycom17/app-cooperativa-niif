@@ -3,13 +3,15 @@ import { Link } from "react-router-dom";
 
 import { GrFormClose } from "react-icons/gr";
 import { MdMenu } from "react-icons/md";
+import { useRoomStore } from "../../stores/RoomStore";
+import { useStudentStore } from "../../stores/StudentStore";
 
 function AsideStudent() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const asideRef = useRef<HTMLElement | null>(null);
 
-  const leaveRoom = () => { };
-  const logout = () => { };
+  const { leaveRoom } = useRoomStore();
+  const { logout } = useStudentStore();
 
   const handleLeaveRoom = async () => {
     leaveRoom();

@@ -13,5 +13,9 @@ export const LoginService = {
     profile: async () => {
         const response = await axiosInstance.get("/auth/profile");
         return response;
+    },
+    studentProfile: async () => {
+        const response = await axiosInstance.get("/auth/studentProfile");
+        return response;
     }
 }

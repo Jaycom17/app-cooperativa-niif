@@ -13,8 +13,9 @@ function MiddlewareStudent() {
   const [firstTime, setFirstTime] = useState(OPTIONS.NOTHING);
   const [animationClass, setAnimationClass] = useState("");
 
-  const { leaveRoom, currentRoom } = useRoomStore();
-  const { student, checkStudent, sStudent, studentError } = useStudentStore();
+  const { leaveRoom, currentRoom, initCheck } = useRoomStore();
+  const { student, checkStudent, sStudent, studentError, studentProfile } =
+    useStudentStore();
 
   const navigate = useNavigate();
 
@@ -27,7 +28,16 @@ function MiddlewareStudent() {
   });
 
   useEffect(() => {
-    console.log(currentRoom, student);
+    const startLoading = async () => {
+      await studentProfile();
+
+      initCheck();
+    };
+    startLoading();
+  }, [initCheck, studentProfile]);
+
+  useEffect(() => {
+    console.log(student)
     if (!currentRoom) {
       navigate("/");
     }
@@ -35,10 +45,9 @@ function MiddlewareStudent() {
     if (student) {
       navigate("/student");
     }
-  }, [student]);
+  }, [currentRoom, navigate, student]);
 
   const onSubmit = async (data: StudentModel) => {
-    console.log(data)
     if (firstTime === OPTIONS.SI) {
       await checkStudent(data);
     } else if (firstTime === OPTIONS.NO) {
