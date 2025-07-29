@@ -1,8 +1,8 @@
 import { useForm } from "react-hook-form";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { FaCheckCircle } from "react-icons/fa";
 import { MdCreate } from "react-icons/md";
-import logo from '../../assets/LogoUniversidadCooperativa.png'
+import logo from "../../assets/LogoUniversidadCooperativa.png";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { UserEditSchema, type UserFormData } from "../models/User";
 import AdminLayout from "../components/templates/AdminLayout";
@@ -11,6 +11,7 @@ import PasswordInput from "../../components/atoms/PasswordInput";
 import { AdminService } from "../services/admin.service";
 
 function UpdateInfoAdminPage() {
+  const [id, setId] = useState<string>("");
 
   const {
     register,
@@ -18,32 +19,22 @@ function UpdateInfoAdminPage() {
     setValue,
     formState: { errors },
   } = useForm({
-    resolver: zodResolver(UserEditSchema)
+    resolver: zodResolver(UserEditSchema),
   });
 
-
-  const profile = async () => {
-    // Simulate an API call to get user profile data
-    return new Promise((resolve, reject) => {
-      setTimeout(() => {
-        resolve({
-          status: 200,
-          data: {
-            usuName: "Admin User",
-            usuEmail: "admin@algo.com",
-          }
-        });
-      }, 1000);
-    });
-  };
-
   useEffect(() => {
-    profile()
+    AdminService.profile()
       .then((response) => {
-        const res = response as { status: number; data: { usuName: string; usuEmail: string } };
-        const userData = res.data;
-        setValue("usuName", userData.usuName);
-        setValue("usuEmail", userData.usuEmail);
+        const { usuID } = response.data;
+        AdminService.getAdminById(usuID)
+          .then((user) => {
+            setId(user.usuID);
+            setValue("usuName", user.usuName);
+            setValue("usuEmail", user.usuEmail);
+          })
+          .catch(() => {
+            alert("Error al cargar la información del usuario");
+          });
       })
       .catch(() => {
         alert("Error al cargar la información del usuario");
@@ -51,24 +42,33 @@ function UpdateInfoAdminPage() {
   }, [setValue]);
 
   const onSubmit = (data: UserFormData) => {
-
     const userData = {
       usuName: data.usuName,
       usuEmail: data.usuEmail,
       usuPassword: data.usuPassword,
     };
 
-    AdminService.updateAdmin(userData).then((_res) => {
-      alert("Se han actualizado los datos del usuario");
-    }).catch(() => {
-      alert("Error al actualizar los datos del usuario");
-    });
+    AdminService.updateAdmin(userData, id)
+      .then((_res) => {
+        alert("Se han actualizado los datos del usuario");
+        setValue("usuName", userData.usuName);
+        setValue("usuEmail", userData.usuEmail);
+        setValue("usuPassword", "");
+        setValue("confirmPassword", "");
+      })
+      .catch(() => {
+        alert("Error al actualizar los datos del usuario");
+      });
   };
 
   return (
     <AdminLayout>
       <main className="w-full h-screen flex flex-col justify-center items-center bg-background text-white">
-        <img src={logo} alt="logo universidad cooperativa" className="w-11/12 sm:w-96" />
+        <img
+          src={logo}
+          alt="logo universidad cooperativa"
+          className="w-11/12 sm:w-96"
+        />
         <form
           className="flex flex-col items-center w-11/12 lg:w-3/5 bg-unicoop-black rounded-md gap-3 p-6"
           onSubmit={handleSubmit(onSubmit)}
@@ -117,8 +117,11 @@ function UpdateInfoAdminPage() {
               placeholder="Repita la contraseña"
             />
           </div>
-          <button type="submit" className="flex items-center p-1.5 mt-4 gap-1 bg-buttons-update-green hover:bg-buttons-update-green-h text-unicoop duration-150 rounded" >
-            <FaCheckCircle className='bg-transparent' /> Confirmar
+          <button
+            type="submit"
+            className="flex items-center p-1.5 mt-4 gap-1 bg-buttons-update-green hover:bg-buttons-update-green-h text-unicoop duration-150 rounded"
+          >
+            <FaCheckCircle className="bg-transparent" /> Confirmar
           </button>
         </form>
       </main>

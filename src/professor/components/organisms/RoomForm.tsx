@@ -13,10 +13,10 @@ interface RoomFormProps {
 }
 
 const RoomForm = ({ room, usuId, onRefresh, setOpen }: RoomFormProps) => {
-  const { register, errors, handleSubmit, isUpdate, isSubmitting } =
+  const { register, errors, handleSubmit, isUpdate, isSubmitting, roomErrors } =
     useRoomForm({
       room: room,
-      usuId: usuId,
+      usuID: usuId,
       onRefresh: onRefresh,
       closeModal: () => setOpen?.(false),
     });
@@ -38,6 +38,10 @@ const RoomForm = ({ room, usuId, onRefresh, setOpen }: RoomFormProps) => {
         </article>
       ) : (
         <MdAddHome className="text-unicoop text-4xl" />
+      )}
+
+      {roomErrors && (
+        <p className="text-red-500 text-sm mt-2">{roomErrors}</p>
       )}
 
       <section className="flex flex-col md:flex-row gap-3 w-11/12 mt-3">

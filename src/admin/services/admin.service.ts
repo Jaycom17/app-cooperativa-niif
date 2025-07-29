@@ -4,14 +4,14 @@ import axiosInstance from "../../config/axios";
 type AdminDTO = Omit<UserModel, "usuID">;
 
 export const AdminService = {
-  updateAdmin: (userData: AdminDTO): Promise<{ status: number }> =>
-    new Promise((resolve, reject) => {
-      setTimeout(() => {
-        if (userData.usuName && userData.usuEmail && userData.usuPassword) {
-          resolve({ status: 200 });
-        } else {
-          reject(new Error("Error updating admin data"));
-        }
-      }, 1000);
-    }),
+  updateAdmin: (userData: AdminDTO, usuID: string): Promise<void> =>{
+    return axiosInstance.put(`/users/admin/${usuID}`, userData)
+  },
+  profile: (): Promise<any> => {
+    return axiosInstance.get("/auth/profile");
+  },
+  getAdminById: async (usuID: string): Promise<UserModel> => {
+    const response = await axiosInstance.get(`/users/${usuID}`);
+    return response.data;
+  }
 };

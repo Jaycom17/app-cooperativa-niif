@@ -19,37 +19,10 @@ import { ResumenESFService } from "../../forms/services/resumenESF.service";
 function RoomReport() {
   const { roomID } = useParams();
   const [form, setForm] = useState("");
-  const [selectedStudent, setSelectedStudent] = useState(null);
+  const [selectedStudent, setSelectedStudent] = useState<string | null>(null);
   const [data, setData] = useState({});
 
-  const updateValue = (value, path, form) => {
-    // Crear una copia del objeto data
-    const updatedData = { ...form };
-    // Navegar al valor específico usando la ruta (path)
-    let currentLevel = updatedData;
-    const pathArray = path.split(".");
-    for (let i = 0; i < pathArray.length - 1; i++) {
-      currentLevel = currentLevel[pathArray[i]];
-    }
-
-    const lastKey = pathArray[pathArray.length - 1];
-
-    // Actualizar el valor
-    currentLevel[lastKey] = value;
-    setData(updatedData);
-  };
-
-  const recieveData = (key, path, form) => {
-    if (typeof key === "object") {
-      Object.entries(key).map(([key, val]) => {
-        recieveData(val, `${path}.${key}`, form);
-      });
-    } else {
-      updateValue(key, path, form);
-    }
-  };
-
-  const toNav = (formTo, stuID) => {
+  const toNav = (formTo: string, stuID:  string | undefined) => {
     setForm(formTo);
     if (formTo === "stuSelect") {
       setSelectedStudent(stuID || null);
@@ -57,11 +30,9 @@ function RoomReport() {
     switch (formTo) {
       case "form110":
         setData({});
-        Form110Service.getForm110ForProfessor(stuID, roomID!)
+        Form110Service.getForm110ForProfessor(stuID!, roomID!)
           .then((res) => {
-            Object.entries(res.data.r110Content).map(([key, val]) => {
-              recieveData(val, [key], data);
-            });
+            setData(res.data.r110Content);
             console.log(data);
           })
           .catch((error) => {
@@ -70,11 +41,9 @@ function RoomReport() {
         break;
       case "detalleReng":
         setData({});
-        DetalleReglonesService.getDetalleReglonesFormProfessor(stuID, roomID!)
+        DetalleReglonesService.getDetalleReglonesFormProfessor(stuID!, roomID!)
           .then((res) => {
-            Object.entries(res.data.detContent).map(([key, val]) => {
-              recieveData(val, [key], data);
-            });
+            setData(res.data.detContent);
             console.log(data);
           })
           .catch((error) => {
@@ -83,11 +52,9 @@ function RoomReport() {
         break;
       case "caratulaform":
         setData({});
-        CaratulaService.getCaratulaForProfessor(stuID, roomID!)
+        CaratulaService.getCaratulaForProfessor(stuID!, roomID!)
           .then((res) => {
-            Object.entries(res.data.carContent).map(([key, val]) => {
-              recieveData(val, [key], data);
-            });
+            setData(res.data.carContent);
             console.log(data);
           })
           .catch((error) => {
@@ -96,11 +63,9 @@ function RoomReport() {
         break;
       case "esfpatrimonioform":
         setData({});
-        EsfPatrimonioService.getEsfPatrimonioFormProfessor(stuID, roomID!)
+        EsfPatrimonioService.getEsfPatrimonioFormProfessor(stuID!, roomID!)
           .then((res) => {
-            Object.entries(res.data.esfContent).map(([key, val]) => {
-              recieveData(val, [key], data);
-            });
+            setData(res.data.esfContent);
             console.log(data);
           })
           .catch((error) => {
@@ -109,11 +74,9 @@ function RoomReport() {
         break;
       case "rentaliquida":
         setData({});
-        RentaLiquidaService.getRentaLiquidaForProfessor(stuID, roomID!)
+        RentaLiquidaService.getRentaLiquidaForProfessor(stuID!, roomID!)
           .then((res) => {
-            Object.entries(res.data.renContent).map(([key, val]) => {
-              recieveData(val, [key], data);
-            });
+            setData(res.data.renContent);
             console.log(data);
           })
           .catch((error) => {
@@ -122,11 +85,9 @@ function RoomReport() {
         break;
       case "impuestodiferido":
         setData({});
-        ImpuestoDiferidoService.getImpuestoDiferidoForProfessor(stuID, roomID!)
+        ImpuestoDiferidoService.getImpuestoDiferidoForProfessor(stuID!, roomID!)
           .then((res) => {
-            Object.entries(res.data.impContent).map(([key, val]) => {
-              recieveData(val, [key], data);
-            });
+            setData(res.data.impContent);
             console.log(data);
           })
           .catch((error) => {
@@ -135,11 +96,9 @@ function RoomReport() {
         break;
       case "ingrefactform":
         setData({});
-        IngresosFacturacionService.getIngresosFacturacionForProfessor(stuID, roomID!)
+        IngresosFacturacionService.getIngresosFacturacionForProfessor(stuID!, roomID!)
           .then((res) => {
-            Object.entries(res.data.ingContent).map(([key, val]) => {
-              recieveData(val, [key], data);
-            });
+            setData(res.data.ingContent);
             console.log(data);
           })
           .catch((error) => {
@@ -148,19 +107,25 @@ function RoomReport() {
         break;
       case "activosfijos":
         setData({});
-        ActivosFijosService.getActivosFijosFormProfessor(stuID, roomID!)
+        ActivosFijosService.getActivosFijosFormProfessor(stuID!, roomID!)
           .then((res) => {
-            Object.entries(res.data.actContent).map(([key, val]) => {
-              recieveData(val, [key], data);
-            });
+            setData(res.data.actContent);
             console.log(data);
           })
           .catch((error) => {
             console.log(error);
           });
         break;
-      case "stuSelect":
-
+      case "resumenesf":
+        setData({});
+        ResumenESFService.getResumenESFForProfessor(stuID!, roomID!)
+          .then((res) => {
+            setData(res.data.resContent);
+            console.log(data);
+          })
+          .catch((error) => {
+            console.log(error);
+          });
         break;
     }
     console.log(formTo, stuID);
@@ -202,7 +167,7 @@ function RoomReport() {
               {forms.map((form, index) => (
                 <button
                   key={index}
-                  onClick={() => toNav(form.to, selectedStudent.stuID)}
+                  onClick={() => toNav(form.to, selectedStudent)}
                   className="flex items-center hover:scale-105 hover:bg-slate-100 duration-150 justify-center w-full flex-col rounded-2xl p-2"
                 >
                   <img
@@ -216,7 +181,7 @@ function RoomReport() {
             </section>
           </div>
         )}
-        {form !== "" && form !== "stuSelect" && (
+        {form !== "" && Object.keys(data).length > 0 && (
           <GenericTabs
             json={data}
             onReport={true}

@@ -1,9 +1,9 @@
 import GenericValues from "./GenericValues";
 import TabBar from "../../../forms/components/TabBar";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 interface GenericTabsProps {
-  json: Record<string, any>;
+  json: any;
   TabsNames?: Record<string, string>;
   ValuesNames?: Record<string, string>;
   onReport?: boolean;
@@ -17,12 +17,20 @@ function GenericTabs({
 }: GenericTabsProps) {
 
   const keys = json ? Object.keys(json) : [];
+  
   const tabs = keys.map((key) => ({
     name: key,
     label: TabsNames?.[key] || key,
   }));
 
-  const [activeTab, setActiveTab] = useState(() => tabs[0]?.name || "");
+  const [activeTab, setActiveTab] = useState("");
+
+  useEffect(() => {
+    console.log(activeTab, tabs);
+    if (tabs.length > 0 && !activeTab) {
+      setActiveTab(tabs[0].name);
+    }
+  }, [tabs, activeTab]);
 
   const renderForm = (json: any) => (
     <GenericValues json={json} ValuesNames={ValuesNames!} />

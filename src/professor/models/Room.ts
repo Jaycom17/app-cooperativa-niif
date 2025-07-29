@@ -6,7 +6,7 @@ export interface RoomModel {
   roomPassword: string;
   roomDate: string;
   roomStatus: "open" | "closed";
-  usuId: string;
+  usuID: string;
 }
 
 export const RoomSchema = z.object({

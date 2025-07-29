@@ -1,10 +1,10 @@
 import type { RoomModel } from "../models/Room";
 import axiosInstance from "../../config/axios";
 
-type CreateDto = Omit<RoomModel, "roomId" | "roomDate" | "roomStatus">;
+type CreateDto = Omit<RoomModel, "roomID" | "roomDate" | "roomStatus">;
 type UpdateDto = Omit<
   RoomModel,
-  "roomId" | "roomDate" | "roomStatus" | "usuId"
+  "roomID" | "roomDate" | "roomStatus" | "usuID"
 >;
 
 export const RoomService = {

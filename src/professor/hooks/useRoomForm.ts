@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { RoomService } from "../services/room.service";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
@@ -8,19 +8,20 @@ import type { RoomModel } from "../models/Room";
 
 interface UseRoomFormOptions {
   room?: RoomModel;
-  usuId: string;
+  usuID: string;
   onRefresh?: () => void;
   closeModal?: () => void;
 }
 
 export function useRoomForm({
   room,
-  usuId,
+  usuID,
   onRefresh,
   closeModal,
 }: UseRoomFormOptions) {
   const navigate = useNavigate();
   const isUpdate = Boolean(room);
+  const [roomErrors, setRoomErrors] = useState("");
 
   const {
     register,
@@ -43,7 +44,7 @@ export function useRoomForm({
   const onSubmit = async (values: RoomFormSchema) => {
     try {
       if (isUpdate) {
-        await RoomService.update(room?.roomId!, {
+        await RoomService.update(room?.roomID!, {
           roomName: values.roomName,
           roomPassword: values.roomPassword,
         });
@@ -53,13 +54,16 @@ export function useRoomForm({
       } else {
         await RoomService.create({
           ...values,
-          usuId,
+          usuID,
         });
         alert("Sala creada");
         navigate("/professor");
       }
-    } catch {
-      alert("Algo salió mal, intenta de nuevo");
+    } catch (error: any) {
+      setRoomErrors(error.response.data.error.message || "Error al crear o actualizar la sala");
+      setTimeout(() => {
+        setRoomErrors("");
+      }, 5000);
     }
   };
 
@@ -69,5 +73,6 @@ export function useRoomForm({
     isUpdate,
     isSubmitting,
     handleSubmit: handleSubmit(onSubmit),
+    roomErrors,
   };
 }

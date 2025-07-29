@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { IoPersonAddSharp } from "react-icons/io5";
@@ -18,6 +18,7 @@ interface ProfFormProps {
 
 const ProfForm = ({ professor, onRefresh, setOpen }: ProfFormProps) => {
   const isUpdate = Boolean(professor);
+  const [profErrors, setProfErrors] = useState("");
 
   const navigate = useNavigate();
 
@@ -50,16 +51,22 @@ const ProfForm = ({ professor, onRefresh, setOpen }: ProfFormProps) => {
         alert("Se han actualizado los datos del profesor");
         onRefresh!();
         setOpen!(false);
-      }).catch(() => {
-        alert("Error al actualizar los datos del docente");
+      }).catch((error: any) => {
+        setProfErrors( error.response.data.error.message || "Error al actualizar los datos del profesor");
+        setTimeout(() => {
+          setProfErrors("");
+        }, 5000);
       })
     }
     else {
       ProfessorService.createProfessor(professorData).then(() => {
         alert("Profesor creado exitosamente");
         navigate("/admin");
-      }).catch(() => {
-        alert("Error al crear el profesor");
+      }).catch((error: any) => {
+        setProfErrors( error.response.data.error.message || "Error al crear el profesor");
+        setTimeout(() => {
+          setProfErrors("");
+        }, 5000);
       });
     }
   };
@@ -73,6 +80,10 @@ const ProfForm = ({ professor, onRefresh, setOpen }: ProfFormProps) => {
           <p className="text-center">A continuación, puede actualizar los datos del profesor. Recuerde informar al docente los cambios realizados</p>
         </article>
       ) : <IoPersonAddSharp className="text-unicoop text-4xl" />}
+      {profErrors && (
+        <p className="text-red-500 text-sm mt-2">{profErrors}</p>
+      )}
+
       <section className="flex flex-col md:flex-row gap-3 w-11/12">
         <div className="w-full flex flex-col items-center">
           <InputForm errors={errors} register={register} inputName="usuName" placeholder="Nombre" />
@@ -81,7 +92,6 @@ const ProfForm = ({ professor, onRefresh, setOpen }: ProfFormProps) => {
           <InputForm errors={errors} register={register} inputName="usuEmail" placeholder="Correo electronico" type="email" />
         </div>
       </section>
-
       <div className="w-11/12">
         <PasswordInput register={register} errors={errors} inputName="usuPassword" placeholder="Contraseña" />
       </div>

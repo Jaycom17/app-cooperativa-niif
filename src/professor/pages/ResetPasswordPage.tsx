@@ -25,7 +25,7 @@ function ResetPasswordPage() {
   //TODO: cambiar el await por un then catch
   const onSubmit = async (data: PasswordModel) => {
     try {
-      const res = await UpdatePasswordService.updatePassword(data);
+      UpdatePasswordService.updatePassword(data);
       alert("Contraseña cambiada correctamente");
       setValue("usuOldPassword", "");
       setValue("usuPassword", "");

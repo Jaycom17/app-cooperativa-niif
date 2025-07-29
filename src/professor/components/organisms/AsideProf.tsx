@@ -160,7 +160,7 @@ const AsideProf = ({ toNav }: AsideProfProps) => {
         <section className="bg-primary rounded-md text-black">
           <div className="relative w-10/12 p-2 mx-auto">
             <input
-              className="w-full mx-auto p-1.5 rounded-md mt-2"
+              className="w-full mx-auto p-1.5 rounded-md mt-2 text-white bg-unicoop-slate-blue"
               placeholder="Buscar estudiante"
               type="text"
               onChange={searchStudent}
