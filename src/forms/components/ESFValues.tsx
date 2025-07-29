@@ -1,15 +1,12 @@
-import { rentaLiquidaNames } from "../utils/RentaLiquida";
+import { ValuesNames, CalculatedValues } from "../utils/esfPatrimonio";
 
-interface ResumenESFValuesProps {
-    title?: string;
+interface ESFValuesProps {
     path: string;
     data: any;
     handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
-const CalculatedValues = [];
-
-function ResumenESFValues({ title, path, data, handleChange }: ResumenESFValuesProps) {
+function ESFvalues({ path, data, handleChange }: ESFValuesProps) {
   const renderTextField = (sectionData, sectionTitle = "", value = 0) => {
     let newPath = "";
     if (sectionTitle !== "") {
@@ -21,7 +18,7 @@ function ResumenESFValues({ title, path, data, handleChange }: ResumenESFValuesP
       value = sectionData;
     }
     const pathParts = newPath.split(".");
-    if (CalculatedValues.includes(pathParts[pathParts.length - 1])) {
+    if (CalculatedValues.includes(pathParts.join("."))) {
       return <p className="p-1 text-xl font-medium border-b-4">{value}</p>;
     } else {
       return (
@@ -50,9 +47,7 @@ function ResumenESFValues({ title, path, data, handleChange }: ResumenESFValuesP
         <section className="grid grid-cols-1 sm:grid-cols-2  lg:grid-cols-4 gap-3">
           {Object.keys(sectionData).map((key) => (
             <article key={key} className="flex flex-col border p-3 rounded-md">
-              <h4 className="mb-3 font-semibold">
-                {rentaLiquidaNames[key] || key}
-              </h4>
+              <h4 className="mb-3 font-semibold">{ValuesNames[key] || key}</h4>
               <section className="flex flex-col gap-y-2">
                 {typeof sectionData[key] === "object" ? (
                   Object.entries(sectionData[key]).map(([subKey, subValue]) => (
@@ -61,7 +56,7 @@ function ResumenESFValues({ title, path, data, handleChange }: ResumenESFValuesP
                       className="flex flex-col space-y-2 bg-white"
                     >
                       <label className="bg-white text-sm" htmlFor={subKey}>
-                        {rentaLiquidaNames[subKey] || subKey}
+                        {ValuesNames[subKey] || subKey}
                       </label>
                       {
                         <>
@@ -100,28 +95,47 @@ function ResumenESFValues({ title, path, data, handleChange }: ResumenESFValuesP
     return (
       <div className="flex flex-col border my-4 rounded-md p-4 gap-4 bg-white">
         <h3 className="w-full font-bold text-xl pb-2">
-          {rentaLiquidaNames[path] || path}
+          {ValuesNames[path] || path}
         </h3>
         {renderTextField(data)}
       </div>
     );
   }
 
+  const dataKeys = Object.keys(data);
+
   return (
     <>
-      {Object.keys(data).map((key) => (
+      {dataKeys.map((key) => (
         <div
           key={key}
           className="flex flex-col border my-4 rounded-md p-4 gap-4 bg-white"
         >
           <h3 className="w-full font-bold text-xl pb-2">
-            {rentaLiquidaNames[key] || key}
+            {ValuesNames[key] || key}
           </h3>
-          {<>{renderSection(data[key], key)}</>}
+          {Object.keys(data[key]).some(
+            (subKey) => typeof data[key][subKey] === "object"
+          )
+            ? Object.keys(data[key]).map(
+                (subKey) =>
+                  typeof data[key][subKey] === "object" && (
+                    <div
+                      key={subKey}
+                      className="flex flex-col border my-4 rounded-md p-4 gap-4 bg-white"
+                    >
+                      <h3 className="w-full font-bold text-xl pb-2">
+                        {ValuesNames[subKey] || subKey}
+                      </h3>
+                      {renderSection(data[key][subKey], `${key}.${subKey}`)}
+                    </div>
+                  )
+              )
+            : renderSection(data[key], key)}
         </div>
       ))}
     </>
   );
 }
 
-export default ResumenESFValues;
+export default ESFvalues;

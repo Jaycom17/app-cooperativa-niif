@@ -3,7 +3,7 @@ import Form110Values from "../components/Form110Values";
 import Accordeon from "../components/Accordeon";
 import TabBar from "../components/TabBar";
 import { ValuesNames } from "../utils/form110";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Form110Service } from "../services/form110.service";
 
 const Form110 = () => {
@@ -146,6 +146,8 @@ const Form110 = () => {
       PagoTot: 0,
     },
   });
+
+  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const updateValue = (value: string | number, path: string) => {
     // Crear una copia del objeto data
@@ -499,8 +501,15 @@ const Form110 = () => {
 
     // Calculo de los totales
     setData(updatedData);
-    console.log(data);
-    Form110Service.updateForm110ForStudent(data);
+
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+    }
+
+    timeoutRef.current = setTimeout(() => {
+      Form110Service.updateForm110ForStudent(updatedData);
+      timeoutRef.current = null;
+    }, 5000);
   };
 
   const tabs = [

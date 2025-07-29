@@ -1,11 +1,11 @@
 interface YesNoSelectProps {
     message: string;
     path: string;
-    data: any;
+    value: any;
     handleChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
 }
 
-function YesNoSelect({ message, path, data, handleChange }: YesNoSelectProps) {
+function YesNoSelect({ message, path, value, handleChange }: YesNoSelectProps) {
     return (
         <div className="flex items-center gap-2 justify-between bg-gray-200 p-1 rounded">
             <h3 className="font-semibold">{message}</h3>
@@ -13,7 +13,7 @@ function YesNoSelect({ message, path, data, handleChange }: YesNoSelectProps) {
                 className="border-none rounded"
                 name={path}
                 id=""
-                defaultValue={data ? 'true' : 'false'}
+                value={value ? 'true' : 'false'}
                 onChange={
                     (e) => handleChange(e)
                 }

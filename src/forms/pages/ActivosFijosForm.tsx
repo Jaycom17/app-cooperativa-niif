@@ -1,15 +1,27 @@
 import StudentLayout from "../../components/templates/StudentLayout";
-import ActivosFijosValues from "../components/Form110Values";
+import ActivosFijosValues from "../components/ActivosFijosValues";
 import ActivosFijosTotals from "../components/ActivosFijosTotals";
 import basicInformation from "../models/ActivosFijos.json";
 import Accordeon from "../components/Accordeon";
 import TabBar from "../components/TabBar";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import {
+  friendlyNamesPPE,
+  friendlyNamesAI,
+  calculateCostoImpNetoFinPeriodo,
+  calculateAjusteImpNetoFinPeriodo,
+  calculateSubTotalFinPeriodo,
+  calculateTotalNetoFinPeriodo,
+  calculateValorNetoFinPeriodo,
+  calcultateTotal,
+} from "../utils/ActivosFijos";
 
 import { ActivosFijosService } from "../services/activosFijos.service";
 
 const ActivosFijosForm = () => {
   const [data, setData] = useState(basicInformation);
+
+  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const tabs = [
     { name: "PPE", label: "Propiedades, plantas y equipos" },
@@ -21,69 +33,11 @@ const ActivosFijosForm = () => {
 
   const [activeTab, setActiveTab] = useState(tabs[0].name);
 
-  const updateArray = (length, path) => {
-    // Crear una copia del objeto data
-    const updatedData = { ...data };
-
-    // Navegar al valor específico usando la ruta (path)
-    let currentLevel = updatedData;
-    const pathArray = path.split(".");
-    for (let i = 0; i < pathArray.length - 1; i++) {
-      currentLevel = currentLevel[pathArray[i]];
-    }
-
-    const lastKey = pathArray[pathArray.length - 1];
-
-    // Actualizar el valor
-    console.log("length", currentLevel[lastKey].length);
-    for (let i = 0; i < length; i++) {
-      if (currentLevel[lastKey].length < length) {
-        currentLevel[lastKey].push({
-          ...addRetencion,
-        });
-      }
-    }
-    setData(updatedData);
-  };
-
-  const updateValue = (value, path) => {
-    // Crear una copia del objeto data
-    const updatedData = { ...data };
-
-    // Navegar al valor específico usando la ruta (path)
-    let currentLevel = updatedData;
-    const pathArray = path.split(".");
-    for (let i = 0; i < pathArray.length - 1; i++) {
-      currentLevel = currentLevel[pathArray[i]];
-    }
-
-    const lastKey = pathArray[pathArray.length - 1];
-
-    // Actualizar el valor
-    currentLevel[lastKey] = value;
-    setData(updatedData);
-  };
-
-  const recieveData = (key, path) => {
-    if (Array.isArray(key) && key.length > 1) {
-      updateArray(key.length, path);
-    }
-    if (typeof key === "object") {
-      Object.entries(key).map(([key, val]) => {
-        recieveData(val, `${path}.${key}`);
-      });
-    } else {
-      updateValue(key, path);
-    }
-  };
-
   useEffect(() => {
     ActivosFijosService.getActivosFijosFormStudent()
       .then((response) => {
         if (response.status === 200) {
-          Object.entries(response.data.actContent).map(([key, val]) => {
-            recieveData(val, key);
-          });
+          setData(response.data.actContent);
         } else {
           console.error("Error en la respuesta", response);
         }
@@ -114,53 +68,121 @@ const ActivosFijosForm = () => {
         }
       }
 
-      // Calcular los totales
-      const calculateTotals = (obj) => {
-        const totals = {};
+      const keys = Object.keys(newData);
 
-        Object.entries(obj).forEach(([key, values]) => {
-          if (
-            key !== "Total" &&
-            typeof values === "object" &&
-            values !== null
-          ) {
-            Object.entries(values).forEach(([subKey, subValue]) => {
-              if (typeof subValue === "number") {
-                if (!totals[subKey]) {
-                  totals[subKey] = 0;
-                }
-                totals[subKey] += subValue;
-              }
-            });
+      keys.forEach((key) => {
+        Object.keys(newData[key]).forEach((subKey) => {
+          const contables = newData[key][subKey].Contables;
+          const fiscales = newData[key][subKey].Fiscales;
+
+          if (contables && contables.ImporteNeto) {
+            contables.ImporteNeto.Costo = calculateCostoImpNetoFinPeriodo(
+              newData[key][subKey]
+            );
+            contables.ImporteNeto.Ajuste = calculateAjusteImpNetoFinPeriodo(
+              newData[key][subKey]
+            );
+          }
+
+          if (fiscales) {
+            fiscales.SubtotalFinalPeriodo = calculateSubTotalFinPeriodo(
+              newData[key][subKey]
+            );
+            fiscales.TotalNeto = calculateTotalNetoFinPeriodo(
+              newData[key][subKey]
+            );
+            fiscales.ValorNeto = calculateValorNetoFinPeriodo(
+              newData[key][subKey]
+            );
           }
         });
+      });
 
-        return totals;
-      };
+      const PPE = newData.PropiedadesPlantasEquipos;
+      const PI = newData.PropiedadesInversión;
+      const ANCMV = newData.ANCMV.ANCMV;
+      const AI = newData.ActivosIntangibles;
+      const TotalPPEPIANCMV = newData.TotalPPEPIANCMV;
+      const TotalTodo = newData.TotalTodo;
 
-      // Actualizar los totales de PropiedadesInversión
-      const PPE_Total = calculateTotals(newData.PropiedadesPlantasEquipos);
-      const PI_Total = calculateTotals(newData.PropiedadesInversión);
-      const AI_Total = calculateTotals(newData.ActivosIntangibles);
+      const elementosPPE = [
+        PPE.Terrenos,
+        PPE.Edificios,
+        PPE.Maquinaria,
+        PPE.Buques,
+        PPE.Aeronave,
+        PPE.EquiposTransporte,
+        PPE.EnseresAccesorios,
+        PPE.EquiposInformaticos,
+        PPE.EquiposRedesComunicacion,
+        PPE.InfraestructuraRed,
+        PPE.ActivosTangiblesExploracionEvaluacion,
+        PPE.ActivosMineria,
+        PPE.ActivosPetroleoGas,
+        PPE.PPyEArrendamientoOperativo,
+        PPE.PlantasProductoras,
+        PPE.AnimalesProductores,
+        PPE.ConstruccionesProceso,
+        PPE.Otras,
+      ];
 
-      newData.PropiedadesPlantasEquipos.Total = PPE_Total;
-      newData.PropiedadesInversión.Total = PI_Total;
-      newData.ActivosIntangibles.Total = AI_Total;
+      const elementosPI = [PI.Terrenos, PI.Edificios];
 
-      console.log(newData); // Para depuración
+      const elementosAI = [
+        AI.MarcasComerciales,
+        AI.ActivosIntangiblesExploracionEvaluacion,
+        AI.CabecerasOeriodicosRevistasTitulosPublicaciones,
+        AI.ProgramasAplicacionesInformaticos,
+        AI.LicenciasFranquicias,
+        AI.PropiedadIntelectualPatentesPropiedadIndustrialServiciosDerechosOperacion,
+        AI.RecetasFormulasModelosDiseñosPrototipos,
+        AI.Concesiones,
+        AI.DesembolsosDesarrolloCapitalizados,
+        AI.ActivosIntangiblesDesarrollo,
+        AI.Plusvalia,
+        AI.MejorasDerechosArrendamiento,
+        AI.SubvencionesEstado,
+        AI.Otros,
+      ];
 
-      setData(newData);
-      ActivosFijosService.updateACtivosFijosFormStudent(newData);
+      const elementosPPEPIANCMV = [PPE.Total, PI.Total, ANCMV];
+
+      const elementosTodo = [TotalPPEPIANCMV, AI.Total];
+
+      calcultateTotal(PPE.Total, elementosPPE);
+      calcultateTotal(PI.Total, elementosPI);
+      calcultateTotal(AI.Total, elementosAI);
+      calcultateTotal(TotalPPEPIANCMV, elementosPPEPIANCMV);
+      calcultateTotal(TotalTodo, elementosTodo);
+
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+
+      timeoutRef.current = setTimeout(() => {
+        ActivosFijosService.updateACtivosFijosFormStudent(newData);
+        timeoutRef.current = null;
+      }, 5000);
+
+      return newData;
     });
   };
 
-  const renderSections = (sectionData, pathPrefix, excludeSection = "") => {
+  const renderSections = (
+    sectionData,
+    pathPrefix,
+    excludeSection = "",
+    friendlyNames = []
+  ) => {
     return Object.keys(sectionData).map((sectionKey) => {
       if (sectionKey === excludeSection) return null;
+
+      const friendlyName = friendlyNames[sectionKey] || sectionKey;
+
       return (
-        <Accordeon key={sectionKey} title={sectionKey}>
+        <Accordeon key={sectionKey} title={friendlyName}>
           <ActivosFijosValues
-            title={sectionKey}
+            title={friendlyName}
             path={`${pathPrefix}.${sectionKey}`}
             data={sectionData[sectionKey]}
             handleChange={handleChange}
@@ -178,7 +200,8 @@ const ActivosFijosForm = () => {
           renderSections(
             data.PropiedadesPlantasEquipos,
             "PropiedadesPlantasEquipos",
-            "Total"
+            "Total",
+            friendlyNamesPPE
           )}
         {activeTab === "PI" &&
           renderSections(
@@ -189,8 +212,8 @@ const ActivosFijosForm = () => {
         {activeTab === "ANCMV" && (
           <ActivosFijosValues
             title={"ANCMV"}
-            path={"ANCMV"}
-            data={data.ANCMV}
+            path={"ANCMV.ANCMV"}
+            data={data.ANCMV.ANCMV}
             handleChange={handleChange}
           />
         )}
@@ -198,7 +221,8 @@ const ActivosFijosForm = () => {
           renderSections(
             data.ActivosIntangibles,
             "ActivosIntangibles",
-            "Total"
+            "Total",
+            friendlyNamesAI
           )}
         {activeTab === "TOTALES" && (
           <div>
@@ -209,19 +233,28 @@ const ActivosFijosForm = () => {
               />
             </Accordeon>
             <Accordeon title={"Total Propiedades de inversión"}>
-              <ActivosFijosTotals title="Total PPE" data={data.ANCMV} />
+              <ActivosFijosTotals
+                title="Total PI"
+                data={data.PropiedadesInversión.Total}
+              />
             </Accordeon>
             <Accordeon title={"Total Activos Intangibles"}>
-              <ActivosFijosTotals title="Total PPE" data={data.ANCMV} />
+              <ActivosFijosTotals
+                title="Total AI"
+                data={data.ActivosIntangibles.Total}
+              />
             </Accordeon>
             <Accordeon title={"Total PPE, PI y ANCMV"}>
               <ActivosFijosTotals
-                title="Total PPE"
+                title="Total PPE, PI y ANCMV"
                 data={data.TotalPPEPIANCMV}
               />
             </Accordeon>
-            <Accordeon title={"Total Propiedades, plantas y equipos"}>
-              <ActivosFijosTotals title="Total PPE" data={data.ANCMV} />
+            <Accordeon title={"Total PPE, PI, ANCMV y AI"}>
+              <ActivosFijosTotals
+                title="Total PPE, PI, ANCMV y AI"
+                data={data.TotalTodo}
+              />
             </Accordeon>
           </div>
         )}

@@ -2,8 +2,9 @@ import StudentLayout from "../../components/templates/StudentLayout";
 import jsonData from "../models/ResumenESF.json";
 import ResumenESFValues from "../components/ResumenESFValues";
 import Accordeon from "../components/Accordeon";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import TabBar from "../components/TabBar";
+import { ResumenESFService } from "../services/resumenESF.service";
 
 function ResumenESFForm() {
   const tabs = [
@@ -17,6 +18,16 @@ function ResumenESFForm() {
 
   const [data, setData] = useState(jsonData);
   const [activeTab, setActiveTab] = useState(tabs[0].name);
+
+  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => {
+    ResumenESFService.getResumenESFForStudent().then((response) => {
+      if (response.data.resContent) {
+        setData(response.data.resContent);
+      }
+    });
+  }, []);
 
   const handleChange = (e) => {
     let { name, value } = e.target;
@@ -37,13 +48,24 @@ function ResumenESFForm() {
         temp = temp[pathArray[i]];
       }
     }
+    console.log(newData);
 
     setData(newData);
 
-    console.log(data);
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+    }
+
+    timeoutRef.current = setTimeout(() => {
+      ResumenESFService.updateResumenESFForStudent(newData);
+      timeoutRef.current = null;
+    }, 5000);
   };
 
   const renderSections = (sectionData, pathPrefix = "", friendlyNames = []) => {
+    if (!sectionData || typeof sectionData !== "object") {
+      return null;
+    }
     return Object.keys(sectionData).map((sectionKey) => {
       const friendlyName = friendlyNames[sectionKey] || sectionKey;
 
@@ -71,31 +93,25 @@ function ResumenESFForm() {
   };
 
   return (
-    <main className="flex md:flex-row w-full">
-      <StudentLayout>
-        <section className="w-full mt-12 md:mt-0 overflow-auto max-h-screen">
-          <TabBar
-            tabs={tabs}
-            activeTab={activeTab}
-            setActiveTab={setActiveTab}
-          />
-          {activeTab === "EstadoSituacionFinanciera" &&
-            renderSections(
-              data.EstadoSituacionFinanciera,
-              "EstadoSituacionFinanciera",
-              []
-            )}
-          {activeTab === "EstadosResultadoIntegral" &&
-            renderSections(
-              data.EstadosResultadoIntegral,
-              "EstadosResultadoIntegral",
-              []
-            )}
-          {activeTab === "ResultadoEjercicio" &&
-            renderSections(data.ResultadoEjercicio, "ResultadoEjercicio", [])}
-        </section>
-      </StudentLayout>
-    </main>
+    <StudentLayout>
+      <section className="w-full mt-12 md:mt-0 overflow-auto max-h-screen">
+        <TabBar tabs={tabs} activeTab={activeTab} setActiveTab={setActiveTab} />
+        {activeTab === "EstadoSituacionFinanciera" &&
+          renderSections(
+            data.EstadoSituacionFinanciera,
+            "EstadoSituacionFinanciera",
+            []
+          )}
+        {activeTab === "EstadosResultadoIntegral" &&
+          renderSections(
+            data.EstadosResultadoIntegral,
+            "EstadosResultadoIntegral",
+            []
+          )}
+        {activeTab === "ResultadoEjercicio" &&
+          renderSections(data.ResultadoEjercicio, "ResultadoEjercicio", [])}
+      </section>
+    </StudentLayout>
   );
 }
 

@@ -1,6 +1,6 @@
 import StudentLayout from "../../components/templates/StudentLayout";
 import YesNoSelect from "../../components/atoms/YesNoSelect";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { CaratulaService } from "../services/caratula.service";
 
 function CaratulaForm() {
@@ -51,98 +51,72 @@ function CaratulaForm() {
     NoTarjProf: 0,
   });
 
-  const updateValue = (value, path) => {
-    // Crear una copia del objeto data
-    const updatedData = { ...data };
-
-    // Navegar al valor específico usando la ruta (path)
-    let currentLevel = updatedData;
-    let pathArray = path;
-    if (path.includes(".")) {
-      pathArray = path.split(".");
-    }
-    for (let i = 0; i < pathArray.length - 1; i++) {
-      currentLevel = currentLevel[pathArray[i]];
-    }
-
-    const lastKey = pathArray[pathArray.length - 1];
-
-    // Actualizar el valor
-    currentLevel[lastKey] = value;
-    setData(updatedData);
-  };
-
-  const recieveData = (key, path) => {
-    if (typeof key === "object") {
-      Object.entries(key).map(([key, val]) => {
-        recieveData(val, `${path}.${key}`);
-      });
-    } else {
-      updateValue(key, path);
-    }
-  };
+  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
-    CaratulaService.getCaratulaForStudent()
-      .then((response) => {
-        if (response.status === 200) {
-          Object.entries(response.data.carContent).map(([key, val]) => {
-            recieveData(val, [key]);
-          });
-        } else {
-          console.error("Error en la respuesta", response);
-        }
-      })
-      .catch((error) => {
-        console.error("Error en la llamada a la API", error);
-      });
+    CaratulaService.getCaratulaForStudent().then((response) => {
+      console.log(response.data.carContent);
+      if (response.data.carContent) {
+        setData(response.data.carContent);
+      }
+    });
   }, []);
 
   const handleChange = (e) => {
     let { name, value } = e.target;
-    console.log(name, value);
-    console.log("Data", data);
+    console.log("Original Data", data);
 
     if (value === "") value = 0;
 
-    // Crear una copia del objeto data
-    const updatedData = { ...data };
+    const updatedData = structuredClone(data); // mejor que {...data} para objetos anidados
 
-    // Navegar al valor específico usando la ruta (name)
-    let currentLevel = updatedData;
     const pathArray = name.split(".");
-    console.log("patharray", pathArray);
+    console.log("Path array", pathArray);
+
+    let currentLevel = updatedData;
+
+    // Crear niveles intermedios si no existen
     for (let i = 0; i < pathArray.length - 1; i++) {
-      currentLevel = currentLevel[pathArray[i]];
+      const key = pathArray[i];
+      if (typeof currentLevel[key] !== "object" || currentLevel[key] === null) {
+        currentLevel[key] = {}; // Inicializar nivel si no existe o es nulo
+      }
+      currentLevel = currentLevel[key];
     }
 
     const lastKey = pathArray[pathArray.length - 1];
 
-    // Detectar el tipo de dato actual
-    const currentValueType = typeof currentLevel[lastKey];
+    // Detectar tipo anterior si existe
+    const existingValue = currentLevel[lastKey];
+    const existingType = typeof existingValue;
 
-    // Convertir el valor al tipo correcto
-    if (currentValueType === "number") {
-      value = parseFloat(value);
-    } else if (currentValueType === "boolean") {
+    // Conversión segura
+    if (existingType === "number") {
+      const parsed = parseFloat(value);
+      value = isNaN(parsed) ? 0 : parsed;
+    } else if (existingType === "boolean") {
       value = value === "true";
     }
-    // No es necesario convertir si es una cadena de texto (string)
 
-    // Actualizar el valor
     currentLevel[lastKey] = value;
 
-    // Actualizar el estado con el objeto modificado
+    console.log("Updated Data", updatedData);
 
-    // Calculo de los totales
-    setData(updatedData);
-    console.log(data);
-    CaratulaService.updateCaratulaForStudent(data);
+    setData(updatedData); // actualiza el estado
+
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+    }
+
+    timeoutRef.current = setTimeout(() => {
+      CaratulaService.updateCaratulaForStudent(updatedData);
+      timeoutRef.current = null;
+    }, 5000);
   };
 
   return (
     <StudentLayout>
-      <div className="flex bg-gray-100 rounded shadow-md">
+      <div className="flex bg-gray-100 rounded shadow-md w-full">
         <main className="overflow-auto max-h-screen w-full">
           <section className="p-2">
             <h2 className="font-bold text-xl mb-3 pl-10 md:pl-[0px]">
@@ -155,7 +129,7 @@ function CaratulaForm() {
               >
                 <p>Número de Identificación Tributaria (NIT)</p>
                 <input
-                  className=""
+                  className="p-1 bg-white rounded"
                   type="text"
                   value={data.DatDecl.NIT}
                   name="DatDecl.NIT"
@@ -169,7 +143,7 @@ function CaratulaForm() {
                 {" "}
                 DV
                 <input
-                  className=""
+                  className="p-1 bg-white rounded"
                   type="text"
                   value={data.DatDecl.DV}
                   name="DatDecl.DV"
@@ -182,7 +156,7 @@ function CaratulaForm() {
               >
                 Primer apellido
                 <input
-                  className=""
+                  className="p-1 bg-white rounded"
                   type="text"
                   value={data.DatDecl.PriApell}
                   name="DatDecl.PriApell"
@@ -195,7 +169,7 @@ function CaratulaForm() {
               >
                 Segundo apellido
                 <input
-                  className=""
+                  className="p-1 bg-white rounded"
                   type="text"
                   value={data.DatDecl.SegunApell}
                   name="DatDecl.SegunApell"
@@ -208,7 +182,7 @@ function CaratulaForm() {
               >
                 Primer nombre
                 <input
-                  className=""
+                  className="p-1 bg-white rounded"
                   type="text"
                   value={data.DatDecl.PriNomb}
                   name="DatDecl.PriNomb"
@@ -221,7 +195,7 @@ function CaratulaForm() {
               >
                 Otros nombres
                 <input
-                  className=""
+                  className="p-1 bg-white rounded"
                   type="text"
                   value={data.DatDecl.OtrosNomb}
                   name="DatDecl.OtrosNomb"

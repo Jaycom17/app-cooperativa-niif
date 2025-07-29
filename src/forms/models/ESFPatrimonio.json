@@ -1,5 +1,4 @@
 {
-  "ActivosPasivos": {
     "Activos": {
       "ActivosEquivalentesEfectivo": {
         "Efectivo": {
@@ -179,7 +178,7 @@
             "MayorValorFiscal": 0,
             "ValorFiscal": 0
           },
-          "InstrumentosDeudaPatrimonioCosto": {
+          "InstrumentosDeudaPatrimoniooCosto": {
             "ValorContable": 0,
             "EfectoConversion": 0,
             "MenorValorFiscal": 0,
@@ -506,12 +505,47 @@
           "ValorFiscal": 0
         }
       },
+      "ActivosImpuestosCorrientes": {
+        "SaldosaFavor": {
+          "ValorContable": 0,
+          "EfectoConversion": 0,
+          "MenorValorFiscal": 0,
+          "MayorValorFiscal": 0,
+          "ValorFiscal": 0
+        },
+        "SaldosaFavorOtrosImpuestos": {
+          "ValorContable": 0,
+          "EfectoConversion": 0,
+          "MenorValorFiscal": 0,
+          "MayorValorFiscal": 0,
+          "ValorFiscal": 0
+        },
+        "DescuentosTributarios" : {
+          "ValorContable": 0,
+          "EfectoConversion": 0,
+          "MenorValorFiscal": 0,
+          "MayorValorFiscal": 0,
+          "ValorFiscal": 0
+        },
+        "AnticiposyOtros" : {
+          "ValorContable": 0,
+          "EfectoConversion": 0,
+          "MenorValorFiscal": 0,
+          "MayorValorFiscal": 0,
+          "ValorFiscal": 0
+        },
+        "Total": {
+          "ValorContable": 0,
+          "EfectoConversion": 0,
+          "MenorValorFiscal": 0,
+          "MayorValorFiscal": 0,
+          "ValorFiscal": 0
+        }
+      },
       "ActivosImpuestosDiferidos": {
         "ValorContable": 0,
         "EfectoConversion": 0,
-        "MenorValorFiscal": 0,
-        "MayorValorFiscal": 0,
-        "ValorFiscal": 0
+        "MenorValorFiscal": 0
       },
       "PropiedadesPlantaEquipo": {
           "Terrenos": {
@@ -537,13 +571,6 @@
               "ValorFiscal": 0
             },
             "AjusteAcumuladoRevaluacionesReexpresiones": {
-              "ValorContable": 0,
-              "EfectoConversion": 0,
-              "MenorValorFiscal": 0,
-              "MayorValorFiscal": 0,
-              "ValorFiscal": 0
-            },
-            "Total": {
               "ValorContable": 0,
               "EfectoConversion": 0,
               "MenorValorFiscal": 0,
@@ -846,7 +873,13 @@
             "MayorValorFiscal": 0,
             "ValorFiscal": 0
           },
-          "Total": {}
+          "Total": {
+            "ValorContable": 0,
+            "EfectoConversion": 0,
+            "MenorValorFiscal": 0,
+            "MayorValorFiscal": 0,
+            "ValorFiscal": 0
+          }
       },
       "ActivosBiologicos": {
         "AnimalesVivos": {
@@ -899,7 +932,13 @@
             "MayorValorFiscal": 0,
             "ValorFiscal": 0
           },
-          "Total": {}
+          "Total": {
+            "ValorContable": 0,
+            "EfectoConversion": 0,
+            "MenorValorFiscal": 0,
+            "MayorValorFiscal": 0,
+            "ValorFiscal": 0
+          }
         },
         "PlantasProductorasCultivosConsumibles": {
           "PlantasProductorasMedidasAlCosto": {
@@ -945,6 +984,13 @@
             "ValorFiscal": 0
           },
           "CultivosConsumiblesMedidosAlValorRazonableMenosCostosDeVenta": {
+            "ValorContable": 0,
+            "EfectoConversion": 0,
+            "MenorValorFiscal": 0,
+            "MayorValorFiscal": 0,
+            "ValorFiscal": 0
+          },
+          "Total":{
             "ValorContable": 0,
             "EfectoConversion": 0,
             "MenorValorFiscal": 0,
@@ -1178,7 +1224,7 @@
             "MayorValorFiscal": 0,
             "ValorFiscal": 0
           },
-          "Otros": {
+          "Otrosimpuestos": {
             "ValorContable": 0,
             "EfectoConversion": 0,
             "MenorValorFiscal": 0,
@@ -1406,6 +1452,13 @@
           "ValorFiscal": 0
         }
       },
+    "TotalPatrimonio":{
+      "ValorContable": 0,
+      "EfectoConversion": 0,
+      "MenorValorFiscal": 0,
+      "MayorValorFiscal": 0,
+      "ValorFiscal": 0
+    },
     "PatrimonioContable": {
       "CapitalSocialReservas": {
         "CapitalPagado": {
@@ -1595,7 +1648,7 @@
         }
       },
       "Pasivos": {
-        "TotalIntereses": {
+        "TotalInteresespasivos": {
           "ValorContable": 0,
           "EfectoConversion": 0
         },
@@ -1632,5 +1685,4 @@
         }
       }
     }
-  }
 }

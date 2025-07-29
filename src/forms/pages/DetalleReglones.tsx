@@ -1,7 +1,7 @@
 import jsonData from "../models/DetalleReglones.json";
 import StudentLayout from "../../components/templates/StudentLayout";
 import FormTabs from "../components/FormTabs";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import {
   TabsNames,
   CalculatedValues,
@@ -15,6 +15,8 @@ import { DetalleReglonesService } from "../services/detalleReglones.service";
 
 const DetalleRenglones = () => {
   const [data, setData] = useState(jsonData);
+
+  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const updateValue = (value, path) => {
     // Crear una copia del objeto data
@@ -767,24 +769,29 @@ const DetalleRenglones = () => {
         })*/
     // Calculo de los totales
     setData(updatedData);
-    console.log(data);
-    DetalleReglonesService.updateADetalleReglonesFormStudent(data);
+
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+    }
+
+    timeoutRef.current = setTimeout(() => {
+      DetalleReglonesService.updateADetalleReglonesFormStudent(updatedData);
+      timeoutRef.current = null;
+    }, 5000);
   };
 
   return (
-    <main className="flex md:flex-row w-full">
-      <StudentLayout>
-        <FormTabs
-          json={data}
-          handleChange={handleChange}
-          handleAdd={handleAdd}
-          handleQuit={handleQuit}
-          TabsNames={TabsNames}
-          CalculatedValues={CalculatedValues}
-          ValuesNames={ValuesNames}
-        />
-      </StudentLayout>
-    </main>
+    <StudentLayout>
+      <FormTabs
+        json={data}
+        handleChange={handleChange}
+        handleAdd={handleAdd}
+        handleQuit={handleQuit}
+        TabsNames={TabsNames}
+        CalculatedValues={CalculatedValues}
+        ValuesNames={ValuesNames}
+      />
+    </StudentLayout>
   );
 };
 export default DetalleRenglones;

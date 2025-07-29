@@ -8,7 +8,8 @@ import {
   calculateValorFiscalInputs,
   excludedCalculateValorFiscalInputs,
 } from "../utils/RentaLiquida";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
+import { RentaLiquidaService } from "../services/rentaLiquida.service";
 
 function RentaLiquidaForm() {
   const tabs = [
@@ -73,6 +74,20 @@ function RentaLiquidaForm() {
       label: "Otros Campos",
     },
   ];
+
+  const [data, setData] = useState(jsonData);
+  const [activeTab, setActiveTab] = useState(tabs[0].name);
+
+  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => {
+    RentaLiquidaService.getRentaLiquidaForStudent().then((res) => {
+      console.log(res.data.renContent);
+      if (res.data.renContent) {
+        setData(res.data.renContent);
+      }
+    });
+  }, []);
 
   const calculateValorFiscal = (pathArray) => {
     if (
@@ -360,7 +375,7 @@ function RentaLiquidaForm() {
 
     newData.Costos.TotalCostos = { ...totalCostos };
   };
-  
+
   const calcuateSubSection = (total, section) => {
     total.ValorContable += section.ValorContable || 0;
     total.EfectoConversion += section.EfectoConversion || 0;
@@ -447,8 +462,6 @@ function RentaLiquidaForm() {
     return Otros;
   };
 
-  const [data, setData] = useState(jsonData);
-  const [activeTab, setActiveTab] = useState(tabs[0].name);
   const Otros = createOtrosSection();
 
   const handleChange = (e) => {
@@ -652,15 +665,25 @@ function RentaLiquidaForm() {
         ["Gastos", "GastosDistribucionVentas", "ManoObra"]
       ) || newData.Gastos.GastosDistribucionVentas.ManoObra.Total;
 
-    newData.Gastos.GastosDistribucionVentas.OtrosGastosDistribucionVentas.Total =
-      calculateTotalSectionGeneric(
-        [...pathArray],
-        {
-          ...newData.Gastos.GastosDistribucionVentas.OtrosGastosDistribucionVentas,
-        },
-        ["Gastos", "GastosDistribucionVentas", "OtrosGastosDistribucionVentas"]
-      ) ||
-      newData.Gastos.GastosDistribucionVentas.OtrosGastosDistribucionVentas.Total;
+    if (
+      newData?.Gastos?.GastosDistribucionVentas?.OtrosGastosDistribucionVentas
+    ) {
+      newData.Gastos.GastosDistribucionVentas.OtrosGastosDistribucionVentas.Total =
+        calculateTotalSectionGeneric(
+          [...pathArray],
+          {
+            ...newData.Gastos.GastosDistribucionVentas
+              .OtrosGastosDistribucionVentas,
+          },
+          [
+            "Gastos",
+            "GastosDistribucionVentas",
+            "OtrosGastosDistribucionVentas",
+          ]
+        ) ||
+        newData.Gastos.GastosDistribucionVentas.OtrosGastosDistribucionVentas
+          .Total;
+    }
 
     newData.Gastos.GastosDistribucionVentas.DepreciacionesAmortizacionesDeterioros.Total =
       calculateTotalSectionGeneric(
@@ -718,9 +741,22 @@ function RentaLiquidaForm() {
       ) || newData.Gastos.OtrosGastos.Total;
 
     setData(newData);
+
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+    }
+
+    timeoutRef.current = setTimeout(() => {
+      RentaLiquidaService.updateRentaLiquidaForStudent(newData);
+      timeoutRef.current = null;
+    }, 5000);
   };
 
-  const renderSections = (sectionData, pathPrefix = "", friendlyNames = []) => {
+  const renderSections = (
+    sectionData,
+    pathPrefix = "",
+    friendlyNames: Record<string, string> = {}
+  ) => {
     return Object.keys(sectionData).map((sectionKey) => {
       const friendlyName = friendlyNames[sectionKey] || sectionKey;
 
@@ -748,8 +784,7 @@ function RentaLiquidaForm() {
   };
 
   return (
-    <main className="flex md:flex-row w-full">
-        <StudentLayout>
+    <StudentLayout>
       <section className="w-full mt-12 md:mt-0 overflow-auto max-h-screen">
         <TabBar tabs={tabs} activeTab={activeTab} setActiveTab={setActiveTab} />
         {activeTab === "Ingresos" &&
@@ -827,8 +862,7 @@ function RentaLiquidaForm() {
         {activeTab === "OtrosDatosConSoloUnCampo" &&
           renderSections(Otros, "", rentaLiquidaNames)}
       </section>
-      </StudentLayout>
-    </main>
+    </StudentLayout>
   );
 }
 

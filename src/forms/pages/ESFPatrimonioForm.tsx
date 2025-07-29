@@ -1,1514 +1,1080 @@
-import { useState } from 'react';
-import basicInformation from '../models/ESFPatrimonio.json';
-import ESFvalues from '../components/Form110Values';
-import AsideStudent from '../../components/organisms/AsideStudent';
+import { useState, useEffect, useRef } from "react";
+import basicInformation from "../models/ESFPatrimonio.json";
+import StudentLayout from "../../components/templates/StudentLayout";
+import { EsfPatrimonioService } from "../services/esfPatrimonio.service";
+import {
+  ValuesNames,
+  excludedCalculateValorFiscalInputs,
+} from "../utils/esfPatrimonio";
+import TabBar from "../components/TabBar";
+import Accordeon from "../components/Accordeon";
+import EsfValues from "../components/ESFValues";
 
-const ESFpatrimonioForm = () => {
+const ESFpatrimonio = () => {
   const [data, setData] = useState(basicInformation);
-  const [activeTab, setActiveTab] = useState('activos');
-  const [expandedSection, setExpandedSection] = useState(null);
-  const [expandedSubSection, setExpandedSubSection] = useState(null);
-  const [expandedSubSubSection, setExpandedSubSubSection] = useState(null);
 
-  const handleChange = (e, path) => {
-    let { name, value } = e.target;
+  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-    if (value === '') value = 0;
-
-    const newData = { ...data };
-    path.reduce((acc, key, index) => {
-      if (index === path.length - 1) {
-        acc[key][name] = Number.parseInt(value);
-      }
-      return acc[key];
-    }, newData);
-
-    const calculateTotals = (obj) => {
-      const totals = {};
-
-      Object.entries(obj).forEach(([key, values]) => {
-        if (key !== 'Total' && typeof values === 'object' && values !== null) {
-          Object.entries(values).forEach(([subKey, subValue]) => {
-            if (typeof subValue === 'number') {
-              if (!totals[subKey]) {
-                totals[subKey] = 0;
-              }
-              totals[subKey] += subValue;
-            }
-          });
+  useEffect(() => {
+    EsfPatrimonioService.getEsfPatrimonioFormStudent()
+      .then((response) => {
+        if (response.status === 200) {
+          setData(response.data.esfContent);
+        } else {
+          console.error("Error en la respuesta", response);
         }
+      })
+      .catch((error) => {
+        console.error("Error en la llamada a la API", error);
       });
+  }, []);
+  // Activos Equivalentes Efectivo
+  const valorcontactivosequi = (currentData) => {
+    return (
+      (currentData.Efectivo.ValorContable || 0) +
+      (currentData.EquivalentesEfectivo.ValorContable || 0) +
+      (currentData.EfectivoRestringido.ValorContable || 0)
+    );
+  };
+  const efectconveractivosequi = (currentData) => {
+    return (
+      (currentData.Efectivo.EfectoConversion || 0) +
+      (currentData.EquivalentesEfectivo.EfectoConversion || 0) +
+      (currentData.EfectivoRestringido.EfectoConversion || 0)
+    );
+  };
+  const menorfiscalactivosequi = (currentData) => {
+    return (
+      (currentData.Efectivo.MenorValorFiscal || 0) +
+      (currentData.EquivalentesEfectivo.MenorValorFiscal || 0) +
+      (currentData.EfectivoRestringido.MenorValorFiscal || 0)
+    );
+  };
+  const mayorfiscalactivosequi = (currentData) => {
+    return (
+      (currentData.Efectivo.MayorValorFiscal || 0) +
+      (currentData.EquivalentesEfectivo.MayorValorFiscal || 0) +
+      (currentData.EfectivoRestringido.MayorValorFiscal || 0)
+    );
+  };
+  const valorfiscalactivosequi = (currentData) => {
+    return (
+      (currentData.Efectivo.ValorFiscal || 0) +
+      (currentData.EquivalentesEfectivo.ValorFiscal || 0) +
+      (currentData.EfectivoRestringido.ValorFiscal || 0)
+    );
+  };
+  // Inversiones Instrumentos Financieros Derivados VN
+  //Cuentas Comerciales Cobrar Otras Por Cobrar
+  const valorcontcuentascomercialestotal = (currentData) => {
+    return (
+      (currentData.CuentasDocumentosPorCobrar.Total.ValorContable || 0) -
+      (currentData.DeterioroAcumuladoValorCuentasDocumentosCobrar.Total
+        .ValorContable || 0)
+    );
+  };
+  const efectconvercuentascomercialestotal = (currentData) => {
+    return (
+      (currentData.CuentasDocumentosPorCobrar.Total.EfectoConversion || 0) -
+      (currentData.DeterioroAcumuladoValorCuentasDocumentosCobrar.Total
+        .EfectoConversion || 0)
+    );
+  };
+  const menorfiscalcuentascomercialestotal = (currentData) => {
+    return (
+      (currentData.CuentasDocumentosPorCobrar.Total.MenorValorFiscal || 0) -
+      (currentData.DeterioroAcumuladoValorCuentasDocumentosCobrar.Total
+        .MenorValorFiscal || 0)
+    );
+  };
+  const mayorfiscalcuentascomercialestotal = (currentData) => {
+    return (
+      (currentData.CuentasDocumentosPorCobrar.Total.MayorValorFiscal || 0) -
+      (currentData.DeterioroAcumuladoValorCuentasDocumentosCobrar.Total
+        .MayorValorFiscal || 0)
+    );
+  };
+  const valorfiscalcuentascomercialestotal = (currentData) => {
+    return (
+      (currentData.CuentasDocumentosPorCobrar.Total.ValorFiscal || 0) -
+      (currentData.DeterioroAcumuladoValorCuentasDocumentosCobrar.Total
+        .ValorFiscal || 0)
+    );
+  };
+  // //Cuentas Documentos Por Cobrar
+  const valorcontaccuentascomerciales = (currentData) => {
+    return (
+      (currentData.CarteraCreditoPrestamosBancarios.ValorContable || 0) +
+      (currentData.CuentasComercialesPorCobrar.ValorContable || 0) +
+      (currentData.CuentasPorCobrarAcuerdosConcesion.ValorContable || 0) +
+      (currentData.ArrendamientoFinancieroOLeasingFinanciero.ValorContable ||
+        0) +
+      (currentData.DividendosParticipaciones.ValorContable || 0) +
+      (currentData.CuentasPorCobrarSociosAccionistasParticipes.ValorContable ||
+        0) +
+      (currentData.CuentasDocumentosPorCobrarOtrasPartesRelacionadasAsociadas
+        .ValorContable || 0) +
+      (currentData.PrimasSegurosPorRecaudar.ValorContable || 0) +
+      (currentData.CarteraDificilCobro.ValorContable || 0) +
+      (currentData.ReclamacionesPorCobrar.ValorContable || 0) +
+      (currentData.AnticiposPagos.ValorContable || 0) +
+      (currentData.OtrasCuentasDocumentosPorCobrar.ValorContable || 0)
+    );
+  };
+  const efectconvercuentascomerciales = (currentData) => {
+    return (
+      (currentData.CarteraCreditoPrestamosBancarios.EfectoConversion || 0) +
+      (currentData.CuentasComercialesPorCobrar.EfectoConversion || 0) +
+      (currentData.CuentasPorCobrarAcuerdosConcesion.EfectoConversion || 0) +
+      (currentData.ArrendamientoFinancieroOLeasingFinanciero.EfectoConversion ||
+        0) +
+      (currentData.DividendosParticipaciones.EfectoConversion || 0) +
+      (currentData.CuentasPorCobrarSociosAccionistasParticipes
+        .EfectoConversion || 0) +
+      (currentData.CuentasDocumentosPorCobrarOtrasPartesRelacionadasAsociadas
+        .EfectoConversion || 0) +
+      (currentData.PrimasSegurosPorRecaudar.EfectoConversion || 0) +
+      (currentData.CarteraDificilCobro.EfectoConversion || 0) +
+      (currentData.ReclamacionesPorCobrar.EfectoConversion || 0) +
+      (currentData.AnticiposPagos.EfectoConversion || 0) +
+      (currentData.OtrasCuentasDocumentosPorCobrar.EfectoConversion || 0)
+    );
+  };
+  const menorfiscalcuentascomerciales = (currentData) => {
+    return (
+      (currentData.CarteraCreditoPrestamosBancarios.MenorValorFiscal || 0) +
+      (currentData.CuentasComercialesPorCobrar.MenorValorFiscal || 0) +
+      (currentData.CuentasPorCobrarAcuerdosConcesion.MenorValorFiscal || 0) +
+      (currentData.ArrendamientoFinancieroOLeasingFinanciero.MenorValorFiscal ||
+        0) +
+      (currentData.DividendosParticipaciones.MenorValorFiscal || 0) +
+      (currentData.CuentasPorCobrarSociosAccionistasParticipes
+        .MenorValorFiscal || 0) +
+      (currentData.CuentasDocumentosPorCobrarOtrasPartesRelacionadasAsociadas
+        .MenorValorFiscal || 0) +
+      (currentData.PrimasSegurosPorRecaudar.MenorValorFiscal || 0) +
+      (currentData.CarteraDificilCobro.MenorValorFiscal || 0) +
+      (currentData.ReclamacionesPorCobrar.MenorValorFiscal || 0) +
+      (currentData.AnticiposPagos.MenorValorFiscal || 0) +
+      (currentData.OtrasCuentasDocumentosPorCobrar.MenorValorFiscal || 0)
+    );
+  };
+  const mayorfiscalcuentascomerciales = (currentData) => {
+    return (
+      (currentData.CarteraCreditoPrestamosBancarios.MayorValorFiscal || 0) +
+      (currentData.CuentasComercialesPorCobrar.MayorValorFiscal || 0) +
+      (currentData.CuentasPorCobrarAcuerdosConcesion.MayorValorFiscal || 0) +
+      (currentData.ArrendamientoFinancieroOLeasingFinanciero.MayorValorFiscal ||
+        0) +
+      (currentData.DividendosParticipaciones.MayorValorFiscal || 0) +
+      (currentData.CuentasPorCobrarSociosAccionistasParticipes
+        .MayorValorFiscal || 0) +
+      (currentData.CuentasDocumentosPorCobrarOtrasPartesRelacionadasAsociadas
+        .MayorValorFiscal || 0) +
+      (currentData.PrimasSegurosPorRecaudar.MayorValorFiscal || 0) +
+      (currentData.CarteraDificilCobro.MayorValorFiscal || 0) +
+      (currentData.ReclamacionesPorCobrar.MayorValorFiscal || 0) +
+      (currentData.AnticiposPagos.MayorValorFiscal || 0) +
+      (currentData.OtrasCuentasDocumentosPorCobrar.MayorValorFiscal || 0)
+    );
+  };
+  const valorfiscalcuentascomerciales = (currentData) => {
+    return (
+      (currentData.CarteraCreditoPrestamosBancarios.ValorFiscal || 0) +
+      (currentData.CuentasComercialesPorCobrar.ValorFiscal || 0) +
+      (currentData.CuentasPorCobrarAcuerdosConcesion.ValorFiscal || 0) +
+      (currentData.ArrendamientoFinancieroOLeasingFinanciero.ValorFiscal || 0) +
+      (currentData.DividendosParticipaciones.ValorFiscal || 0) +
+      (currentData.CuentasPorCobrarSociosAccionistasParticipes.ValorFiscal ||
+        0) +
+      (currentData.CuentasDocumentosPorCobrarOtrasPartesRelacionadasAsociadas
+        .ValorFiscal || 0) +
+      (currentData.PrimasSegurosPorRecaudar.ValorFiscal || 0) +
+      (currentData.CarteraDificilCobro.ValorFiscal || 0) +
+      (currentData.ReclamacionesPorCobrar.ValorFiscal || 0) +
+      (currentData.AnticiposPagos.ValorFiscal || 0) +
+      (currentData.OtrasCuentasDocumentosPorCobrar.ValorFiscal || 0)
+    );
+  };
 
-      return totals;
-    };
+  // // Deterioro Acumulado Valor Cuentas Documentos Cobrar
+  const valorcontdeterioroacumuladodocumentos = (currentData) => {
+    return (
+      (currentData.CarteraDeCredito.ValorContable || 0) +
+      (currentData.CuentasComercialesPorCobrar.ValorContable || 0) +
+      (currentData.CuentasPorCobrarAcuerdosConcesion.ValorContable || 0) +
+      (currentData.ArrendamientoFinancieroLeasingFinanciero.ValorContable ||
+        0) +
+      (currentData.DividendosParticipaciones.ValorContable || 0) +
+      (currentData.CuentasPorCobrarSociosAccionistasParticipes.ValorContable ||
+        0) +
+      (currentData.CuentasPorCobrarOtrasPartesRelacionadasAsociadas
+        .ValorContable || 0) +
+      (currentData.OtrasCuentasPorCobrar.ValorContable || 0)
+    );
+  };
+  const efectconversiondeterioroacumuladodocumentos = (currentData) => {
+    return (
+      (currentData.CarteraDeCredito.EfectoConversion || 0) +
+      (currentData.CuentasComercialesPorCobrar.EfectoConversion || 0) +
+      (currentData.CuentasPorCobrarAcuerdosConcesion.EfectoConversion || 0) +
+      (currentData.ArrendamientoFinancieroLeasingFinanciero.EfectoConversion ||
+        0) +
+      (currentData.DividendosParticipaciones.EfectoConversion || 0) +
+      (currentData.CuentasPorCobrarSociosAccionistasParticipes
+        .EfectoConversion || 0) +
+      (currentData.CuentasPorCobrarOtrasPartesRelacionadasAsociadas
+        .EfectoConversion || 0) +
+      (currentData.OtrasCuentasPorCobrar.EfectoConversion || 0)
+    );
+  };
+  const menorfiscaldeterioroacumuladodocumentos = (currentData) => {
+    return (
+      (currentData.CarteraDeCredito.MenorValorFiscal || 0) +
+      (currentData.CuentasComercialesPorCobrar.MenorValorFiscal || 0) +
+      (currentData.CuentasPorCobrarAcuerdosConcesion.MenorValorFiscal || 0) +
+      (currentData.ArrendamientoFinancieroLeasingFinanciero.MenorValorFiscal ||
+        0) +
+      (currentData.DividendosParticipaciones.MenorValorFiscal || 0) +
+      (currentData.CuentasPorCobrarSociosAccionistasParticipes
+        .MenorValorFiscal || 0) +
+      (currentData.CuentasPorCobrarOtrasPartesRelacionadasAsociadas
+        .MenorValorFiscal || 0) +
+      (currentData.OtrasCuentasPorCobrar.MenorValorFiscal || 0)
+    );
+  };
+  const mayorfiscaldeterioroacumuladodocumentos = (currentData) => {
+    return (
+      (currentData.CarteraDeCredito.MayorValorFiscal || 0) +
+      (currentData.CuentasComercialesPorCobrar.MayorValorFiscal || 0) +
+      (currentData.CuentasPorCobrarAcuerdosConcesion.MayorValorFiscal || 0) +
+      (currentData.ArrendamientoFinancieroLeasingFinanciero.MayorValorFiscal ||
+        0) +
+      (currentData.DividendosParticipaciones.MayorValorFiscal || 0) +
+      (currentData.CuentasPorCobrarSociosAccionistasParticipes
+        .MayorValorFiscal || 0) +
+      (currentData.CuentasPorCobrarOtrasPartesRelacionadasAsociadas
+        .MayorValorFiscal || 0) +
+      (currentData.OtrasCuentasPorCobrar.MayorValorFiscal || 0)
+    );
+  };
+  const valorfiscaldeterioroacumuladodocumentos = (currentData) => {
+    return (
+      (currentData.CarteraDeCredito.ValorFiscal || 0) +
+      (currentData.CuentasComercialesPorCobrar.ValorFiscal || 0) +
+      (currentData.CuentasPorCobrarAcuerdosConcesion.ValorFiscal || 0) +
+      (currentData.ArrendamientoFinancieroLeasingFinanciero.ValorFiscal || 0) +
+      (currentData.DividendosParticipaciones.ValorFiscal || 0) +
+      (currentData.CuentasPorCobrarSociosAccionistasParticipes.ValorFiscal ||
+        0) +
+      (currentData.CuentasPorCobrarOtrasPartesRelacionadasAsociadas
+        .ValorFiscal || 0) +
+      (currentData.OtrasCuentasPorCobrar.ValorFiscal || 0)
+    );
+  };
+  //Activos Total
+  const valorcontactivostotal = (currentData) => {
+    return currentData.ActivosEquivalentesEfectivo.Total.ValorContable || 0;
+  };
+  //Pasivos
+  //Obligaciones financieras y cuentas por pagar
+  const valorcontobligacionesfinancieras = (currentData) => {
+    return (
+      (currentData.ObligacionesFinancierasEnMonedaLocal.ValorContable || 0) +
+      (currentData.ObligacionesFinancierasEnMonedaExtranjera.ValorContable ||
+        0) +
+      (currentData.DepositosYExigibilidades.ValorContable || 0) +
+      (currentData.CuentasComercialesPorPagarEnMonedaLocal.ValorContable || 0) +
+      (currentData.CuentasComercialesPorPagarEnMonedaExtranjera.ValorContable ||
+        0) +
+      (currentData.DividendosYParticipacionesPorPagar.ValorContable || 0) +
+      (currentData.CuentasPorPagarASociosAccionistasOParticipes.ValorContable ||
+        0) +
+      (currentData.CuentasYDocumentosPorPagarAOtrasPartesRelacionadasYAsociadas
+        .ValorContable || 0) +
+      (currentData
+        .ReservaMatematicaYOTecnicaYOtrosPasivosExclusivosEnCompaniasDeSeguros
+        .ValorContable || 0) +
+      (currentData.RecaudoAFavorDeTerceros.ValorContable || 0) +
+      (currentData.OtrasCuentasYDocumentosPorPagarEnMonedaLocal.ValorContable ||
+        0) +
+      (currentData.OtrasCuentasYDocumentosPorPagarEnMonedaExtranjera
+        .ValorContable || 0)
+    );
+  };
+  const efectconverobligacionesfinancieras = (currentData) => {
+    return (
+      (currentData.ObligacionesFinancierasEnMonedaLocal.EfectoConversion || 0) +
+      (currentData.ObligacionesFinancierasEnMonedaExtranjera.EfectoConversion ||
+        0) +
+      (currentData.DepositosYExigibilidades.EfectoConversion || 0) +
+      (currentData.CuentasComercialesPorPagarEnMonedaLocal.EfectoConversion ||
+        0) +
+      (currentData.CuentasComercialesPorPagarEnMonedaExtranjera
+        .EfectoConversion || 0) +
+      (currentData.DividendosYParticipacionesPorPagar.EfectoConversion || 0) +
+      (currentData.CuentasPorPagarASociosAccionistasOParticipes
+        .EfectoConversion || 0) +
+      (currentData.CuentasYDocumentosPorPagarAOtrasPartesRelacionadasYAsociadas
+        .EfectoConversion || 0) +
+      (currentData
+        .ReservaMatematicaYOTecnicaYOtrosPasivosExclusivosEnCompaniasDeSeguros
+        .EfectoConversion || 0) +
+      (currentData.RecaudoAFavorDeTerceros.EfectoConversion || 0) +
+      (currentData.OtrasCuentasYDocumentosPorPagarEnMonedaLocal
+        .EfectoConversion || 0) +
+      (currentData.OtrasCuentasYDocumentosPorPagarEnMonedaExtranjera
+        .EfectoConversion || 0)
+    );
+  };
+  const menorfiscalobligacionesfinancieras = (currentData) => {
+    return (
+      (currentData.ObligacionesFinancierasEnMonedaLocal.MenorValorFiscal || 0) +
+      (currentData.ObligacionesFinancierasEnMonedaExtranjera.MenorValorFiscal ||
+        0) +
+      (currentData.DepositosYExigibilidades.MenorValorFiscal || 0) +
+      (currentData.CuentasComercialesPorPagarEnMonedaLocal.MenorValorFiscal ||
+        0) +
+      (currentData.CuentasComercialesPorPagarEnMonedaExtranjera
+        .MenorValorFiscal || 0) +
+      (currentData.DividendosYParticipacionesPorPagar.MenorValorFiscal || 0) +
+      (currentData.CuentasPorPagarASociosAccionistasOParticipes
+        .MenorValorFiscal || 0) +
+      (currentData.CuentasYDocumentosPorPagarAOtrasPartesRelacionadasYAsociadas
+        .MenorValorFiscal || 0) +
+      (currentData
+        .ReservaMatematicaYOTecnicaYOtrosPasivosExclusivosEnCompaniasDeSeguros
+        .MenorValorFiscal || 0) +
+      (currentData.RecaudoAFavorDeTerceros.MenorValorFiscal || 0) +
+      (currentData.OtrasCuentasYDocumentosPorPagarEnMonedaLocal
+        .MenorValorFiscal || 0) +
+      (currentData.OtrasCuentasYDocumentosPorPagarEnMonedaExtranjera
+        .MenorValorFiscal || 0)
+    );
+  };
+  const mayorfiscalobligacionesfinancieras = (currentData) => {
+    return (
+      (currentData.ObligacionesFinancierasEnMonedaLocal.MayorValorFiscal || 0) +
+      (currentData.ObligacionesFinancierasEnMonedaExtranjera.MayorValorFiscal ||
+        0) +
+      (currentData.DepositosYExigibilidades.MayorValorFiscal || 0) +
+      (currentData.CuentasComercialesPorPagarEnMonedaLocal.MayorValorFiscal ||
+        0) +
+      (currentData.CuentasComercialesPorPagarEnMonedaExtranjera
+        .MayorValorFiscal || 0) +
+      (currentData.DividendosYParticipacionesPorPagar.MayorValorFiscal || 0) +
+      (currentData.CuentasPorPagarASociosAccionistasOParticipes
+        .MayorValorFiscal || 0) +
+      (currentData.CuentasYDocumentosPorPagarAOtrasPartesRelacionadasYAsociadas
+        .MayorValorFiscal || 0) +
+      (currentData
+        .ReservaMatematicaYOTecnicaYOtrosPasivosExclusivosEnCompaniasDeSeguros
+        .MayorValorFiscal || 0) +
+      (currentData.RecaudoAFavorDeTerceros.MayorValorFiscal || 0) +
+      (currentData.OtrasCuentasYDocumentosPorPagarEnMonedaLocal
+        .MayorValorFiscal || 0) +
+      (currentData.OtrasCuentasYDocumentosPorPagarEnMonedaExtranjera
+        .MayorValorFiscal || 0)
+    );
+  };
+  const valorfiscalobligacionesfinancieras = (currentData) => {
+    return (
+      (currentData.ObligacionesFinancierasEnMonedaLocal.ValorFiscal || 0) +
+      (currentData.ObligacionesFinancierasEnMonedaExtranjera.ValorFiscal || 0) +
+      (currentData.DepositosYExigibilidades.ValorFiscal || 0) +
+      (currentData.CuentasComercialesPorPagarEnMonedaLocal.ValorFiscal || 0) +
+      (currentData.CuentasComercialesPorPagarEnMonedaExtranjera.ValorFiscal ||
+        0) +
+      (currentData.DividendosYParticipacionesPorPagar.ValorFiscal || 0) +
+      (currentData.CuentasPorPagarASociosAccionistasOParticipes.ValorFiscal ||
+        0) +
+      (currentData.CuentasYDocumentosPorPagarAOtrasPartesRelacionadasYAsociadas
+        .ValorFiscal || 0) +
+      (currentData
+        .ReservaMatematicaYOTecnicaYOtrosPasivosExclusivosEnCompaniasDeSeguros
+        .ValorFiscal || 0) +
+      (currentData.RecaudoAFavorDeTerceros.ValorFiscal || 0) +
+      (currentData.OtrasCuentasYDocumentosPorPagarEnMonedaLocal.ValorFiscal ||
+        0) +
+      (currentData.OtrasCuentasYDocumentosPorPagarEnMonedaExtranjera
+        .ValorFiscal || 0)
+    );
+  };
+  //Arrendamientos por pagar
+  const valorcontrarrendamientoporpagar = (currentData) => {
+    return (
+      (currentData.FinancieroLeasingPartesNoRelacionadas.ValorContable || 0) +
+      (currentData.FinancieroLeasingPartesRelacionadas.ValorContable || 0) +
+      (currentData.Operativo.ValorContable || 0)
+    );
+  };
+  const efectconverrrendamientoporpagar = (currentData) => {
+    return (
+      (currentData.FinancieroLeasingPartesNoRelacionadas.EfectoConversion ||
+        0) +
+      (currentData.FinancieroLeasingPartesRelacionadas.EfectoConversion || 0) +
+      (currentData.Operativo.EfectoConversion || 0)
+    );
+  };
+  const menorfiscalrrendamientoporpagar = (currentData) => {
+    return (
+      (currentData.FinancieroLeasingPartesNoRelacionadas.MenorValorFiscal ||
+        0) +
+      (currentData.FinancieroLeasingPartesRelacionadas.MenorValorFiscal || 0) +
+      (currentData.Operativo.MenorValorFiscal || 0)
+    );
+  };
+  const mayorfiscalrrendamientoporpagar = (currentData) => {
+    return (
+      (currentData.FinancieroLeasingPartesNoRelacionadas.MayorValorFiscal ||
+        0) +
+      (currentData.FinancieroLeasingPartesRelacionadas.MayorValorFiscal || 0) +
+      (currentData.Operativo.MayorValorFiscal || 0)
+    );
+  };
+  const valorfiscalrrendamientoporpagar = (currentData) => {
+    return (
+      (currentData.FinancieroLeasingPartesNoRelacionadas.ValorFiscal || 0) +
+      (currentData.FinancieroLeasingPartesRelacionadas.ValorFiscal || 0) +
+      (currentData.Operativo.ValorFiscal || 0)
+    );
+  };
+  // Otros Pasivos Financieros
+  const valorcontotrospasivosfinancieros = (currentData) => {
+    return (
+      (currentData.BonosYDocumentosEquivalentes.ValorContable || 0) +
+      (currentData.InstrumentosFinancierosDerivados.ValorContable || 0) +
+      (currentData
+        .AccionesPreferencialesOAportesDeCapitalClasificadosComoPasivos
+        .ValorContable || 0) +
+      (currentData.DerechosFiduciarios.ValorContable || 0) +
+      (currentData.OtrosPasivosFinancieros.ValorContable || 0)
+    );
+  };
+  const efectconverotrospasivosfinancieros = (currentData) => {
+    return (
+      (currentData.BonosYDocumentosEquivalentes.EfectoConversion || 0) +
+      (currentData.InstrumentosFinancierosDerivados.EfectoConversion || 0) +
+      (currentData
+        .AccionesPreferencialesOAportesDeCapitalClasificadosComoPasivos
+        .EfectoConversion || 0) +
+      (currentData.DerechosFiduciarios.EfectoConversion || 0) +
+      (currentData.OtrosPasivosFinancieros.EfectoConversion || 0)
+    );
+  };
+  const menorfiscalotrospasivosfinancieros = (currentData) => {
+    return (
+      (currentData.BonosYDocumentosEquivalentes.MenorValorFiscal || 0) +
+      (currentData.InstrumentosFinancierosDerivados.MenorValorFiscal || 0) +
+      (currentData
+        .AccionesPreferencialesOAportesDeCapitalClasificadosComoPasivos
+        .MenorValorFiscal || 0) +
+      (currentData.DerechosFiduciarios.MenorValorFiscal || 0) +
+      (currentData.OtrosPasivosFinancieros.MenorValorFiscal || 0)
+    );
+  };
+  const mayorfiscalotrospasivosfinancieros = (currentData) => {
+    return (
+      (currentData.BonosYDocumentosEquivalentes.MayorValorFiscal || 0) +
+      (currentData.InstrumentosFinancierosDerivados.MayorValorFiscal || 0) +
+      (currentData
+        .AccionesPreferencialesOAportesDeCapitalClasificadosComoPasivos
+        .MayorValorFiscal || 0) +
+      (currentData.DerechosFiduciarios.MayorValorFiscal || 0) +
+      (currentData.OtrosPasivosFinancieros.MayorValorFiscal || 0)
+    );
+  };
+  const valorfiscalotrospasivosfinancieros = (currentData) => {
+    return (
+      (currentData.BonosYDocumentosEquivalentes.ValorFiscal || 0) +
+      (currentData.InstrumentosFinancierosDerivados.ValorFiscal || 0) +
+      (currentData
+        .AccionesPreferencialesOAportesDeCapitalClasificadosComoPasivos
+        .ValorFiscal || 0) +
+      (currentData.DerechosFiduciarios.ValorFiscal || 0) +
+      (currentData.OtrosPasivosFinancieros.ValorFiscal || 0)
+    );
+  };
+  //Impuestos, gravámenes y tasas por pagar
+  const valorcontimpuestosgravamentasas = (currentData) => {
+    return (
+      (currentData.ImpuestoRenta.ValorContable || 0) +
+      (currentData.IVA.ValorContable || 0) +
+      (currentData.Otrosimpuestos.ValorContable || 0)
+    );
+  };
+  const efectconverimpuestosgravamentasas = (currentData) => {
+    return (
+      (currentData.ImpuestoRenta.EfectoConversion || 0) +
+      (currentData.IVA.EfectoConversion || 0) +
+      (currentData.Otrosimpuestos.EfectoConversion || 0)
+    );
+  };
+  const menorfiscalimpuestosgravamentasas = (currentData) => {
+    return (
+      (currentData.ImpuestoRenta.MenorValorFiscal || 0) +
+      (currentData.IVA.MenorValorFiscal || 0) +
+      (currentData.Otrosimpuestos.MenorValorFiscal || 0)
+    );
+  };
+  const mayorfiscalimpuestosgravamentasas = (currentData) => {
+    return (
+      (currentData.ImpuestoRenta.MayorValorFiscal || 0) +
+      (currentData.IVA.MayorValorFiscal || 0) +
+      (currentData.Otrosimpuestos.MayorValorFiscal || 0)
+    );
+  };
+  const valorfiscalimpuestosgravamentasas = (currentData) => {
+    return (
+      (currentData.ImpuestoRenta.ValorFiscal || 0) +
+      (currentData.IVA.ValorFiscal || 0) +
+      (currentData.Otrosimpuestos.ValorFiscal || 0)
+    );
+  };
+  //Pasivos por impuestos diferidos
+  //Pasivos por beneficios a los empleados
+  const valorcontpasivosbeneficiosempleados = (currentData) => {
+    return (
+      (currentData.CortoPlazo.ValorContable || 0) +
+      (currentData.LargoPlazo.ValorContable || 0) +
+      (currentData.TerminacionVinculosLaborales.ValorContable || 0) +
+      (currentData.PostEmpleo.ValorContable || 0)
+    );
+  };
+  const efectconverpasivosbeneficiosempleados = (currentData) => {
+    return (
+      (currentData.CortoPlazo.EfectoConversion || 0) +
+      (currentData.LargoPlazo.EfectoConversion || 0) +
+      (currentData.TerminacionVinculosLaborales.EfectoConversion || 0) +
+      (currentData.PostEmpleo.EfectoConversion || 0)
+    );
+  };
+  const menorfiscalpasivosbeneficiosempleados = (currentData) => {
+    return (
+      (currentData.CortoPlazo.MenorValorFiscal || 0) +
+      (currentData.LargoPlazo.MenorValorFiscal || 0) +
+      (currentData.TerminacionVinculosLaborales.MenorValorFiscal || 0) +
+      (currentData.PostEmpleo.MenorValorFiscal || 0)
+    );
+  };
+  const mayorfiscalpasivosbeneficiosempleados = (currentData) => {
+    return (
+      (currentData.CortoPlazo.MayorValorFiscal || 0) +
+      (currentData.LargoPlazo.MayorValorFiscal || 0) +
+      (currentData.TerminacionVinculosLaborales.MayorValorFiscal || 0) +
+      (currentData.PostEmpleo.MayorValorFiscal || 0)
+    );
+  };
+  const valorfiscalpasivosbeneficiosempleados = (currentData) => {
+    return (
+      (currentData.CortoPlazo.ValorFiscal || 0) +
+      (currentData.LargoPlazo.ValorFiscal || 0) +
+      (currentData.TerminacionVinculosLaborales.ValorFiscal || 0) +
+      (currentData.PostEmpleo.ValorFiscal || 0)
+    );
+  };
+  //Provisiones
+  const valorcontprovisiones = (currentData) => {
+    return 0; //return (currentData.procesosLegalesLitigiosYDemandas.ValorContable || 0) + (currentData.mantenimientoYReparaciones.ValorContable || 0) + (currentData.obligacionesFiscales.ValorContable || 0) + (currentData.desmantelamientosRestauracionYRehabilitacion.ValorContable || 0) + (currentData.garantias.ValorContable || 0) + (currentData.contratosOnerosos.ValorContable || 0) + (currentData.reembolsosAClientes.ValorContable || 0) + (currentData.reestructuracionesDeNegocios.ValorContable || 0) + (currentData.OtrosPasivos.ValorContable || 0) + (currentData.pasivosContingentesAsumidosEnUnaCombinacionDeNegocios.ValorContable || 0) + (currentData.relacionadasConElMedioAmbiente.ValorContable || 0) + (currentData.otrasProvisiones.ValorContable || 0);
+  };
+  const efectconverprovisiones = (currentData) => {
+    return 0; //return (currentData.procesosLegalesLitigiosYDemandas.EfectoConversion || 0) + (currentData.mantenimientoYReparaciones.EfectoConversion || 0) + (currentData.obligacionesFiscales.EfectoConversion || 0) + (currentData.desmantelamientosRestauracionYRehabilitacion.EfectoConversion || 0) + (currentData.garantias.EfectoConversion || 0) + (currentData.contratosOnerosos.EfectoConversion || 0) + (currentData.reembolsosAClientes.EfectoConversion || 0) + (currentData.reestructuracionesDeNegocios.EfectoConversion || 0) + (currentData.OtrosPasivos.EfectoConversion || 0) + (currentData.pasivosContingentesAsumidosEnUnaCombinacionDeNegocios.EfectoConversion || 0) + (currentData.relacionadasConElMedioAmbiente.EfectoConversion || 0) + (currentData.otrasProvisiones.EfectoConversion || 0);
+  };
+  const menorfiscalprovisiones = (currentData) => {
+    return 0; //return (currentData.procesosLegalesLitigiosYDemandas.MenorValorFiscal || 0) + (currentData.mantenimientoYReparaciones.MenorValorFiscal || 0) + (currentData.obligacionesFiscales.MenorValorFiscal || 0) + (currentData.desmantelamientosRestauracionYRehabilitacion.MenorValorFiscal || 0) + (currentData.garantias.MenorValorFiscal || 0) + (currentData.contratosOnerosos.MenorValorFiscal || 0) + (currentData.reembolsosAClientes.MenorValorFiscal || 0) + (currentData.reestructuracionesDeNegocios.MenorValorFiscal || 0) + (currentData.OtrosPasivos.MenorValorFiscal || 0) + (currentData.pasivosContingentesAsumidosEnUnaCombinacionDeNegocios.MenorValorFiscal || 0) + (currentData.relacionadasConElMedioAmbiente.MenorValorFiscal || 0) + (currentData.otrasProvisiones.MenorValorFiscal || 0);
+  };
+  const mayorfiscalprovisiones = (currentData) => {
+    return 0; //return (currentData.procesosLegalesLitigiosYDemandas.MayorValorFiscal || 0) + (currentData.mantenimientoYReparaciones.MayorValorFiscal || 0) + (currentData.obligacionesFiscales.MayorValorFiscal || 0) + (currentData.desmantelamientosRestauracionYRehabilitacion.MayorValorFiscal || 0) + (currentData.garantias.MayorValorFiscal || 0) + (currentData.contratosOnerosos.MayorValorFiscal || 0) + (currentData.reembolsosAClientes.MayorValorFiscal || 0) + (currentData.reestructuracionesDeNegocios.MayorValorFiscal || 0) + (currentData.OtrosPasivos.MayorValorFiscal || 0) + (currentData.pasivosContingentesAsumidosEnUnaCombinacionDeNegocios.MayorValorFiscal || 0) + (currentData.relacionadasConElMedioAmbiente.MayorValorFiscal || 0) + (currentData.otrasProvisiones.MayorValorFiscal || 0);
+  };
 
-    const parentPath = path.slice(0, -1);
-    const parent = parentPath.reduce((acc, key) => acc[key], newData);
+  const valorfiscalprovisiones = (currentData) => {
+    /**
+     * TODO: Revisar que esa vualta le falta algo
+     */
+    //return (currentData.procesosLegalesLitigiosYDemandas.ValorFiscal || 0) + (currentData.mantenimientoYReparaciones.ValorFiscal || 0) + (currentData.obligacionesFiscales.ValorFiscal || 0) + (currentData.desmantelamientosRestauracionYRehabilitacion.ValorFiscal || 0) + (currentData.garantias.ValorFiscal || 0) + (currentData.contratosOnerosos.ValorFiscal || 0) + (currentData.reembolsosAClientes.ValorFiscal || 0) + (currentData.reestructuracionesDeNegocios.ValorFiscal || 0) + (currentData.return 0;//.ValorFiscal || 0) + (currentData.pasivosContingentesAsumidosEnUnaCombinacionDeNegocios.ValorFiscal || 0) + (currentData.relacionadasConElMedioAmbiente.ValorFiscal || 0) + (currentData.otrasProvisiones.ValorFiscal || 0) || 0;
+    return 0;
+  };
+  //Pasivos por ingresos diferidos
+  const valorcontpasivosingresosdiferidos = (currentData) => {
+    return 0; //return (currentData.AnticiposYAvancesRecibidosDeClientes.ValorContable || 0) + (currentData.IngresosDiferidosPorProgramasDeFidelizacion.ValorContable || 0) + (currentData.SubvencionesDelGobiernoYOtrasAyudas.ValorContable || 0) + (currentData.OtrosPasivosIngresosDiferidos.ValorContable || 0);
+  };
+  const efectconverpasivosingresosdiferidos = (currentData) => {
+    return 0; //return (currentData.AnticiposYAvancesRecibidosDeClientes.EfectoConversion || 0) + (currentData.IngresosDiferidosPorProgramasDeFidelizacion.EfectoConversion || 0) + (currentData.SubvencionesDelGobiernoYOtrasAyudas.EfectoConversion || 0) + (currentData.OtrosPasivosIngresosDiferidos.EfectoConversion || 0);
+  };
+  const menorfiscalpasivosingresosdiferidos = (currentData) => {
+    return 0; //return (currentData.AnticiposYAvancesRecibidosDeClientes.MenorValorFiscal || 0) + (currentData.IngresosDiferidosPorProgramasDeFidelizacion.MenorValorFiscal || 0) + (currentData.SubvencionesDelGobiernoYOtrasAyudas.MenorValorFiscal || 0) + (currentData.OtrosPasivosIngresosDiferidos.MenorValorFiscal || 0);
+  };
+  const mayorfiscalpasivosingresosdiferidos = (currentData) => {
+    return 0; //return (currentData.AnticiposYAvancesRecibidosDeClientes.MayorValorFiscal || 0) + (currentData.IngresosDiferidosPorProgramasDeFidelizacion.MayorValorFiscal || 0) + (currentData.SubvencionesDelGobiernoYOtrasAyudas.MayorValorFiscal || 0) + (currentData.OtrosPasivosIngresosDiferidos.MayorValorFiscal || 0);
+  };
+  const valorfiscalpasivosingresosdiferidos = (currentData) => {
+    return 0; //return (currentData.AnticiposYAvancesRecibidosDeClientes.ValorFiscal || 0) + (currentData.IngresosDiferidosPorProgramasDeFidelizacion.ValorFiscal || 0) + (currentData.SubvencionesDelGobiernoYOtrasAyudas.ValorFiscal || 0) + (currentData.OtrosPasivosIngresosDiferidos.ValorFiscal || 0);
+  };
+  //Otros pasivos
+  const valorcontotrospasivos = (currentData) => {
+    return 0; //return (currentData.DepositosRecibidos.ValorContable || 0) + (currentData.RetencionesATercerosSobreContratos.ValorContable || 0) + (currentData.EmbargosJudiciales.ValorContable || 0) + (currentData.CuentasEnParticipacion.ValorContable || 0) + (currentData.PasivoParaEjecucionDeExcedentesESAL.ValorContable || 0) + (currentData.FondosSocialesMutualesYOtros.ValorContable || 0) + (currentData.OtrosPasivos.ValorContable || 0) + (currentData.PasivosReconocidosSolamenteParaFinesFiscales.ValorContable || 0);
+  };
+  const efectconverotrospasivos = (currentData) => {
+    return 0; //return (currentData.DepositosRecibidos.EfectoConversion || 0) + (currentData.RetencionesATercerosSobreContratos.EfectoConversion || 0) + (currentData.EmbargosJudiciales.EfectoConversion || 0) + (currentData.CuentasEnParticipacion.EfectoConversion || 0) + (currentData.PasivoParaEjecucionDeExcedentesESAL.EfectoConversion || 0) + (currentData.FondosSocialesMutualesYOtros.EfectoConversion || 0) + (currentData.OtrosPasivos.EfectoConversion || 0) + (currentData.PasivosReconocidosSolamenteParaFinesFiscales.EfectoConversion || 0);
+  };
+  const menorfiscalotrospasivos = (currentData) => {
+    return 0; //return (currentData.DepositosRecibidos.MenorValorFiscal || 0) + (currentData.RetencionesATercerosSobreContratos.MenorValorFiscal || 0) + (currentData.EmbargosJudiciales.MenorValorFiscal || 0) + (currentData.CuentasEnParticipacion.MenorValorFiscal || 0) + (currentData.PasivoParaEjecucionDeExcedentesESAL.MenorValorFiscal || 0) + (currentData.FondosSocialesMutualesYOtros.MenorValorFiscal || 0) + (currentData.OtrosPasivos.MenorValorFiscal || 0) + (currentData.PasivosReconocidosSolamenteParaFinesFiscales.MenorValorFiscal || 0);
+  };
+  const mayorfiscalotrospasivos = (currentData) => {
+    return 0; //return (currentData.DepositosRecibidos.MayorValorFiscal || 0) + (currentData.RetencionesATercerosSobreContratos.MayorValorFiscal || 0) + (currentData.EmbargosJudiciales.MayorValorFiscal || 0) + (currentData.CuentasEnParticipacion.MayorValorFiscal || 0) + (currentData.PasivoParaEjecucionDeExcedentesESAL.MayorValorFiscal || 0) + (currentData.FondosSocialesMutualesYOtros.MayorValorFiscal || 0) + (currentData.OtrosPasivos.MayorValorFiscal || 0) + (currentData.PasivosReconocidosSolamenteParaFinesFiscales.MayorValorFiscal || 0);
+  };
+  const valorfiscalotrospasivos = (currentData) => {
+    return 0; //return (currentData.DepositosRecibidos.ValorFiscal || 0) + (currentData.RetencionesATercerosSobreContratos.ValorFiscal || 0) + (currentData.EmbargosJudiciales.ValorFiscal || 0) + (currentData.CuentasEnParticipacion.ValorFiscal || 0) + (currentData.PasivoParaEjecucionDeExcedentesESAL.ValorFiscal || 0) + (currentData.FondosSocialesMutualesYOtros.ValorFiscal || 0) + (currentData.OtrosPasivos.ValorFiscal || 0) + (currentData.PasivosReconocidosSolamenteParaFinesFiscales.ValorFiscal || 0);
+  };
+  //Patrimonio Total
+  //Patrimonio
+  //Capital social y reservas
+  //Resultados del ejercicio
+  //Resultados acumulados
+  //Ganancias (pérdidas) acumuladas o retenidas por la adopción por primera
+  //Otro resultado integral acumulado
+  //Datos Informativos
 
-    if (parent && typeof parent === 'object' && parent.Total) {
-      parent.Total = calculateTotals(parent);
+  const clculateValorFiscal = (path) => {
+    const pathArray = path.split(".");
+
+    console.log({ pathArray, excludedCalculateValorFiscalInputs });
+
+    console.log(
+      excludedCalculateValorFiscalInputs.some((elemment) =>
+        pathArray.includes(elemment)
+      )
+    );
+
+    if (
+      !excludedCalculateValorFiscalInputs.some((elemment) =>
+        pathArray.includes(elemment)
+      )
+    ) {
+      let newData = { ...data };
+      let temp = newData;
+
+      let auxData = newData[pathArray[0]];
+
+      for (let i = 1; i < pathArray.length - 1; i++) {
+        auxData = auxData[pathArray[i]];
+      }
+
+      let calculatedValue =
+        (auxData.ValorContable || 0) +
+        (auxData.EfectoConversion || 0) -
+        (auxData.MenorValorFiscal || 0) +
+        (auxData.MayorValorFiscal || 0);
+
+      for (let i = 0; i < pathArray.length - 1; i++) {
+        if (!temp[pathArray[i]]) {
+          temp[pathArray[i]] = {}; // Crear objeto si no existe
+        }
+        temp = temp[pathArray[i]]; // Mover al siguiente nivel del objeto
+      }
+
+      temp.ValorFiscal = calculatedValue;
+    }
+  };
+
+  const handleChange = (e) => {
+    let { name, value } = e.target;
+    if (value === "") value = 0;
+
+    // Crear una copia del objeto data
+    const updatedData = { ...data };
+
+    // Navegar al valor específico usando la ruta (name)
+    let currentLevel = updatedData;
+    const pathArray = name.split(".");
+    for (let i = 0; i < pathArray.length - 1; i++) {
+      currentLevel = currentLevel[pathArray[i]];
     }
 
-    setData(newData);
+    const lastKey = pathArray[pathArray.length - 1];
+
+    // Detectar el tipo de dato actual
+    const currentValueType = typeof currentLevel[lastKey];
+
+    // Convertir el valor al tipo correcto
+    if (currentValueType === "number") {
+      value = parseFloat(value);
+    } else if (currentValueType === "boolean") {
+      value = value === "true";
+    }
+    // No es necesario convertir si es una cadena de texto (string)
+
+    // Actualizar el valor
+    currentLevel[lastKey] = value;
+
+    // Activos Equivalentes Efectivo
+    clculateValorFiscal(name);
+    // Inversiones Instrumentos Financieros Derivados VN
+    //Cuentas Comerciales Cobrar Otras Por Cobrar
+    updatedData.Activos.CuentasComercialesCobrarOtrasPorCobrar.Total.ValorContable =
+      valorcontcuentascomercialestotal(
+        updatedData.Activos.CuentasComercialesCobrarOtrasPorCobrar
+      );
+    updatedData.Activos.CuentasComercialesCobrarOtrasPorCobrar.Total.EfectoConversion =
+      efectconvercuentascomercialestotal(
+        updatedData.Activos.CuentasComercialesCobrarOtrasPorCobrar
+      );
+    updatedData.Activos.CuentasComercialesCobrarOtrasPorCobrar.Total.MenorValorFiscal =
+      menorfiscalcuentascomercialestotal(
+        updatedData.Activos.CuentasComercialesCobrarOtrasPorCobrar
+      );
+    updatedData.Activos.CuentasComercialesCobrarOtrasPorCobrar.Total.MayorValorFiscal =
+      mayorfiscalcuentascomercialestotal(
+        updatedData.Activos.CuentasComercialesCobrarOtrasPorCobrar
+      );
+    updatedData.Activos.CuentasComercialesCobrarOtrasPorCobrar.Total.ValorFiscal =
+      valorfiscalcuentascomercialestotal(
+        updatedData.Activos.CuentasComercialesCobrarOtrasPorCobrar
+      );
+    // //Cuentas Documentos Por Cobrar
+    updatedData.Activos.CuentasComercialesCobrarOtrasPorCobrar.CuentasDocumentosPorCobrar.Total.ValorContable =
+      valorcontaccuentascomerciales(
+        updatedData.Activos.CuentasComercialesCobrarOtrasPorCobrar
+          .CuentasDocumentosPorCobrar
+      );
+    updatedData.Activos.CuentasComercialesCobrarOtrasPorCobrar.CuentasDocumentosPorCobrar.Total.EfectoConversion =
+      efectconvercuentascomerciales(
+        updatedData.Activos.CuentasComercialesCobrarOtrasPorCobrar
+          .CuentasDocumentosPorCobrar
+      );
+    updatedData.Activos.CuentasComercialesCobrarOtrasPorCobrar.CuentasDocumentosPorCobrar.Total.MenorValorFiscal =
+      menorfiscalcuentascomerciales(
+        updatedData.Activos.CuentasComercialesCobrarOtrasPorCobrar
+          .CuentasDocumentosPorCobrar
+      );
+    updatedData.Activos.CuentasComercialesCobrarOtrasPorCobrar.CuentasDocumentosPorCobrar.Total.MayorValorFiscal =
+      mayorfiscalcuentascomerciales(
+        updatedData.Activos.CuentasComercialesCobrarOtrasPorCobrar
+          .CuentasDocumentosPorCobrar
+      );
+    updatedData.Activos.CuentasComercialesCobrarOtrasPorCobrar.CuentasDocumentosPorCobrar.Total.ValorFiscal =
+      valorfiscalcuentascomerciales(
+        updatedData.Activos.CuentasComercialesCobrarOtrasPorCobrar
+          .CuentasDocumentosPorCobrar
+      );
+    // // Deterioro Acumulado Valor Cuentas Documentos Cobrar
+    updatedData.Activos.CuentasComercialesCobrarOtrasPorCobrar.DeterioroAcumuladoValorCuentasDocumentosCobrar.Total.ValorContable =
+      valorcontdeterioroacumuladodocumentos(
+        updatedData.Activos.CuentasComercialesCobrarOtrasPorCobrar
+          .DeterioroAcumuladoValorCuentasDocumentosCobrar
+      );
+    updatedData.Activos.CuentasComercialesCobrarOtrasPorCobrar.DeterioroAcumuladoValorCuentasDocumentosCobrar.Total.EfectoConversion =
+      efectconversiondeterioroacumuladodocumentos(
+        updatedData.Activos.CuentasComercialesCobrarOtrasPorCobrar
+          .DeterioroAcumuladoValorCuentasDocumentosCobrar
+      );
+    updatedData.Activos.CuentasComercialesCobrarOtrasPorCobrar.DeterioroAcumuladoValorCuentasDocumentosCobrar.Total.MenorValorFiscal =
+      menorfiscaldeterioroacumuladodocumentos(
+        updatedData.Activos.CuentasComercialesCobrarOtrasPorCobrar
+          .DeterioroAcumuladoValorCuentasDocumentosCobrar
+      );
+    updatedData.Activos.CuentasComercialesCobrarOtrasPorCobrar.DeterioroAcumuladoValorCuentasDocumentosCobrar.Total.MayorValorFiscal =
+      mayorfiscaldeterioroacumuladodocumentos(
+        updatedData.Activos.CuentasComercialesCobrarOtrasPorCobrar
+          .DeterioroAcumuladoValorCuentasDocumentosCobrar
+      );
+    updatedData.Activos.CuentasComercialesCobrarOtrasPorCobrar.DeterioroAcumuladoValorCuentasDocumentosCobrar.Total.ValorFiscal =
+      valorfiscaldeterioroacumuladodocumentos(
+        updatedData.Activos.CuentasComercialesCobrarOtrasPorCobrar
+          .DeterioroAcumuladoValorCuentasDocumentosCobrar
+      );
+    //Activos Total
+    /**
+     * TODO: revisar
+     */
+    updatedData.Activos.Total.ValorContable = valorcontactivostotal(
+      updatedData.Activos
+    );
+    //Pasivos
+    //Obligaciones financieras y cuentas por pagar
+    updatedData.Pasivos.ObligacionesFinancierasCuentasPorPagar.Total.ValorContable =
+      valorcontobligacionesfinancieras(
+        updatedData.Pasivos.ObligacionesFinancierasCuentasPorPagar
+      );
+    updatedData.Pasivos.ObligacionesFinancierasCuentasPorPagar.Total.EfectoConversion =
+      efectconverobligacionesfinancieras(
+        updatedData.Pasivos.ObligacionesFinancierasCuentasPorPagar
+      );
+    updatedData.Pasivos.ObligacionesFinancierasCuentasPorPagar.Total.MenorValorFiscal =
+      menorfiscalobligacionesfinancieras(
+        updatedData.Pasivos.ObligacionesFinancierasCuentasPorPagar
+      );
+    updatedData.Pasivos.ObligacionesFinancierasCuentasPorPagar.Total.MayorValorFiscal =
+      mayorfiscalobligacionesfinancieras(
+        updatedData.Pasivos.ObligacionesFinancierasCuentasPorPagar
+      );
+    updatedData.Pasivos.ObligacionesFinancierasCuentasPorPagar.Total.ValorFiscal =
+      valorfiscalobligacionesfinancieras(
+        updatedData.Pasivos.ObligacionesFinancierasCuentasPorPagar
+      );
+    //Arrendamientos por pagar
+    updatedData.Pasivos.ArrendamientosPorPagar.Total.ValorContable =
+      valorcontrarrendamientoporpagar(
+        updatedData.Pasivos.ArrendamientosPorPagar
+      );
+    updatedData.Pasivos.ArrendamientosPorPagar.Total.EfectoConversion =
+      efectconverrrendamientoporpagar(
+        updatedData.Pasivos.ArrendamientosPorPagar
+      );
+    updatedData.Pasivos.ArrendamientosPorPagar.Total.MenorValorFiscal =
+      menorfiscalrrendamientoporpagar(
+        updatedData.Pasivos.ArrendamientosPorPagar
+      );
+    updatedData.Pasivos.ArrendamientosPorPagar.Total.MayorValorFiscal =
+      mayorfiscalrrendamientoporpagar(
+        updatedData.Pasivos.ArrendamientosPorPagar
+      );
+    updatedData.Pasivos.ArrendamientosPorPagar.Total.ValorFiscal =
+      valorfiscalrrendamientoporpagar(
+        updatedData.Pasivos.ArrendamientosPorPagar
+      );
+    //Otros Pasivos Financieros
+    updatedData.Pasivos.OtrosPasivosFinancieros.Total.ValorContable =
+      valorcontotrospasivosfinancieros(
+        updatedData.Pasivos.OtrosPasivosFinancieros
+      );
+    updatedData.Pasivos.OtrosPasivosFinancieros.Total.EfectoConversion =
+      efectconverotrospasivosfinancieros(
+        updatedData.Pasivos.OtrosPasivosFinancieros
+      );
+    updatedData.Pasivos.OtrosPasivosFinancieros.Total.MenorValorFiscal =
+      menorfiscalotrospasivosfinancieros(
+        updatedData.Pasivos.OtrosPasivosFinancieros
+      );
+    updatedData.Pasivos.OtrosPasivosFinancieros.Total.MayorValorFiscal =
+      mayorfiscalotrospasivosfinancieros(
+        updatedData.Pasivos.OtrosPasivosFinancieros
+      );
+    updatedData.Pasivos.OtrosPasivosFinancieros.Total.ValorFiscal =
+      valorfiscalotrospasivosfinancieros(
+        updatedData.Pasivos.OtrosPasivosFinancieros
+      );
+    //Impuestos, gravámenes y tasas por pagar
+    updatedData.Pasivos.ImpuestosGravamenesTasasPorPagar.Total.ValorContable =
+      valorcontimpuestosgravamentasas(
+        updatedData.Pasivos.ImpuestosGravamenesTasasPorPagar
+      );
+    updatedData.Pasivos.ImpuestosGravamenesTasasPorPagar.Total.EfectoConversion =
+      efectconverimpuestosgravamentasas(
+        updatedData.Pasivos.ImpuestosGravamenesTasasPorPagar
+      );
+    updatedData.Pasivos.ImpuestosGravamenesTasasPorPagar.Total.MenorValorFiscal =
+      menorfiscalimpuestosgravamentasas(
+        updatedData.Pasivos.ImpuestosGravamenesTasasPorPagar
+      );
+    updatedData.Pasivos.ImpuestosGravamenesTasasPorPagar.Total.MayorValorFiscal =
+      mayorfiscalimpuestosgravamentasas(
+        updatedData.Pasivos.ImpuestosGravamenesTasasPorPagar
+      );
+    updatedData.Pasivos.ImpuestosGravamenesTasasPorPagar.Total.ValorFiscal =
+      valorfiscalimpuestosgravamentasas(
+        updatedData.Pasivos.ImpuestosGravamenesTasasPorPagar
+      );
+    //Pasivos por impuestos diferidos
+    //Pasivos por beneficios a los empleados
+    updatedData.Pasivos.PasivosBeneficiosEmpleados.Total.ValorContable =
+      valorcontpasivosbeneficiosempleados(
+        updatedData.Pasivos.PasivosBeneficiosEmpleados
+      );
+    updatedData.Pasivos.PasivosBeneficiosEmpleados.Total.EfectoConversion =
+      efectconverpasivosbeneficiosempleados(
+        updatedData.Pasivos.PasivosBeneficiosEmpleados
+      );
+    updatedData.Pasivos.PasivosBeneficiosEmpleados.Total.MenorValorFiscal =
+      menorfiscalpasivosbeneficiosempleados(
+        updatedData.Pasivos.PasivosBeneficiosEmpleados
+      );
+    updatedData.Pasivos.PasivosBeneficiosEmpleados.Total.MayorValorFiscal =
+      mayorfiscalpasivosbeneficiosempleados(
+        updatedData.Pasivos.PasivosBeneficiosEmpleados
+      );
+    updatedData.Pasivos.PasivosBeneficiosEmpleados.Total.ValorFiscal =
+      valorfiscalpasivosbeneficiosempleados(
+        updatedData.Pasivos.PasivosBeneficiosEmpleados
+      );
+    //Provisiones
+    updatedData.Pasivos.Provisiones.Total.ValorContable = valorcontprovisiones(
+      updatedData.Pasivos.Provisiones
+    );
+    updatedData.Pasivos.Provisiones.Total.EfectoConversion =
+      efectconverprovisiones(updatedData.Pasivos.Provisiones);
+    updatedData.Pasivos.Provisiones.Total.MenorValorFiscal =
+      menorfiscalprovisiones(updatedData.Pasivos.Provisiones);
+    updatedData.Pasivos.Provisiones.Total.MayorValorFiscal =
+      mayorfiscalprovisiones(updatedData.Pasivos.Provisiones);
+    updatedData.Pasivos.Provisiones.Total.ValorFiscal = valorfiscalprovisiones(
+      updatedData.Pasivos.Provisiones
+    );
+    //Pasivos por ingresos diferidos
+    updatedData.Pasivos.PasivosIngresosDiferidos.Total.ValorContable =
+      valorcontpasivosingresosdiferidos(
+        updatedData.Pasivos.PasivosIngresosDiferidos
+      );
+    updatedData.Pasivos.PasivosIngresosDiferidos.Total.EfectoConversion =
+      efectconverpasivosingresosdiferidos(
+        updatedData.Pasivos.PasivosIngresosDiferidos
+      );
+    updatedData.Pasivos.PasivosIngresosDiferidos.Total.MenorValorFiscal =
+      menorfiscalpasivosingresosdiferidos(
+        updatedData.Pasivos.PasivosIngresosDiferidos
+      );
+    updatedData.Pasivos.PasivosIngresosDiferidos.Total.MayorValorFiscal =
+      mayorfiscalpasivosingresosdiferidos(
+        updatedData.Pasivos.PasivosIngresosDiferidos
+      );
+    updatedData.Pasivos.PasivosIngresosDiferidos.Total.ValorFiscal =
+      valorfiscalpasivosingresosdiferidos(
+        updatedData.Pasivos.PasivosIngresosDiferidos
+      );
+    //Otros pasivos
+    updatedData.Pasivos.OtrosPasivos.Total.ValorContable =
+      valorcontotrospasivos(updatedData.Pasivos.OtrosPasivos);
+    updatedData.Pasivos.OtrosPasivos.Total.EfectoConversion =
+      efectconverotrospasivos(updatedData.Pasivos.OtrosPasivos);
+    updatedData.Pasivos.OtrosPasivos.Total.MenorValorFiscal =
+      menorfiscalotrospasivos(updatedData.Pasivos.OtrosPasivos);
+    updatedData.Pasivos.OtrosPasivos.Total.MayorValorFiscal =
+      mayorfiscalotrospasivos(updatedData.Pasivos.OtrosPasivos);
+    updatedData.Pasivos.OtrosPasivos.Total.ValorFiscal =
+      valorfiscalotrospasivos(updatedData.Pasivos.OtrosPasivos);
+    //Patrimonio Total
+
+    //Totales
+    updatedData.Activos.ActivosEquivalentesEfectivo.Total.ValorContable =
+      valorcontactivosequi(updatedData.Activos.ActivosEquivalentesEfectivo);
+    updatedData.Activos.ActivosEquivalentesEfectivo.Total.EfectoConversion =
+      efectconveractivosequi(updatedData.Activos.ActivosEquivalentesEfectivo);
+    updatedData.Activos.ActivosEquivalentesEfectivo.Total.MenorValorFiscal =
+      menorfiscalactivosequi(updatedData.Activos.ActivosEquivalentesEfectivo);
+    updatedData.Activos.ActivosEquivalentesEfectivo.Total.MayorValorFiscal =
+      mayorfiscalactivosequi(updatedData.Activos.ActivosEquivalentesEfectivo);
+    updatedData.Activos.ActivosEquivalentesEfectivo.Total.ValorFiscal =
+      valorfiscalactivosequi(updatedData.Activos.ActivosEquivalentesEfectivo);
+    // Calculo de los totales
+    setData(updatedData);
+
+    // Actualizar el estado con los nuevos datos
+
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+    }
+
+    timeoutRef.current = setTimeout(() => {
+      EsfPatrimonioService.updateAEsfPatrimonioFormStudent(updatedData);
+      timeoutRef.current = null;
+    }, 5000);
   };
 
-  const toggleSection = (section) => {
-    setExpandedSection(expandedSection === section ? null : section);
-    setExpandedSubSection(null);
-  };
+  const tabs = [
+    { name: "Activos", label: "Activos" },
+    { name: "Pasivos", label: "Pasivos" },
+    { name: "TotalPatrimonio", label: "Patrimonio Total" },
+    { name: "PatrimonioContable", label: "Patrimonio" },
+    { name: "DatosInformativos", label: "Datos Informativos" },
+  ];
 
-  const toggleSubSection = (subSection) => {
-    setExpandedSubSection(expandedSubSection === subSection ? null : subSection);
-  };
-  const toggleSubSubSection = (subSubSection) => {
-    setExpandedSubSubSection(expandedSubSubSection === subSubSection ? null : subSubSection);
-  };
+  const [activeTab, setActiveTab] = useState(tabs[0].name);
 
-  const handleTabClick = (tab) => {
-    setActiveTab(tab);
-    setExpandedSection(null);
-    setExpandedSubSection(null);
+  const renderSections = (
+    sectionData,
+    pathPrefix,
+    excludeSection = "",
+    ValuesNamess = []
+  ) => {
+    if (Array.isArray(sectionData)) {
+      return Object.keys(sectionData).map((sectionKey) => {
+        if (sectionKey === excludeSection) return null;
+
+        const ValuesNames = sectionData[sectionKey].Anio.toString();
+
+        return (
+          <Accordeon
+            key={sectionKey}
+            title={ValuesNames}
+            arrayIndex={sectionKey}
+          >
+            <EsfValues
+              title={ValuesNames}
+              path={`${pathPrefix}.${sectionKey}`}
+              data={sectionData[sectionKey]}
+              handleChange={handleChange}
+            />
+          </Accordeon>
+        );
+      });
+    }
+
+    if (typeof sectionData !== "object" || sectionData === null) {
+      return null; // Si no es un objeto, no renderizar nada
+    }
+
+    return Object.keys(sectionData).map((sectionKey) => {
+      if (sectionKey === excludeSection) return null;
+
+      const ValuesNames = ValuesNamess[sectionKey] || sectionKey;
+
+      if (typeof sectionData[sectionKey] !== "object") {
+        return (
+          <div key={sectionKey}>
+            <EsfValues
+              title={ValuesNames}
+              path={`${pathPrefix}.${sectionKey}`}
+              data={sectionData[sectionKey]}
+              handleChange={handleChange}
+            />
+          </div>
+        );
+      }
+      return (
+        <Accordeon key={sectionKey} title={ValuesNames}>
+          <EsfValues
+            title={ValuesNames}
+            path={`${pathPrefix}.${sectionKey}`}
+            data={sectionData[sectionKey]}
+            handleChange={handleChange}
+          />
+        </Accordeon>
+      );
+    });
   };
 
   return (
-    <div className="flex bg-gray-100 rounded shadow-md">
-      <AsideStudent />
-      <div className="bg-white w-full p-2 mt-12 md:mt-0 overflow-auto max-h-screen">
-        <div className="bg-white">
-          <div className="flex">
-            <button
-              className={`flex-1 text-left p-4 border-b-2 ${
-                activeTab === 'activos' ? 'border-blue-500' : 'border-gray-200'
-              }`}
-              onClick={() => handleTabClick('activos')}
-            >
-              Activos
-            </button>
-            <button
-              className={`flex-1 text-left p-4 border-b-2 ${
-                activeTab === 'pasivos' ? 'border-blue-500' : 'border-gray-200'
-              }`}
-              onClick={() => handleTabClick('pasivos')}
-            >
-              Pasivos
-            </button>
-            <button
-              className={`flex-1 text-left p-4 border-b-2 ${
-                activeTab === 'patrimonio' ? 'border-blue-500' : 'border-gray-200'
-              }`}
-              onClick={() => handleTabClick('patrimonio')}
-            >
-              Patrimonio
-            </button>
-            <button
-              className={`flex-1 text-left p-4 border-b-2 ${
-                activeTab === 'datos-informativos' ? 'border-blue-500' : 'border-gray-200'
-              }`}
-              onClick={() => handleTabClick('datos-informativos')}
-            >
-              Datos Informativos
-            </button>
-          </div>
-          {activeTab === 'activos' && (
-            <div>
-              <div className="border-t border-gray-200">
-                <button
-                  type="button"
-                  className="w-full text-left p-4 border-b border-gray-200"
-                  onClick={() => toggleSection('activos')}
-                >
-                  Efectivo y equivalentes al efectivo 
-                </button>
-                {expandedSection === 'activos' && (
-                  <div className="pl-4">
-                    <div className="pl-4">
-                      <section className="p-2 bg-white border rounded-md">
-                        <h2 className="bg-white font-bold text-xl pb-2">
-                          Activos Equivalentes Efectivo
-                        </h2>
-                        <article className="bg-white grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2">
-                          <ESFvalues
-                            title="Efectivo"
-                            path={
-                              'ActivosPasivos.Activos.ActivosEquivalentesEfectivo.Efectivo'
-                            }
-                            data={
-                              data.ActivosPasivos.Activos
-                                .ActivosEquivalentesEfectivo.Efectivo
-                            }
-                            handleChange={handleChange}
-                          />
-                          <ESFvalues
-                            title="Equivalentes efectivo"
-                            path={
-                              'ActivosPasivos.Activos.ActivosEquivalentesEfectivo.EquivalentesEfectivo'
-                            }
-                            data={
-                              data.ActivosPasivos.Activos
-                                .ActivosEquivalentesEfectivo.EquivalentesEfectivo
-                            }
-                            handleChange={handleChange}
-                          />
-                          <ESFvalues
-                            title="Efectivo restringido"
-                            path={
-                              'ActivosPasivos.Activos.ActivosEquivalentesEfectivo.EfectivoRestringido'
-                            }
-                            data={
-                              data.ActivosPasivos.Activos
-                                .ActivosEquivalentesEfectivo.EfectivoRestringido
-                            }
-                            handleChange={handleChange}
-                          />
-                        </article>
-                        <article>
-                          <h3 className="text-lg font-bold">Total</h3>
-                          <div className="bg-white flex flex-col md:flex-row gap-2 justify-between">
-                            <p className="border p-1 rounded-sm">
-                              <span className="font-semibold bg-white">
-                                Valor contable:
-                              </span>
-                              {
-                                data.ActivosPasivos.Activos
-                                  .ActivosEquivalentesEfectivo.Total
-                                  .ValorContable
-                              }
-                            </p>
-                            <p className="border p-1 rounded-sm">
-                              <span className="font-semibold bg-white">
-                                Efecto conversion:
-                              </span>{' '}
-                              {
-                                data.ActivosPasivos.Activos
-                                  .ActivosEquivalentesEfectivo.Total
-                                  .EfectoConversion
-                              }
-                            </p>
-                            <p className="border p-1 rounded-sm">
-                              <span className="font-semibold bg-white">
-                                Menor valor fical:
-                              </span>
-                              {
-                                data.ActivosPasivos.Activos
-                                  .ActivosEquivalentesEfectivo.Total
-                                  .MenorValorFiscal
-                              }
-                            </p>
-                            <p className="border p-1 rounded-sm">
-                              <span className="font-semibold bg-white">
-                                Mayor Valor Fiscal:
-                              </span>
-                              {
-                                data.ActivosPasivos.Activos
-                                  .ActivosEquivalentesEfectivo.Total
-                                  .MayorValorFiscal
-                              }
-                            </p>
-                            <p className="border p-1 rounded-sm">
-                              <span className="font-semibold bg-white">
-                                Valor fiscal:
-                              </span>{' '}
-                              {
-                                data.ActivosPasivos.Activos
-                                  .ActivosEquivalentesEfectivo.Total
-                                  .ValorFiscal
-                              }
-                            </p>
-                          </div>
-                        </article>
-                      </section>
-                    </div>
-                    {/* Aquí se pueden añadir más secciones según sea necesario */}
-                  </div>
-                )}
-              </div>
-              <div className="border-t border-gray-200">
-              <button type="button" 
-                className="w-full text-left p-4 border-b border-gray-200"
-                onClick={() => toggleSection("activos-i")}>
-                Inversiones e instrumentos financieros derivados (valor neto)
-                </button>
-                {expandedSection === "activos-i" && (
-                  <div className="pl-4">
-                    <div className="pl-4">
-                      <button
-                        type="button"
-                        className="w-full text-left p-4 border-b border-gray-200"
-                        onClick={() => toggleSubSection("activos-instrumentos-financieros")}
-                      >
-                        Inversiones e instrumentos financieros derivados
-                      </button>
-                      {expandedSubSection === "activos-instrumentos-financieros" && (
-                        <div className="pl-4">
-                        <section className="p-2 bg-white border rounded-md">
-                          <h2 className="bg-white font-bold text-xl pb-2">
-                            Cuentas por Cobrar Comerciales y Otras Cuentas por Cobrar
-                          </h2>
-                          <article className="bg-white grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2">
-                            <ESFvalues
-                              title="Derechos de recompra de inversiones"
-                              path={
-                                "ActivosPasivos.Activos.InversionesInstrumentosFinancierosDerivadosVN.InversionesInstrumentosFinancierosDerivados.DerechosRecompraInversiones"
-                              }
-                                data={
-                                data.ActivosPasivos.Activos.InversionesInstrumentosFinancierosDerivadosVN.InversionesInstrumentosFinancierosDerivados.DerechosRecompraInversiones
-                              }
-                              handleChange={handleChange}
-                            />
-                            <ESFvalues
-                              title="Instrumentos de deuda a costo amortizado"
-                              path={
-                                "ActivosPasivos.Activos.InversionesInstrumentosFinancierosDerivadosVN.InversionesInstrumentosFinancierosDerivados.InstrumentosDeudaCostoAmortizado"                           
-                              }
-                              data={
-                                data.ActivosPasivos.Activos.InversionesInstrumentosFinancierosDerivadosVN.InversionesInstrumentosFinancierosDerivados.InstrumentosDeudaCostoAmortizado
-                              }
-                              handleChange={handleChange}                     
-                            />
-                            <ESFvalues
-                              title="Instrumentos de deuda o patrimonio al costo"
-                              path={
-                                "ActivosPasivos.Activos.InversionesInstrumentosFinancierosDerivadosVN.InversionesInstrumentosFinancierosDerivados.InstrumentosDeudaPatrimonioCosto"                           
-                              }
-                              data={
-                                data.ActivosPasivos.Activos.InversionesInstrumentosFinancierosDerivadosVN.InversionesInstrumentosFinancierosDerivados.InstrumentosDeudaPatrimonioCosto
-                              }
-                              handleChange={handleChange}                     
-                            />
-                            <button type="button"
-                              className="w-full text-left p-4 border-b border-gray-200"
-                              onClick={() => toggleSubSubSection("activos-is")}>
-                              Inversiones en subsidiarias, asociadas y negocios conjuntos
-                            </button>
-                            {expandedSubSubSection === "activos-is" && (
-                              <div className="pl-4">
-                                <h1>Inversiones en subsidiarias, asociadas y negocios conjuntos</h1>
-                                <ESFvalues
-                                  title='Valor razonable con cambios en resultados'
-                                  path={
-                                    'ActivosPasivos.Activos.InversionesInstrumentosFinancierosDerivadosVN.InversionesInstrumentosFinancierosDerivados.InversionesSubsidiariasAsociadasNegociosConjuntos.ValorRazonableCambiosResultados'
-                                  }
-                                  data={
-                                    data.ActivosPasivos.Activos.InversionesInstrumentosFinancierosDerivadosVN.InversionesInstrumentosFinancierosDerivados.InversionesSubsidiariasAsociadasNegociosConjuntos.ValorRazonableCambiosResultados
-                                  }
-                                  handleChange={handleChange}
-                                />
-                                <ESFvalues
-                                  title='Valor razonable con cambios en el ORI'
-                                  path={
-                                    'ActivosPasivos.Activos.InversionesInstrumentosFinancierosDerivadosVN.InversionesInstrumentosFinancierosDerivados.InversionesSubsidiariasAsociadasNegociosConjuntos.ValorRazonableCambiosORI'
-                                  }
-                                  data={
-                                    data.ActivosPasivos.Activos.InversionesInstrumentosFinancierosDerivadosVN.InversionesInstrumentosFinancierosDerivados.InversionesSubsidiariasAsociadasNegociosConjuntos.ValorRazonableCambiosORI
-                                  }
-                                  handleChange={handleChange}
-                                />
-                                <ESFvalues
-                                  title='Método de la participación'
-                                  path={
-                                    'ActivosPasivos.Activos.InversionesInstrumentosFinancierosDerivadosVN.InversionesInstrumentosFinancierosDerivados.InversionesSubsidiariasAsociadasNegociosConjuntos.MetodoParticipacion'
-                                  }
-                                  data={
-                                    data.ActivosPasivos.Activos.InversionesInstrumentosFinancierosDerivadosVN.InversionesInstrumentosFinancierosDerivados.InversionesSubsidiariasAsociadasNegociosConjuntos.MetodoParticipacion
-                                  }
-                                  handleChange={handleChange}
-                                />
-                                <ESFvalues
-                                  title='Al costo'
-                                  path={
-                                    'ActivosPasivos.Activos.InversionesInstrumentosFinancierosDerivadosVN.InversionesInstrumentosFinancierosDerivados.InversionesSubsidiariasAsociadasNegociosConjuntos.AlCosto'
-                                  }
-                                  data={
-                                    data.ActivosPasivos.Activos.InversionesInstrumentosFinancierosDerivadosVN.InversionesInstrumentosFinancierosDerivados.InversionesSubsidiariasAsociadasNegociosConjuntos.AlCosto
-                                  }
-                                  handleChange={handleChange}
-                                />
-                              </div> 
-                            )}
-                            <ESFvalues
-                              title="Inversiones en subsidiarias, asociadas y negocios conjuntos total"
-                              path={
-                                "ActivosPasivos.Activos.InversionesInstrumentosFinancierosDerivadosVN.InversionesInstrumentosFinancierosDerivados.InversionesSubsidiariasAsociadasNegociosConjuntos.Total"
-                              }
-                              data={
-                                data.ActivosPasivos.Activos.InversionesInstrumentosFinancierosDerivadosVN.InversionesInstrumentosFinancierosDerivados.InversionesSubsidiariasAsociadasNegociosConjuntos.Total
-                              }
-                              handleChange={handleChange}
-                            />
-                            <ESFvalues
-                              title="Instrumentos de deuda o patrimonio al valor razonable con cambios en resultados"
-                              path={
-                                "ActivosPasivos.Activos.InversionesInstrumentosFinancierosDerivadosVN.InversionesInstrumentosFinancierosDerivados.InstrumentosDeudaPatrimonioValorRazonableResultados"                           
-                              }
-                              data={
-                                data.ActivosPasivos.Activos.InversionesInstrumentosFinancierosDerivadosVN.InversionesInstrumentosFinancierosDerivados.InstrumentosDeudaPatrimonioValorRazonableResultados
-                              }
-                              handleChange={handleChange}                     
-                            />
-                            <ESFvalues
-                              title="Instrumentos de deuda o patrimonio al valor razonable con cambios en el ORI"
-                              path={
-                                "ActivosPasivos.Activos.InversionesInstrumentosFinancierosDerivadosVN.InversionesInstrumentosFinancierosDerivados.InstrumentosDeudaPatrimonioValorRazonableORI"
-                              }
-                              data={
-                                data.ActivosPasivos.Activos.InversionesInstrumentosFinancierosDerivadosVN.InversionesInstrumentosFinancierosDerivados.InstrumentosDeudaPatrimonioValorRazonableORI
-                              }
-                              handleChange={handleChange}
-                            />
-                            <ESFvalues
-                              title="Instrumentos financieros derivados con fines de negociación"
-                              path={
-                                "ActivosPasivos.Activos.InversionesInstrumentosFinancierosDerivadosVN.InversionesInstrumentosFinancierosDerivados.InstrumentosFinancierosDerivadosNegociación"
-                              }
-                              data={
-                                data.ActivosPasivos.Activos.InversionesInstrumentosFinancierosDerivadosVN.InversionesInstrumentosFinancierosDerivados.InstrumentosFinancierosDerivadosNegociación
-                              }
-                              handleChange={handleChange}
-                            />
-                            <ESFvalues 
-                              title="Instrumentos financieros derivados con fines de cobertura"
-                              path={
-                                "ActivosPasivos.Activos.InversionesInstrumentosFinancierosDerivadosVN.InversionesInstrumentosFinancierosDerivados.InstrumentosFinancierosDerivadosCobertura"
-                              }
-                              data={
-                                data.ActivosPasivos.Activos.InversionesInstrumentosFinancierosDerivadosVN.InversionesInstrumentosFinancierosDerivados.InstrumentosFinancierosDerivadosCobertura
-                              }
-                              handleChange={handleChange}
-                            />
-                            <ESFvalues
-                              title="Derechos fiduciarios"
-                              path={
-                                "ActivosPasivos.Activos.InversionesInstrumentosFinancierosDerivadosVN.InversionesInstrumentosFinancierosDerivados.DerechosFiduciarios"
-                              }
-                              data={
-                                data.ActivosPasivos.Activos.InversionesInstrumentosFinancierosDerivadosVN.InversionesInstrumentosFinancierosDerivados.DerechosFiduciarios
-                              }
-                              handleChange={handleChange}
-                            />
-                            <ESFvalues
-                              title="Otros"
-                              path={
-                                "ActivosPasivos.Activos.InversionesInstrumentosFinancierosDerivadosVN.InversionesInstrumentosFinancierosDerivados.Otros"
-                              }
-                              data={
-                                data.ActivosPasivos.Activos.InversionesInstrumentosFinancierosDerivadosVN.InversionesInstrumentosFinancierosDerivados.Otros
-                              }
-                              handleChange={handleChange}
-                            />
-                            </article>
-                          <article>
-                            <h3 className="text-lg font-bold">Total</h3>
-                            <div className="bg-white flex flex-col md:flex-row gap-2 justify-between">
-                              <p className="border p-1 rounded-sm">
-                                <span className="font-semibold bg-white">
-                                  Valor contable:
-                                </span>
-                                {
-                                  data.ActivosPasivos.Activos.InversionesInstrumentosFinancierosDerivadosVN.InversionesInstrumentosFinancierosDerivados.Total.ValorContable
-                                }
-                              </p>
-                              <p className="border p-1 rounded-sm">
-                                <span className="font-semibold bg-white">
-                                  Efecto conversion:
-                                </span>{' '}
-                                {
-                                  data.ActivosPasivos.Activos.InversionesInstrumentosFinancierosDerivadosVN.InversionesInstrumentosFinancierosDerivados.Total.EfectoConversion
-                                }
-                              </p>
-                              <p className="border p-1 rounded-sm">
-                                <span className="font-semibold bg-white">
-                                  Menor valor fical:
-                                </span>
-                                {
-                                   data.ActivosPasivos.Activos.InversionesInstrumentosFinancierosDerivadosVN.InversionesInstrumentosFinancierosDerivados.Total.MenorValorFiscal
-                                }
-                              </p>
-                              <p className="border p-1 rounded-sm">
-                                <span className="font-semibold bg-white">
-                                  Mayor Valor Fiscal:
-                                </span>
-                                {
-                                  data.ActivosPasivos.Activos.InversionesInstrumentosFinancierosDerivadosVN.InversionesInstrumentosFinancierosDerivados.Total.MayorValorFiscal
-                                }
-                              </p>
-                              <p className="border p-1 rounded-sm">
-                                <span className="font-semibold bg-white">
-                                  Valor fiscal:
-                                </span>{' '}
-                                {
-                                  data.ActivosPasivos.Activos.InversionesInstrumentosFinancierosDerivadosVN.InversionesInstrumentosFinancierosDerivados.Total.ValorFiscal
-                                }
-                              </p>
-                            </div>
-                          </article>
-                        </section>
-                      </div>
-                      )}
-                    </div>
-                    <div className="pl-4">
-                      <button type="button"
-                      className="w-full text-left p-4 border-b border-gray-200"
-                      onClick={() => toggleSubSection("activos-instrumentos-financieros-deterioro")}>
-                        Deterioro acumulado de inversiones
-                      </button>
-                      {expandedSubSection === "activos-instrumentos-financieros-deterioro" && (
-                        <div className="pl-4">
-                        <section className="p-2 bg-white border rounded-md">
-                          <h2 className="bg-white font-bold text-xl pb-2">
-                            Cuentas por Cobrar Comerciales y Otras Cuentas por Cobrar
-                          </h2>
-                          <article className="bg-white grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2">
-                            <ESFvalues
-                              title="Derechos de recompra de inversiones"
-                              path={
-                                'ActivosPasivos.Activos.InversionesInstrumentosFinancierosDerivadosVN.DeterioroAcumuladoInversiones.DerechosRecompraInversiones'
-                              }
-                              data={
-                                data.ActivosPasivos.Activos.InversionesInstrumentosFinancierosDerivadosVN.DeterioroAcumuladoInversiones.DerechosRecompraInversiones
-                              }
-                              handleChange={handleChange}
-                            />
-                            <button type="button"
-                              className="w-full text-left p-4 border-b border-gray-200"
-                              onClick={() => toggleSubSubSection("activos-is-d")}>
-                              Inversiones en subsidiarias, asociadas y negocios conjuntos
-                            </button>
-                            {expandedSubSubSection === "activos-is-d" && (
-                              <div className="pl-4">
-                                <h1>Inversiones en subsidiarias, asociadas y negocios conjuntos</h1>
-                                <ESFvalues
-                                  title='Método de la participación'
-                                  path={
-                                    'ActivosPasivos.Activos.InversionesInstrumentosFinancierosDerivadosVN.DeterioroAcumuladoInversiones.InversionesSubsidiariasAsociadasNegociosConjuntos.Metodo'
-                                  }
-                                  data={
-                                    data.ActivosPasivos.Activos.InversionesInstrumentosFinancierosDerivadosVN.DeterioroAcumuladoInversiones.InversionesSubsidiariasAsociadasNegociosConjuntos.Metodo
-                                  }
-                                  handleChange={handleChange}
-                                />
-                                <ESFvalues
-
-                                  title='Costo'
-                                  path={
-                                    'ActivosPasivos.Activos.InversionesInstrumentosFinancierosDerivadosVN.DeterioroAcumuladoInversiones.InversionesSubsidiariasAsociadasNegociosConjuntos.Costo'
-                                  }
-                                  data={
-                                    data.ActivosPasivos.Activos.InversionesInstrumentosFinancierosDerivadosVN.DeterioroAcumuladoInversiones.InversionesSubsidiariasAsociadasNegociosConjuntos.Costo
-                                  }
-                                  handleChange={handleChange}
-                                />
-                                </div>
-                            )}
-                            <ESFvalues
-                                  title=' Inversiones en subsidiarias, asociadas y negocios conjuntos Total'
-                                  path={
-                                    'ActivosPasivos.Activos.InversionesInstrumentosFinancierosDerivadosVN.DeterioroAcumuladoInversiones.InversionesSubsidiariasAsociadasNegociosConjuntos.Total'
-                                  }
-                                  data={
-                                    data.ActivosPasivos.Activos.InversionesInstrumentosFinancierosDerivadosVN.DeterioroAcumuladoInversiones.InversionesSubsidiariasAsociadasNegociosConjuntos.Total
-                                  }
-                                  handleChange={handleChange}
-                            />
-                            <ESFvalues
-                              title="instrumentos de deuda a costo amortizado"
-                              path={
-                                "ActivosPasivos.Activos.InversionesInstrumentosFinancierosDerivadosVN.DeterioroAcumuladoInversiones.instrumentosDeudaCostoAmortizado"
-                              }
-                              data={
-                                data.ActivosPasivos.Activos.InversionesInstrumentosFinancierosDerivadosVN.DeterioroAcumuladoInversiones.instrumentosDeudaCostoAmortizado
-                              }
-                              handleChange={handleChange}
-                            />
-                            <ESFvalues
-                              title="Instrumentos de deuda o patrimonio al costo"
-                              path={
-                                "ActivosPasivos.Activos.InversionesInstrumentosFinancierosDerivadosVN.DeterioroAcumuladoInversiones.InstrumentosDeudaPatrimonioCosto"
-                              }
-                              data={
-                                data.ActivosPasivos.Activos.InversionesInstrumentosFinancierosDerivadosVN.DeterioroAcumuladoInversiones.InstrumentosDeudaPatrimonioCosto
-                              }
-                              handleChange={handleChange}
-                            />
-                            <ESFvalues
-                              title="Derechos fiduciarios"
-                              path={
-                                "ActivosPasivos.Activos.InversionesInstrumentosFinancierosDerivadosVN.DeterioroAcumuladoInversiones.DerechosFiduciarios"
-                              }
-                              data={
-                                data.ActivosPasivos.Activos.InversionesInstrumentosFinancierosDerivadosVN.DeterioroAcumuladoInversiones.DerechosFiduciarios
-                              }
-                              handleChange={handleChange}
-                            />
-                            <ESFvalues
-                              title="Otros"
-                              path={
-                                "ActivosPasivos.Activos.InversionesInstrumentosFinancierosDerivadosVN.DeterioroAcumuladoInversiones.Otros"
-                              }
-                              data={
-                                data.ActivosPasivos.Activos.InversionesInstrumentosFinancierosDerivadosVN.DeterioroAcumuladoInversiones.Otros
-                              }
-                              handleChange={handleChange}
-                            />
-                          </article>
-                          <article>
-                            <h3 className="text-lg font-bold">Total</h3>
-                            <div className="bg-white flex flex-col md:flex-row gap-2 justify-between">
-                              <p className="border p-1 rounded-sm">
-                                <span className="font-semibold bg-white">
-                                  Valor contable:
-                                </span>
-                                {
-                                  data.ActivosPasivos.Activos.InversionesInstrumentosFinancierosDerivadosVN.DeterioroAcumuladoInversiones.Total.ValorContable
-                                }
-                              </p>
-                              <p className="border p-1 rounded-sm">
-                                <span className="font-semibold bg-white">
-                                  Efecto conversion:
-                                </span>{' '}
-                                {
-                                  data.ActivosPasivos.Activos.InversionesInstrumentosFinancierosDerivadosVN.DeterioroAcumuladoInversiones.Total.EfectoConversion
-                                }
-                              </p>
-                              <p className="border p-1 rounded-sm">
-                                <span className="font-semibold bg-white">
-                                  Menor valor fical:
-                                </span>
-                                {
-                                  data.ActivosPasivos.Activos.InversionesInstrumentosFinancierosDerivadosVN.DeterioroAcumuladoInversiones.Total.MenorValorFiscal
-                                }
-                              </p>
-                              <p className="border p-1 rounded-sm">
-                                <span className="font-semibold bg-white">
-                                  Mayor Valor Fiscal:
-                                </span>
-                                {
-                                  data.ActivosPasivos.Activos.InversionesInstrumentosFinancierosDerivadosVN.DeterioroAcumuladoInversiones.Total.MayorValorFiscal
-                                }
-                              </p>
-                              <p className="border p-1 rounded-sm">
-                                <span className="font-semibold bg-white">
-                                  Valor fiscal:
-                                </span>{' '}
-                                {
-                                  data.ActivosPasivos.Activos.InversionesInstrumentosFinancierosDerivadosVN.DeterioroAcumuladoInversiones.Total.ValorFiscal
-                                }
-                              </p>
-                            </div>
-                          </article>
-                        </section>
-                      </div>
-                      )}
-                    </div>
-                    {/* Aquí se pueden añadir más secciones según sea necesario */} 
-                    <article>
-                      <h3 className="text-lg font-bold">Total</h3>
-                      <div className="bg-white flex flex-col md:flex-row gap-2 justify-between">
-                        <p className="border p-1 rounded-sm">
-                          <span className="font-semibold bg-white">
-                            Valor contable:
-                          </span>
-                          {
-                            data.ActivosPasivos.Activos.InversionesInstrumentosFinancierosDerivadosVN.Total.ValorContable
-                          }
-                        </p>
-                        <p className="border p-1 rounded-sm">
-                          <span className="font-semibold bg-white">
-                            Efecto conversion:
-                          </span>{' '}
-                          {
-                            data.ActivosPasivos.Activos.InversionesInstrumentosFinancierosDerivadosVN.Total.EfectoConversion
-                          }
-                        </p>
-                        <p className="border p-1 rounded-sm">
-                          <span className="font-semibold bg-white">
-                            Menor valor fical:
-                          </span>
-                          {
-                              data.ActivosPasivos.Activos.InversionesInstrumentosFinancierosDerivadosVN.Total.MenorValorFiscal
-                          }
-                        </p>
-                        <p className="border p-1 rounded-sm">
-                          <span className="font-semibold bg-white">
-                            Mayor Valor Fiscal:
-                          </span>
-                          {
-                            data.ActivosPasivos.Activos.InversionesInstrumentosFinancierosDerivadosVN.Total.MayorValorFiscal
-                          }
-                        </p>
-                        <p className="border p-1 rounded-sm">
-                          <span className="font-semibold bg-white">
-                            Valor fiscal:
-                          </span>{' '}
-                          {
-                            data.ActivosPasivos.Activos.InversionesInstrumentosFinancierosDerivadosVN.Total.ValorFiscal
-                          }
-                        </p>
-                      </div>
-                    </article>
-                  </div>
-                )}
-              </div>
-              <div className="border-t border-gray-200">
-                <button type="button"
-                  className="w-full text-left p-4 border-b border-gray-200"
-                  onClick={() => toggleSection("activos-comerciales-cobrar")}>
-                  Cuentas comerciales por cobrar y otras cuentas por cobrar
-                </button>
-                {expandedSection === "activos-comerciales-cobrar" && (
-                  <div className="pl-4">
-                    <div className="pl-4">
-                      <button type="button"
-                        className="w-full text-left p-4 border-b border-gray-200"
-                        onClick={() => toggleSubSection("activos-cc")}>
-                        Cuentas y documentos por cobrar
-                      </button>
-                      {expandedSubSection === "activos-cc" && (
-                        <div className="pl-4">
-                          <section className="p-2 bg-white border rounded-md">
-                            <article className="bg-white grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2">
-                              <ESFvalues
-                                title='Cartera de crédito (préstamos bancarios)'
-                                path={
-                                  'ActivosPasivos.Activos.CuentasComercialesCobrarOtrasPorCobrar.CuentasDocumentosPorCobrar.CarteraCreditoPrestamosBancarios'
-                                }
-                                data={
-                                  data.ActivosPasivos.Activos.CuentasComercialesCobrarOtrasPorCobrar.CuentasDocumentosPorCobrar.CarteraCreditoPrestamosBancarios
-                                }
-                                handleChange={handleChange}
-                              />
-                              <ESFvalues
-                                title='Cuentas por cobrar comerciales'
-                                path={
-                                  'ActivosPasivos.Activos.CuentasComercialesCobrarOtrasPorCobrar.CuentasDocumentosPorCobrar.CuentasComercialesPorCobrar'
-                                }
-                                data={
-                                  data.ActivosPasivos.Activos.CuentasComercialesCobrarOtrasPorCobrar.CuentasDocumentosPorCobrar.CuentasComercialesPorCobrar
-                                }
-                                handleChange={handleChange}
-                              />
-                              <ESFvalues
-                                title='Cuentas por cobrar en acuerdos de concesión (modelo del activo financiero)'
-                                path={
-                                  'ActivosPasivos.Activos.CuentasComercialesCobrarOtrasPorCobrar.CuentasDocumentosPorCobrar.CuentasPorCobrarAcuerdosConcesion'
-                                }
-                                data={
-                                  data.ActivosPasivos.Activos.CuentasComercialesCobrarOtrasPorCobrar.CuentasDocumentosPorCobrar.CuentasPorCobrarAcuerdosConcesion
-                                }
-                                handleChange={handleChange}
-                              />
-                              <ESFvalues
-                                title='Arrendamiento financiero o leasing financiero'
-                                path={
-                                  'ActivosPasivos.Activos.CuentasComercialesCobrarOtrasPorCobrar.CuentasDocumentosPorCobrar.ArrendamientoFinancieroOLeasingFinanciero'
-                                }
-                                data={
-                                  data.ActivosPasivos.Activos.CuentasComercialesCobrarOtrasPorCobrar.CuentasDocumentosPorCobrar.ArrendamientoFinancieroOLeasingFinanciero
-                                }
-                                handleChange={handleChange}
-                              />
-                              <ESFvalues
-                                title='Dividendos y participaciones'
-                                path={
-                                  'ActivosPasivos.Activos.CuentasComercialesCobrarOtrasPorCobrar.CuentasDocumentosPorCobrar.DividendosParticipaciones'
-                                }
-                                data={
-                                  data.ActivosPasivos.Activos.CuentasComercialesCobrarOtrasPorCobrar.CuentasDocumentosPorCobrar.DividendosParticipaciones
-                                }
-                                handleChange={handleChange}
-                              />
-                              <ESFvalues
-                              title='Cuentas por cobrar a socios, accionistas o partícipes'
-                              path={
-                                'ActivosPasivos.Activos.CuentasComercialesCobrarOtrasPorCobrar.CuentasDocumentosPorCobrar.CuentasPorCobrarSociosAccionistasParticipes'
-                              } 
-                              data={
-                                data.ActivosPasivos.Activos.CuentasComercialesCobrarOtrasPorCobrar.CuentasDocumentosPorCobrar.CuentasPorCobrarSociosAccionistasParticipes
-                              }
-                              handleChange={handleChange}
-                              />
-                              <ESFvalues
-                              title='Cuentas y documentos por cobrar a otras partes relacionadas y asociadas'
-                              path={
-                                'ActivosPasivos.Activos.CuentasComercialesCobrarOtrasPorCobrar.CuentasDocumentosPorCobrar.CuentasDocumentosPorCobrarOtrasPartesRelacionadasAsociadas'
-                              }
-                              data={
-                                data.ActivosPasivos.Activos.CuentasComercialesCobrarOtrasPorCobrar.CuentasDocumentosPorCobrar.CuentasDocumentosPorCobrarOtrasPartesRelacionadasAsociadas
-                              }
-                              handleChange={handleChange}
-                              />
-                              <ESFvalues
-                              title='Primas de seguros por recaudar'
-                              path={
-                                'ActivosPasivos.Activos.CuentasComercialesCobrarOtrasPorCobrar.CuentasDocumentosPorCobrar.PrimasSegurosPorRecaudar'
-                              }
-                              data={
-                                data.ActivosPasivos.Activos.CuentasComercialesCobrarOtrasPorCobrar.CuentasDocumentosPorCobrar.PrimasSegurosPorRecaudar
-                              }
-                              handleChange={handleChange}
-                              />
-                              <ESFvalues
-                              title='Cartera de difícil cobro'
-                              path={
-                                'ActivosPasivos.Activos.CuentasComercialesCobrarOtrasPorCobrar.CuentasDocumentosPorCobrar.CarteraDificilCobro'
-                              }
-                              data={
-                                data.ActivosPasivos.Activos.CuentasComercialesCobrarOtrasPorCobrar.CuentasDocumentosPorCobrar.CarteraDificilCobro
-                              }
-                              handleChange={handleChange}
-                              />
-                              <ESFvalues
-                              title='Reclamaciones por cobrar'
-                              path={
-                                'ActivosPasivos.Activos.CuentasComercialesCobrarOtrasPorCobrar.CuentasDocumentosPorCobrar.ReclamacionesPorCobrar'
-                              }
-                              data={
-                                data.ActivosPasivos.Activos.CuentasComercialesCobrarOtrasPorCobrar.CuentasDocumentosPorCobrar.ReclamacionesPorCobrar
-                              }
-                              handleChange={handleChange}
-                              />
-                              <ESFvalues
-                              title='Anticipos de pagos'
-                              path={
-                                'ActivosPasivos.Activos.CuentasComercialesCobrarOtrasPorCobrar.CuentasDocumentosPorCobrar.AnticiposPagos'
-                              }
-                              data={
-                                data.ActivosPasivos.Activos.CuentasComercialesCobrarOtrasPorCobrar.CuentasDocumentosPorCobrar.AnticiposPagos
-                              }
-                              handleChange={handleChange}
-                              />
-                              <ESFvalues
-                              title='Otras cuentas y documentos por cobrar'
-                              path={
-                                'ActivosPasivos.Activos.CuentasComercialesCobrarOtrasPorCobrar.CuentasDocumentosPorCobrar.OtrasCuentasDocumentosPorCobrar'
-                              }
-                              data={
-                                data.ActivosPasivos.Activos.CuentasComercialesCobrarOtrasPorCobrar.CuentasDocumentosPorCobrar.OtrasCuentasDocumentosPorCobrar
-                              }
-                              handleChange={handleChange}
-                              />
-                            </article>    
-                              <article>
-                                <h3 className="text-lg font-bold">Total</h3>
-                                <div className="bg-white flex flex-col md:flex-row gap-2 justify-between">
-                                  <p className="border p-1 rounded-sm">
-                                    <span className="font-semibold bg-white">
-                                      Valor contable:
-                                    </span>
-                                    {
-                                      data.ActivosPasivos.Activos.CuentasComercialesCobrarOtrasPorCobrar.CuentasDocumentosPorCobrar.Total.ValorContable
-                                    }
-                                  </p>
-                                  <p className="border p-1 rounded-sm">
-                                    <span className="font-semibold bg-white">
-                                      Efecto conversion:
-                                    </span>{' '}
-                                    {
-                                      data.ActivosPasivos.Activos.CuentasComercialesCobrarOtrasPorCobrar.CuentasDocumentosPorCobrar.Total.EfectoConversion
-                                    }
-                                  </p>
-                                  <p className="border p-1 rounded-sm">
-                                    <span className="font-semibold bg-white">
-                                      Menor valor fical:
-                                    </span>
-                                    {
-                                        data.ActivosPasivos.Activos.CuentasComercialesCobrarOtrasPorCobrar.CuentasDocumentosPorCobrar.Total.MenorValorFiscal
-                                    }
-                                  </p>
-                                  <p className="border p-1 rounded-sm">
-                                    <span className="font-semibold bg-white">
-                                      Mayor Valor Fiscal:
-                                    </span>
-                                    {
-                                      data.ActivosPasivos.Activos.CuentasComercialesCobrarOtrasPorCobrar.CuentasDocumentosPorCobrar.Total.MayorValorFiscal
-                                    }
-                                  </p>
-                                  <p className="border p-1 rounded-sm">
-                                    <span className="font-semibold bg-white">
-                                      Valor fiscal:
-                                    </span>{' '}
-                                    {
-                                      data.ActivosPasivos.Activos.CuentasComercialesCobrarOtrasPorCobrar.CuentasDocumentosPorCobrar.Total.ValorFiscal
-                                    }
-                                  </p>
-                                </div>
-                              </article>                     
-                            </section>
-                        </div>
-                      )}
-                    </div>
-                    <div className="pl-4">
-                      <button type="button"
-                        className="w-full text-left p-4 border-b border-gray-200"
-                        onClick={() => toggleSubSection("activos-co")}>
-                        Deterioro acumulado del valor cuentas y documentos por cobrar
-                      </button>
-                      {expandedSubSection === "activos-co" && (
-                        <div className="pl-4">
-                          <section className="p-2 bg-white border rounded-md">
-                            <article className="bg-white grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2">
-                              <ESFvalues
-                                title='Cartera de crédito (préstamos bancarios)'
-                                path={
-                                  'ActivosPasivos.Activos.CuentasComercialesCobrarOtrasPorCobrar.DeterioroAcumuladoValorCuentasDocumentosCobrar.CarteraDeCredito'
-                                }
-                                data={
-                                  data.ActivosPasivos.Activos.CuentasComercialesCobrarOtrasPorCobrar.DeterioroAcumuladoValorCuentasDocumentosCobrar.CarteraDeCredito
-                                }
-                                handleChange={handleChange}
-                              />
-                              <ESFvalues
-                                title='Cuentas comerciales por cobrar'
-                                path={
-                                  'ActivosPasivos.Activos.CuentasComercialesCobrarOtrasPorCobrar.DeterioroAcumuladoValorCuentasDocumentosCobrar.CuentasComercialesPorCobrar'
-                                }
-                                data={
-                                  data.ActivosPasivos.Activos.CuentasComercialesCobrarOtrasPorCobrar.DeterioroAcumuladoValorCuentasDocumentosCobrar.CuentasComercialesPorCobrar
-                                }
-                                handleChange={handleChange}
-                              />
-                              <ESFvalues
-                                title='Cuentas por cobrar en acuerdos de concesión (modelo del activo financiero)'
-                                path={
-                                  'ActivosPasivos.Activos.CuentasComercialesCobrarOtrasPorCobrar.DeterioroAcumuladoValorCuentasDocumentosCobrar.CuentasPorCobrarAcuerdosConcesion'
-                                }
-                                data={
-                                  data.ActivosPasivos.Activos.CuentasComercialesCobrarOtrasPorCobrar.DeterioroAcumuladoValorCuentasDocumentosCobrar.CuentasPorCobrarAcuerdosConcesion
-                                }
-                                handleChange={handleChange}
-                              />
-                              <ESFvalues
-                                title='Arrendamiento financiero o leasing financiero'
-                                path={
-                                  'ActivosPasivos.Activos.CuentasComercialesCobrarOtrasPorCobrar.DeterioroAcumuladoValorCuentasDocumentosCobrar.ArrendamientoFinancieroLeasingFinanciero'
-                                }
-                                data={
-                                  data.ActivosPasivos.Activos.CuentasComercialesCobrarOtrasPorCobrar.DeterioroAcumuladoValorCuentasDocumentosCobrar.ArrendamientoFinancieroLeasingFinanciero
-                                }
-                                handleChange={handleChange}
-                              />
-                              <ESFvalues
-                                title='Dividendos y participaciones'
-                                path={
-                                  'ActivosPasivos.Activos.CuentasComercialesCobrarOtrasPorCobrar.DeterioroAcumuladoValorCuentasDocumentosCobrar.DividendosParticipaciones'
-                                }
-                                data={
-                                  data.ActivosPasivos.Activos.CuentasComercialesCobrarOtrasPorCobrar.DeterioroAcumuladoValorCuentasDocumentosCobrar.DividendosParticipaciones
-                                }
-                                handleChange={handleChange}
-                              />
-                              <ESFvalues
-                                title='Cuentas por cobrar a socios, accionistas o partícipes'
-                                path={
-                                  'ActivosPasivos.Activos.CuentasComercialesCobrarOtrasPorCobrar.DeterioroAcumuladoValorCuentasDocumentosCobrar.CuentasPorCobrarSociosAccionistasParticipes'
-                                }
-                                data={
-                                  data.ActivosPasivos.Activos.CuentasComercialesCobrarOtrasPorCobrar.DeterioroAcumuladoValorCuentasDocumentosCobrar.CuentasPorCobrarSociosAccionistasParticipes
-                                }
-                                handleChange={handleChange}
-                              />
-                              <ESFvalues
-                                title='Cuentas por cobrar a otras partes relacionadas y asociadas'
-                                path={
-                                  'ActivosPasivos.Activos.CuentasComercialesCobrarOtrasPorCobrar.DeterioroAcumuladoValorCuentasDocumentosCobrar.CuentasPorCobrarOtrasPartesRelacionadasAsociadas'
-                                }
-                                data={
-                                  data.ActivosPasivos.Activos.CuentasComercialesCobrarOtrasPorCobrar.DeterioroAcumuladoValorCuentasDocumentosCobrar.CuentasPorCobrarOtrasPartesRelacionadasAsociadas
-                                }
-                                handleChange={handleChange}
-                              />
-                              <ESFvalues
-                                title='Otras cuentas por cobrar'
-                                path={
-                                  'ActivosPasivos.Activos.CuentasComercialesCobrarOtrasPorCobrar.DeterioroAcumuladoValorCuentasDocumentosCobrar.OtrasCuentasPorCobrar'
-                                }
-                                data={
-                                  data.ActivosPasivos.Activos.CuentasComercialesCobrarOtrasPorCobrar.DeterioroAcumuladoValorCuentasDocumentosCobrar.OtrasCuentasPorCobrar  
-                                }
-                                handleChange={handleChange}
-                              />                         
-                            </article>
-                            <article>
-                              <h3 className="text-lg font-bold">Total</h3>
-                              <div className="bg-white flex flex-col md:flex-row gap-2 justify-between">
-                                <p className="border p-1 rounded-sm">
-                                  <span className="font-semibold bg-white">
-                                    Valor contable:
-                                  </span>
-                                  {
-                                    data.ActivosPasivos.Activos.CuentasComercialesCobrarOtrasPorCobrar.DeterioroAcumuladoValorCuentasDocumentosCobrar.Total.ValorContable
-                                  }
-                                </p>
-                                <p className="border p-1 rounded-sm">
-                                  <span className="font-semibold bg-white">
-                                    Efecto conversion:
-                                  </span>{' '}
-                                  {
-                                    data.ActivosPasivos.Activos.CuentasComercialesCobrarOtrasPorCobrar.DeterioroAcumuladoValorCuentasDocumentosCobrar.Total.EfectoConversion
-                                  }
-                                </p>
-                                <p className="border p-1 rounded-sm">
-                                  <span className="font-semibold bg-white">
-                                    Menor valor fical:
-                                  </span>
-                                  {
-                                      data.ActivosPasivos.Activos.CuentasComercialesCobrarOtrasPorCobrar.DeterioroAcumuladoValorCuentasDocumentosCobrar.Total.MenorValorFiscal
-                                  }
-                                </p>
-                                <p className="border p-1 rounded-sm">
-                                  <span className="font-semibold bg-white">
-                                    Mayor Valor Fiscal:
-                                  </span>
-                                  {
-                                    data.ActivosPasivos.Activos.CuentasComercialesCobrarOtrasPorCobrar.DeterioroAcumuladoValorCuentasDocumentosCobrar.Total.MayorValorFiscal
-                                  }
-                                </p>
-                                <p className="border p-1 rounded-sm">
-                                  <span className="font-semibold bg-white">
-                                    Valor fiscal:
-                                  </span>{' '}
-                                  {
-                                    data.ActivosPasivos.Activos.CuentasComercialesCobrarOtrasPorCobrar.DeterioroAcumuladoValorCuentasDocumentosCobrar.Total.ValorFiscal
-                                  }
-                                </p>
-                              </div>
-                            </article>
-                          </section>                         
-                        </div>
-                      )}
-                    </div>
-                    <article>
-                  <h3 className="text-lg font-bold">Total</h3>
-                  <div className="bg-white flex flex-col md:flex-row gap-2 justify-between">
-                    <p className="border p-1 rounded-sm">
-                      <span className="font-semibold bg-white">
-                        Valor contable:
-                      </span>
-                      {
-                        data.ActivosPasivos.Activos.CuentasComercialesCobrarOtrasPorCobrar.Total.ValorContable
-                      }
-                    </p>
-                    <p className="border p-1 rounded-sm">
-                      <span className="font-semibold bg-white">
-                        Efecto conversion:
-                      </span>{' '}
-                      {
-                        data.ActivosPasivos.Activos.CuentasComercialesCobrarOtrasPorCobrar.Total.EfectoConversion
-                      }
-                    </p>
-                    <p className="border p-1 rounded-sm">
-                      <span className="font-semibold bg-white">
-                        Menor valor fical:
-                      </span>
-                      {
-                          data.ActivosPasivos.Activos.CuentasComercialesCobrarOtrasPorCobrar.Total.MenorValorFiscal
-                      }
-                    </p>
-                    <p className="border p-1 rounded-sm">
-                      <span className="font-semibold bg-white">
-                        Mayor Valor Fiscal:
-                      </span>
-                      {
-                        data.ActivosPasivos.Activos.CuentasComercialesCobrarOtrasPorCobrar.Total.MayorValorFiscal
-                      }
-                    </p>
-                    <p className="border p-1 rounded-sm">
-                      <span className="font-semibold bg-white">
-                        Valor fiscal:
-                      </span>{' '}
-                      {
-                        data.ActivosPasivos.Activos.CuentasComercialesCobrarOtrasPorCobrar.Total.ValorFiscal
-                      }
-                    </p>
-                  </div>
-                  </article>
-                  </div>
-                )}               
-              </div>
-              <div className="border-t border-gray-200">
-                <button type="button"
-                  className="w-full text-left p-4 border-b border-gray-200"
-                  onClick={() => toggleSection("Inventarios")}>
-                  Inventarios
-                </button>
-                {expandedSection === "Inventarios" && (
-                   <div className="pl-4">
-                   <section className="p-2 bg-white border rounded-md">
-                      <article className="bg-white grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2">
-                        <ESFvalues
-                            title='Para la venta, no producidos por la empresa'
-                            path={
-                              'ActivosPasivos.Activos.Inventarios.ParaLaVentaNoProducidosPorLaEmpresa'  
-                            }
-                            data={
-                              data.ActivosPasivos.Activos.Inventarios.ParaLaVentaNoProducidosPorLaEmpresa
-                            }
-                            handleChange={handleChange}/>
-                          <ESFvalues
-                            title='En tránsito'
-                            path={
-                              'ActivosPasivos.Activos.Inventarios.EnTransito'
-                            }
-                            data={
-                              data.ActivosPasivos.Activos.Inventarios.EnTransito
-                            }
-                            handleChange={handleChange}/>  
-                          <ESFvalues
-                            title='Materias primas, suministros y materiales'
-                            path={
-                              'ActivosPasivos.Activos.Inventarios.MateriasPrimasSuministrosMateriales'
-                            }
-                            data={
-                              data.ActivosPasivos.Activos.Inventarios.MateriasPrimasSuministrosMateriales
-                            }
-                            handleChange={handleChange}/>  
-                          <ESFvalues
-                            title='En proceso (diferentes de obras o inmuebles en construcción para la venta)'
-                            path={
-                              'ActivosPasivos.Activos.Inventarios.EnProcesoDiferentesDeObrasInmueblesEnConstruccionParaVenta'
-                            }
-                            data={
-                              data.ActivosPasivos.Activos.Inventarios.EnProcesoDiferentesDeObrasInmueblesEnConstruccionParaVenta
-                            }
-                            handleChange={handleChange}/> 
-                         <ESFvalues
-                            title='Costos prestadores de servicios'
-                            path={
-                              'ActivosPasivos.Activos.Inventarios.CostosPrestadoresServicios'
-                            }
-                            data={
-                              data.ActivosPasivos.Activos.Inventarios.CostosPrestadoresServicios
-                            }
-                            handleChange={handleChange}/> 
-                          <ESFvalues
-                            title='Producto terminado (diferentes de obras o inmuebles terminados para la venta)'
-                            path={
-                              'ActivosPasivos.Activos.Inventarios.ProductoTerminadoDiferentesObrasInmueblesTerminadosParaVenta'
-                            }
-                            data={
-                              data.ActivosPasivos.Activos.Inventarios.ProductoTerminadoDiferentesObrasInmueblesTerminadosParaVenta
-                            }
-                            handleChange={handleChange}/>
-                          <ESFvalues
-                            title='Obras o inmuebles en construcción para la venta'
-                            path={
-                              'ActivosPasivos.Activos.Inventarios.ObrasInmueblesConstruccionParaVenta'
-                            }
-                            data={
-                              data.ActivosPasivos.Activos.Inventarios.ObrasInmueblesConstruccionParaVenta
-                            }
-                            handleChange={handleChange}/>                             
-                          <ESFvalues
-                            title='Obras o inmuebles terminados para la venta'
-                            path={
-                              'ActivosPasivos.Activos.Inventarios.ObrasInmueblesTerminadosParaVenta'
-                            }
-                            data={
-                              data.ActivosPasivos.Activos.Inventarios.ObrasInmueblesTerminadosParaVenta
-                            }
-                            handleChange={handleChange}/>
-                          <ESFvalues
-                            title='Piezas de repuesto y equipo auxiliar clasificados como inventarios'
-                            path={
-                              'ActivosPasivos.Activos.Inventarios.PiezasRepuestoEquipoAuxiliarClasificadosComoInventarios'
-                            }
-                            data={
-                              data.ActivosPasivos.Activos.Inventarios.PiezasRepuestoEquipoAuxiliarClasificadosComoInventarios
-                            }
-                            handleChange={handleChange}/>  
-                          <ESFvalues
-                            title='Inventario que surge de la actividad de extracción'
-                            path={
-                              'ActivosPasivos.Activos.Inventarios.InventarioSurgeActividadExtraccion'
-                            }
-                            data={
-                              data.ActivosPasivos.Activos.Inventarios.InventarioSurgeActividadExtraccion
-                            }
-                            handleChange={handleChange}/>  
-                          <ESFvalues
-                            title='Deterioro acumulado del valor de inventarios'
-                            path={
-                              'ActivosPasivos.Activos.Inventarios.DeterioroAcumuladoValorInventarios'
-                            }
-                            data={
-                              data.ActivosPasivos.Activos.Inventarios.DeterioroAcumuladoValorInventarios
-                            }
-                            handleChange={handleChange}/>                                       
-                      </article>                       
-                      <article>
-                          <h3 className="text-lg font-bold">Total</h3>
-                          <div className="bg-white flex flex-col md:flex-row gap-2 justify-between">
-                            <p className="border p-1 rounded-sm">
-                              <span className="font-semibold bg-white">
-                                Valor contable:
-                              </span>
-                              {
-                                data.ActivosPasivos.Activos.Inventarios.Total.ValorContable
-                              }
-                            </p>
-                            <p className="border p-1 rounded-sm">
-                              <span className="font-semibold bg-white">
-                                Efecto conversion:
-                              </span>{' '}
-                              {
-                                  data.ActivosPasivos.Activos.Inventarios.Total.EfectoConversion
-                              }
-                            </p>
-                            <p className="border p-1 rounded-sm">
-                              <span className="font-semibold bg-white">
-                                Menor valor fical:
-                              </span>
-                              {
-                                data.ActivosPasivos.Activos.Inventarios.Total.MenorValorFiscal
-                              }
-                            </p>
-                            <p className="border p-1 rounded-sm">
-                              <span className="font-semibold bg-white">
-                                Mayor Valor Fiscal:
-                              </span>
-                              {
-                                  data.ActivosPasivos.Activos.Inventarios.Total.MayorValorFiscal
-                              }
-                            </p>
-                            <p className="border p-1 rounded-sm">
-                              <span className="font-semibold bg-white">
-                                Valor fiscal:
-                              </span>{' '}
-                              {
-                                  data.ActivosPasivos.Activos.Inventarios.Total.ValorFiscal
-                              }
-                            </p>
-                          </div>
-                        </article>                     
-                     </section>
-                 </div>
-                )}
-              </div>
-              <div>
-                <button type="button"
-                  className="w-full text-left p-4 border-b border-gray-200"
-                  onClick={() => toggleSection("Gastos-pagados")}>
-                  Gastos pagados por anticipado
-                </button>
-                {expandedSection === "Gastos-pagados" && (
-                  <div className="pl-4">
-                  <section className="p-2 bg-white border rounded-md">
-                    <article className="bg-white grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2">
-                      <ESFvalues
-                        title='Publicidad'
-                        path={
-                          'ActivosPasivos.Activos.GastosPagadosPorAnticipado.Publicidad'
-                        }
-                        data={
-                          data.ActivosPasivos.Activos.GastosPagadosPorAnticipado.Publicidad
-                        }
-                        handleChange={handleChange}
-                      />   
-                      <ESFvalues 
-                      title='Primas de seguros'  
-                      path={
-                        'ActivosPasivos.Activos.GastosPagadosPorAnticipado.PrimasSeguros'
-                      }
-                      data={
-                        data.ActivosPasivos.Activos.GastosPagadosPorAnticipado.PrimasSeguros
-                      }
-                      handleChange={handleChange}
-                      />
-                      <ESFvalues
-                      title='Arrendamientos'
-                      path={
-                        'ActivosPasivos.Activos.GastosPagadosPorAnticipado.Arrendamientos'
-                      }
-                      data={
-                        data.ActivosPasivos.Activos.GastosPagadosPorAnticipado.Arrendamientos
-                      }
-                      handleChange={handleChange}
-                      />
-                      <ESFvalues
-                      title='Otros'
-                      path={
-                        'ActivosPasivos.Activos.GastosPagadosPorAnticipado.Otros'
-                      }
-                      data={
-                        data.ActivosPasivos.Activos.GastosPagadosPorAnticipado.Otros
-                      }
-                      handleChange={handleChange}
-                      />
-
-                    </article>    
-                      <article>
-                        <h3 className="text-lg font-bold">Total</h3>
-                        <div className="bg-white flex flex-col md:flex-row gap-2 justify-between">
-                          <p className="border p-1 rounded-sm">
-                            <span className="font-semibold bg-white">
-                              Valor contable:
-                            </span>
-                            {
-                              data.ActivosPasivos.Activos.GastosPagadosPorAnticipado.Total.ValorContable
-                            }
-                          </p>
-                          <p className="border p-1 rounded-sm">
-                            <span className="font-semibold bg-white">
-                              Efecto conversion:
-                            </span>{' '}
-                            {
-                              data.ActivosPasivos.Activos.GastosPagadosPorAnticipado.Total.EfectoConversion
-                            }
-                          </p>
-                          <p className="border p-1 rounded-sm">
-                            <span className="font-semibold bg-white">
-                              Menor valor fical:
-                            </span>
-                            {
-                              data.ActivosPasivos.Activos.GastosPagadosPorAnticipado.Total.MenorValorFiscal
-                            }
-                          </p>
-                          <p className="border p-1 rounded-sm">
-                            <span className="font-semibold bg-white">
-                              Mayor Valor Fiscal:
-                            </span>
-                            {
-                              data.ActivosPasivos.Activos.GastosPagadosPorAnticipado.Total.MayorValorFiscal
-                            }
-                          </p>
-                          <p className="border p-1 rounded-sm">
-                            <span className="font-semibold bg-white">
-                              Valor fiscal:
-                            </span>{' '}
-                            {
-                              data.ActivosPasivos.Activos.GastosPagadosPorAnticipado.Total.ValorFiscal
-                            }
-                          </p>
-                        </div>
-                      </article>                     
-                    </section>
-                </div>
-                )}
-              </div> 
-              <div>
-                <button type="button"
-                  className="w-full text-left p-4 border-b border-gray-200"
-                  onClick={() => toggleSection("Activos-impuestos-diferidos")}>
-                Activos por impuestos diferidos               
-                </button>
-                {expandedSection === "Activos-impuestos-diferidos" && (
-                  <article>
-                   <ESFvalues
-                    title='Impuestos diferidos activos'
-                    path={
-                      'ActivosPasivos.Activos.ActivosImpuestosDiferidos'
-                    }
-                    data={
-                      data.ActivosPasivos.Activos.ActivosImpuestosDiferidos
-                    }
-                    handleChange={handleChange}
-                    />
-                 </article>  
-                )}
-              </div>
-              <div>
-                <button type="button"
-                  className="w-full text-left p-4 border-b border-gray-200"
-                  onClick={() => toggleSection("Activos-propiedades")}>
-                  Propiedades, planta y equipo
-                </button>
-              </div>
-              {expandedSection === "Activos-propiedades" && (
-                <div className="pl-4">
-                <section className="p-2 bg-white border rounded-md">
-                  <article className="bg-white grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2">
-                    <ESFvalues
-                      title='Terrenos'
-                      path={
-                        'ActivosPasivos.Activos.PropiedadesPlantaEquipo.Terrenos'
-                      }
-                      data={
-                        data.ActivosPasivos.Activos.CuentasComercialesCobrarOtrasPorCobrar.CuentasDocumentosPorCobrar.CarteraCreditoPrestamosBancarios
-                      }
-                      handleChange={handleChange}
-                    />
-                    <ESFvalues
-                      title='Construcciones en proceso'  
-                      path={
-                        'ActivosPasivos.Activos.PropiedadesPlantaEquipo.ConstruccionesEnProceso'
-                      }
-                      data={
-                        data.ActivosPasivos.Activos.PropiedadesPlantaEquipo.ConstruccionesEnProceso
-                      }
-                      handleChange={handleChange}
-                    />  
-                    <button type="button"
-                      className="w-full text-left p-4 border-b border-gray-200"
-                      onClick={() => toggleSubSection("Edificios")}>
-                      Edificios
-                    </button>      
-                    {expandedSubSection === "Edificios" && (
-                      <div className="pl-4">
-                      <section className="p-2 bg-white border rounded-md">
-                        <article>
-                          <ESFvalues
-                            title='Costo'
-                            path={
-                              'ActivosPasivos.Activos.PropiedadesPlantaEquipo.Edificios.Costo'
-                            }
-                            data={
-                              data.ActivosPasivos.Activos.PropiedadesPlantaEquipo.Edificios.Costo
-                            }
-                            handleChange={handleChange}
-                          />   
-                          <ESFvalues
-                            title='Ajuste acumulado por revaluaciones o reexpresiones'
-                            path={
-                              'ActivosPasivos.Activos.PropiedadesPlantaEquipo.Edificios.AjusteAcumuladoRevaluacionesReexpresiones'
-                            }
-                            data={
-                              data.ActivosPasivos.Activos.PropiedadesPlantaEquipo.Edificios.AjusteAcumuladoRevaluacionesReexpresiones
-                            }
-                            handleChange={handleChange}
-                          />                            
-                        </article>                                                
-                        </section>
-                    </div>
-                    )}
-                    <ESFvalues
-                    title='Edificios Total'         
-                    path={
-                      'ActivosPasivos.Activos.PropiedadesPlantaEquipo.Edificios.Total'
-                    }
-                    data={
-                      data.ActivosPasivos.Activos.PropiedadesPlantaEquipo.Edificios.Total
-                    }
-                    handleChange={handleChange}
-                    />  
-                    <ESFvalues
-                    title='Activos tangibles para exploración y evaluación de recursos minerales'
-                    path={
-                      'ActivosPasivos.Activos.PropiedadesPlantaEquipo.ActivosTangiblesExploracionEvaluacionRecursosMinerales'
-                    }
-                    data={
-                      data.ActivosPasivos.Activos.PropiedadesPlantaEquipo.ActivosTangiblesExploracionEvaluacionRecursosMinerales
-                    }
-                    handleChange={handleChange}
-                    />
-                    <button type="button"
-                      className="w-full text-left p-4 border-b border-gray-200"
-                      onClick={() => toggleSubSection("Otras-propiedades")}>
-                      Otras propiedades, planta y equipo
-                    </button> 
-                    {expandedSubSection === "Otras-propiedades" && (
-                      <div className="pl-4">
-                      <section className="p-2 bg-white border rounded-md">
-                        <article>
-                          <ESFvalues
-                            title='Costo'
-                            path={
-                              'ActivosPasivos.Activos.PropiedadesPlantaEquipo.OtrasPropiedadesPlantaEquipo.Costo'
-                            }
-                            data={
-                              data.ActivosPasivos.Activos.PropiedadesPlantaEquipo.OtrasPropiedadesPlantaEquipo.Costo
-                            }
-                            handleChange={handleChange}
-                          />   
-                          <ESFvalues
-                            title='Ajuste acumulado por revaluaciones o reexpresiones'
-                            path={
-                              'ActivosPasivos.Activos.PropiedadesPlantaEquipo.OtrasPropiedadesPlantaEquipo.AjusteAcumuladoRevaluacionesReexpresiones'
-                            }
-                            data={
-                              data.ActivosPasivos.Activos.PropiedadesPlantaEquipo.OtrasPropiedadesPlantaEquipo.AjusteAcumuladoRevaluacionesReexpresiones
-                            }
-                            handleChange={handleChange}
-                          />                            
-                        </article>                                                
-                        </section>
-                    </div>
-                    )}
-                    <ESFvalues
-                    title='Otras propiedades, planta y equipo Total'
-                    path={
-                      'ActivosPasivos.Activos.PropiedadesPlantaEquipo.OtrasPropiedadesPlantaEquipo.Total'
-                    }
-                    data={
-                      data.ActivosPasivos.Activos.PropiedadesPlantaEquipo.OtrasPropiedadesPlantaEquipo.Total
-                    }
-                    handleChange={handleChange}
-                    />
-                    <ESFvalues
-                    title='Depreciación acumulada de propiedades, planta y equipo'
-                    path={
-                      'ActivosPasivos.Activos.PropiedadesPlantaEquipo.DepreciacionAcumuladaPropiedadesPlantaEquipo'
-                    }
-                    data={
-                      data.ActivosPasivos.Activos.PropiedadesPlantaEquipo.DepreciacionAcumuladaPropiedadesPlantaEquipo
-                    }
-                    handleChange={handleChange}
-                    />
-                    <ESFvalues
-                    title='Deterioro acumulado de propiedades, planta y equipo'
-                    path={
-                      'ActivosPasivos.Activos.PropiedadesPlantaEquipo.DeterioroAcumuladoPropiedadesPlantaEquipo'
-                    }
-                    data={
-                      data.ActivosPasivos.Activos.PropiedadesPlantaEquipo.DeterioroAcumuladoPropiedadesPlantaEquipo
-                    }
-                    handleChange={handleChange}
-                    />
-                  </article>    
-                    <article>
-                      <h3 className="text-lg font-bold">Total</h3>
-                      <div className="bg-white flex flex-col md:flex-row gap-2 justify-between">
-                        <p className="border p-1 rounded-sm">
-                          <span className="font-semibold bg-white">
-                            Valor contable:
-                          </span>
-                          {
-                            data.ActivosPasivos.Activos.PropiedadesPlantaEquipo.Total.ValorContable
-                          }
-                        </p>
-                        <p className="border p-1 rounded-sm">
-                          <span className="font-semibold bg-white">
-                            Efecto conversion:
-                          </span>{' '}
-                          {
-                            data.ActivosPasivos.Activos.PropiedadesPlantaEquipo.Total.EfectoConversion
-                          }
-                        </p>
-                        <p className="border p-1 rounded-sm">
-                          <span className="font-semibold bg-white">
-                            Menor valor fical:
-                          </span>
-                          {
-                            data.ActivosPasivos.Activos.PropiedadesPlantaEquipo.Total.MenorValorFiscal
-                          }
-                        </p>
-                        <p className="border p-1 rounded-sm">
-                          <span className="font-semibold bg-white">
-                            Mayor Valor Fiscal:
-                          </span>
-                          {
-                            data.ActivosPasivos.Activos.PropiedadesPlantaEquipo.Total.MayorValorFiscal
-                          }
-                        </p>
-                        <p className="border p-1 rounded-sm">
-                          <span className="font-semibold bg-white">
-                            Valor fiscal:
-                          </span>{' '}
-                          {
-                            data.ActivosPasivos.Activos.PropiedadesPlantaEquipo.Total.ValorFiscal
-                          }
-                        </p>
-                      </div>
-                    </article>                     
-                  </section>
-                </div>
-              )}
-            </div>
+    <StudentLayout>
+      <section className="w-full mt-12 md:mt-0 overflow-auto max-h-screen">
+        <TabBar tabs={tabs} activeTab={activeTab} setActiveTab={setActiveTab} />
+        {activeTab === "Activos" &&
+          renderSections(data.Activos, "Activos", "", ValuesNames)}
+        {activeTab === "Pasivos" &&
+          renderSections(data.Pasivos, "Pasivos", "", ValuesNames)}
+        {activeTab === "TotalPatrimonio" &&
+          renderSections(
+            data.TotalPatrimonio,
+            "TotalPatrimonio",
+            "",
+            ValuesNames
           )}
-          {/* Aquí irían las secciones de Pasivos, Patrimonio y Datos Informativos, implementadas de manera similar */}
-        </div>
-      </div>
-    </div>
+        {activeTab === "PatrimonioContable" &&
+          renderSections(
+            data.PatrimonioContable,
+            "PatrimonioContable",
+            "",
+            ValuesNames
+          )}
+        {activeTab === "DatosInformativos" &&
+          renderSections(
+            data.DatosInformativos,
+            "DatosInformativos",
+            "",
+            ValuesNames
+          )}
+      </section>
+    </StudentLayout>
   );
 };
 
-export default ESFpatrimonioForm;
-
+export default ESFpatrimonio;
