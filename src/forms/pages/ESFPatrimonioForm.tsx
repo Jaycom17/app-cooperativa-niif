@@ -958,8 +958,6 @@ const ESFpatrimonio = () => {
     // Calculo de los totales
     setData(updatedData);
 
-    // Actualizar el estado con los nuevos datos
-
     if (timeoutRef.current) {
       clearTimeout(timeoutRef.current);
     }

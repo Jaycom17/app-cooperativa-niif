@@ -20,6 +20,7 @@ import ImpuestoDiferidoForm from "../forms/pages/ImpuestoDiferido";
 import DetalleRenglones from "../forms/pages/DetalleReglones";
 import ResumenESFForm from "../forms/pages/ResumenESF";
 import RentaLiquidaForm from "../forms/pages/RentaLiquida";
+import RoomReport from "../professor/pages/RoomReport";
 
 export const AppRoutes = () => {
   const routes = [
@@ -66,6 +67,10 @@ export const AppRoutes = () => {
         {
           element: <ResetPasswordPage />,
           path: "/resetpasswordteacher",
+        },
+        {
+          element: <RoomReport />,
+          path: "/roomreport/:roomID",
         },
       ],
     },
