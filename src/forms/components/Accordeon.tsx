@@ -21,10 +21,10 @@ import { GrSubtractCircle, GrAddCircle  } from "react-icons/gr";
 interface AccordeonProps {
     title: string;
     children: React.ReactNode;
-    arrayIndex: string;
-    onAdd: (path: string) => void;
-    onQuit: (path: string) => void;
-    path: string;
+    arrayIndex?: string;
+    onAdd?: (path: string) => void;
+    onQuit?: (path: string) => void;
+    path?: string;
 }
 
 const Accordeon = ({title, children, arrayIndex, onAdd, onQuit, path}: AccordeonProps) =>{
@@ -42,8 +42,8 @@ const Accordeon = ({title, children, arrayIndex, onAdd, onQuit, path}: Accordeon
         <article className={`${open ? "mb-2": "mb-1"}`}>
             {arrayIndex === '0' && (
                 <div className="flex gap-4 justify-center my-3 text-unicoop">
-                    <button className="flex flex-row items-center justify-center gap-1 bg-buttons-update-green hover:bg-buttons-update-green-h p-2 rounded-3xl w-24 duration-150" onClick={()=>onAdd(path)}><GrAddCircle/> Más</button>
-                    <button className="flex flex-row items-center justify-center gap-1 bg-buttons-delete-red hover:bg-buttons-delete-red-h p-2 rounded-3xl duration-150" onClick={()=>onQuit(path)}><GrSubtractCircle /> Menos</button>
+                    <button className="flex flex-row items-center justify-center gap-1 bg-buttons-update-green hover:bg-buttons-update-green-h p-2 rounded-3xl w-24 duration-150" onClick={()=>onAdd!(path!)}><GrAddCircle/> Más</button>
+                    <button className="flex flex-row items-center justify-center gap-1 bg-buttons-delete-red hover:bg-buttons-delete-red-h p-2 rounded-3xl duration-150" onClick={()=>onQuit!(path!)}><GrSubtractCircle /> Menos</button>
                 </div>
             )}
             <button className={`flex justify-between  items-center text-lg w-full hover:bg-gray-400 duration-150 p-3 border-b-2 ${open ? "font-semibold bg-gray-400": "text-black bg-gray-300"}`} onClick={handleOpen} aria-expanded={open} aria-controls="accordion-contenido">

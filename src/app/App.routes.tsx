@@ -14,6 +14,12 @@ import ActivosFijosForm from "../forms/pages/ActivosFijosForm";
 import ESFpatrimonioForm from "../forms/pages/ESFPatrimonioForm";
 import ProtectedRoute from "../auth/components/templates/ProtectedRoute";
 import ProtectedRouteStudent from "../auth/components/templates/ProtectedRouteStudent";
+import CaratulaForm from "../forms/pages/Caratula";
+import IngresosFacturacionForm from "../forms/pages/IngresosFacturacion";
+import ImpuestoDiferidoForm from "../forms/pages/ImpuestoDiferido";
+import DetalleRenglones from "../forms/pages/DetalleReglones";
+import ResumenESFForm from "../forms/pages/ResumenESF";
+import RentaLiquidaForm from "../forms/pages/RentaLiquida";
 
 export const AppRoutes = () => {
   const routes = [
@@ -80,8 +86,32 @@ export const AppRoutes = () => {
         },
         {
           element: <ESFpatrimonioForm />,
-          path: "/esfpatrimonio",
+          path: "/esfpatrimonioform",
         },
+        {
+          element: <CaratulaForm />,
+          path: "/caratulaform",  
+        },
+        {
+          element: <IngresosFacturacionForm />,
+          path: "/ingrefactform",
+        },
+        {
+          element: <ImpuestoDiferidoForm />,
+          path: "/impuestodiferido",
+        },
+        {
+          element: <DetalleRenglones />,
+          path: "/detalleReng",
+        },
+        {
+          element: <ResumenESFForm />,
+          path: "/resumenesf",
+        },
+        {
+          element: <RentaLiquidaForm />,
+          path: "/rentaliquida",
+        }
       ],
     },
   ];
