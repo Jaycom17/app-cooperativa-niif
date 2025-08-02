@@ -4,7 +4,7 @@ import { useParams } from "react-router-dom";
 import { useState } from "react";
 import { forms } from "../utils/Report";
 import logo from "../../assets/LogoUniversidadCooperativa.png";
-import GenericTabs from "../components/organisms/GenericTabs";
+import { FormRender } from "../../forms/components/FormRender";
 
 import { CaratulaService } from "../../forms/services/caratula.service";
 import { ActivosFijosService } from "../../forms/services/activosFijos.service";
@@ -182,10 +182,13 @@ function RoomReport() {
           </div>
         )}
         {form !== "" && Object.keys(data).length > 0 && (
-          <GenericTabs
-            json={data}
-            onReport={true}
+          <main className="w-full pt-9 md:p-10 max-h-screen overflow-auto">
+          <FormRender
+            value={data}
+            canEdit={true}
+            defaultOpen={false}
           />
+        </main>
         )}
       </main>
     </ProfessorLayout>

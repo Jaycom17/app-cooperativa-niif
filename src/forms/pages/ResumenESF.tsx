@@ -1,55 +1,28 @@
 import StudentLayout from "../../components/templates/StudentLayout";
-import jsonData from "../models/ResumenESF.json";
-import ResumenESFValues from "../components/ResumenESFValues";
-import Accordeon from "../components/Accordeon";
 import { useState, useEffect, useRef } from "react";
-import TabBar from "../components/TabBar";
 import { ResumenESFService } from "../services/resumenESF.service";
+import { FormRender } from "../components/FormRender";
+import { FiLoader, FiCheckCircle, FiEdit3 } from "react-icons/fi";
 
 function ResumenESFForm() {
-  const tabs = [
-    {
-      name: "EstadoSituacionFinanciera",
-      label: "Estado de Situación Financiera",
-    },
-    { name: "EstadosResultadoIntegral", label: "Estado de Resultado Integral" },
-    { name: "ResultadoEjercicio", label: "Resultado del Ejercicio" },
-  ];
-
-  const [data, setData] = useState(jsonData);
-  const [activeTab, setActiveTab] = useState(tabs[0].name);
+  const [data, setData] = useState({});
+  const [saveStatus, setSaveStatus] = useState<"idle" | "saving" | "saved">(
+    "idle"
+  );
 
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
-    ResumenESFService.getResumenESFForStudent().then((response) => {
-      if (response.data.resContent) {
+    ResumenESFService.getResumenESFForStudent()
+      .then((response) => {
         setData(response.data.resContent);
-      }
-    });
+      })
+      .catch((error) => {
+        console.error("Error en la llamada a la API", error);
+      });
   }, []);
 
-  const handleChange = (e) => {
-    let { name, value } = e.target;
-    if (value === "") value = 0;
-    const pathArray = name.split(".");
-
-    let newData = { ...data };
-    let temp = newData;
-
-    for (let i = 0; i < pathArray.length; i++) {
-      if (i === pathArray.length - 1) {
-        if (typeof temp[pathArray[i]] === "object") {
-          temp[pathArray[i]] = parseFloat(value) || 0;
-        } else {
-          temp[pathArray[i]] = parseFloat(value) || 0;
-        }
-      } else {
-        temp = temp[pathArray[i]];
-      }
-    }
-    console.log(newData);
-
+  const handleChange = (newData: any) => {
     setData(newData);
 
     if (timeoutRef.current) {
@@ -57,60 +30,43 @@ function ResumenESFForm() {
     }
 
     timeoutRef.current = setTimeout(() => {
-      ResumenESFService.updateResumenESFForStudent(newData);
+      ResumenESFService.updateResumenESFForStudent(newData)
+        .then(() => setSaveStatus("saved"))
+        .catch(() => setSaveStatus("idle"));
       timeoutRef.current = null;
     }, 5000);
   };
 
-  const renderSections = (sectionData, pathPrefix = "", friendlyNames = []) => {
-    if (!sectionData || typeof sectionData !== "object") {
-      return null;
-    }
-    return Object.keys(sectionData).map((sectionKey) => {
-      const friendlyName = friendlyNames[sectionKey] || sectionKey;
-
-      if (typeof sectionData[sectionKey] !== "object") {
-        return (
-          <div key={sectionKey}>
-            <ResumenESFValues
-              path={`${pathPrefix === "" ? "" : `${pathPrefix}.`}${sectionKey}`}
-              data={sectionData[sectionKey]}
-              handleChange={handleChange}
-            />
-          </div>
-        );
-      }
-      return (
-        <Accordeon key={sectionKey} title={friendlyName}>
-          <ResumenESFValues
-            path={`${pathPrefix === "" ? "" : `${pathPrefix}.`}${sectionKey}`}
-            data={sectionData[sectionKey]}
-            handleChange={handleChange}
-          />
-        </Accordeon>
-      );
-    });
-  };
-
   return (
     <StudentLayout>
-      <section className="w-full mt-12 md:mt-0 overflow-auto max-h-screen">
-        <TabBar tabs={tabs} activeTab={activeTab} setActiveTab={setActiveTab} />
-        {activeTab === "EstadoSituacionFinanciera" &&
-          renderSections(
-            data.EstadoSituacionFinanciera,
-            "EstadoSituacionFinanciera",
-            []
+      <main className="w-full pt-7 md:p-8 max-h-screen overflow-auto">
+        <div className="mb-2 text-right text-sm text-gray-600 flex justify-end items-center gap-2 pr-3 md:pr-0">
+          {saveStatus === "saving" && (
+            <>
+              <FiLoader className="animate-spin" />
+              <span>Guardando...</span>
+            </>
           )}
-        {activeTab === "EstadosResultadoIntegral" &&
-          renderSections(
-            data.EstadosResultadoIntegral,
-            "EstadosResultadoIntegral",
-            []
+          {saveStatus === "saved" && (
+            <>
+              <FiCheckCircle />
+              <span>Guardado</span>
+            </>
           )}
-        {activeTab === "ResultadoEjercicio" &&
-          renderSections(data.ResultadoEjercicio, "ResultadoEjercicio", [])}
-      </section>
+          {saveStatus === "idle" && (
+            <>
+              <FiEdit3 />
+              <span>Cambios no guardados</span>
+            </>
+          )}
+        </div>
+        <FormRender
+          value={data}
+          onChange={handleChange}
+          canEdit={true}
+          defaultOpen={false}
+        />
+      </main>
     </StudentLayout>
   );
 }
