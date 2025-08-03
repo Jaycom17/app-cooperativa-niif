@@ -24,6 +24,7 @@ function ResumenESFForm() {
 
   const handleChange = (newData: any) => {
     setData(newData);
+    setSaveStatus("saving");
 
     if (timeoutRef.current) {
       clearTimeout(timeoutRef.current);

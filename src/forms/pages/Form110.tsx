@@ -3,6 +3,7 @@ import { useState, useEffect, useRef } from "react";
 import { Form110Service } from "../services/form110.service";
 import { FormRender } from "../components/FormRender";
 import { FiLoader, FiCheckCircle, FiEdit3 } from "react-icons/fi";
+import { config } from "../utils/form110";
 
 const Form110 = () => {
   const [data, setData] = useState({});
@@ -24,6 +25,7 @@ const Form110 = () => {
 
   const handleChange = (newData: any) => {
     setData(newData);
+    setSaveStatus("saving");
 
     if (timeoutRef.current) {
       clearTimeout(timeoutRef.current);
@@ -65,6 +67,7 @@ const Form110 = () => {
           onChange={handleChange}
           canEdit={true}
           defaultOpen={false}
+          config={config}
         />
       </main>
     </StudentLayout>

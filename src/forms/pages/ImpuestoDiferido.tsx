@@ -3,6 +3,10 @@ import { ImpuestoDiferidoService } from "../services/impuestoDiferido.service";
 import { useState, useEffect, useRef } from "react";
 import { FormRender } from "../components/FormRender";
 import { FiLoader, FiCheckCircle, FiEdit3 } from "react-icons/fi";
+import {
+  config,
+  calculateDiferenciaTemporariaAcivoDiferidoPrimeraFormaUno,
+} from "../utils/impuestoDiferido";
 
 function ImpuestoDiferidoForm() {
   const [data, setData] = useState({});
@@ -23,7 +27,24 @@ function ImpuestoDiferidoForm() {
   }, []);
 
   const handleChange = (newData: any) => {
+    const basePathDiferenciaTemporariaAcivoDiferido =
+      newData.ImpuestosDiferidosProvenientesDeDiferenciasTemporarias
+        .ActivoDiferidoDiferenciasTemporariasDeducibles;
+
+    for (const item of calculateDiferenciaTemporariaAcivoDiferidoPrimeraFormaUno) {
+      const elemento = basePathDiferenciaTemporariaAcivoDiferido[item];
+      if (
+        elemento?.BaseFiscal !== undefined &&
+        elemento?.BaseContable !== undefined
+      ) {
+        elemento.DiferenciaTemporaria =
+          elemento.BaseFiscal - elemento.BaseContable;
+      }
+    }
+
     setData(newData);
+
+    setSaveStatus("saving");
 
     if (timeoutRef.current) {
       clearTimeout(timeoutRef.current);
@@ -65,6 +86,7 @@ function ImpuestoDiferidoForm() {
           onChange={handleChange}
           canEdit={true}
           defaultOpen={false}
+          config={config}
         />
       </main>
     </StudentLayout>

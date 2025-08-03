@@ -23,6 +23,7 @@ const ActivosFijosForm = () => {
   }, []);
 
   const handleChange = (newData: any) => {
+
     setData(newData);
     setSaveStatus("saving");
 
