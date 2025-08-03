@@ -4,8 +4,12 @@ import { IngresosFacturacionService } from "../services/ingresosFacturacion.serv
 import { FormRender } from "../components/FormRender";
 import { FiLoader, FiCheckCircle, FiEdit3 } from "react-icons/fi";
 
+import { IngresosFacturacionInput } from "../models/IngFactJson";
+
+import { mergeDeepPreservingOrder } from "../utils/mergeDeep";
+
 function IngresosFacturacionForm() {
-  const [data, setData] = useState({});
+  const [data, setData] = useState(IngresosFacturacionInput);
   const [saveStatus, setSaveStatus] = useState<"idle" | "saving" | "saved">(
     "idle"
   );
@@ -15,7 +19,11 @@ function IngresosFacturacionForm() {
   useEffect(() => {
     IngresosFacturacionService.getIngresosFacturacionForStudent()
       .then((response) => {
-          setData(response.data.ingContent);
+        const merged = mergeDeepPreservingOrder(
+          IngresosFacturacionInput,
+          response.data.ingContent
+        );
+        setData(merged);
       })
       .catch((error) => {
         console.error("Error en la llamada a la API", error);

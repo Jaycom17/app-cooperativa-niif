@@ -5,8 +5,12 @@ import { FormRender } from "../components/FormRender";
 import { FiLoader, FiCheckCircle, FiEdit3 } from "react-icons/fi";
 import { config } from "../utils/form110";
 
+import { Form110Input } from "../models/Form110Json";
+
+import { mergeDeepPreservingOrder } from "../utils/mergeDeep";
+
 const Form110 = () => {
-  const [data, setData] = useState({});
+  const [data, setData] = useState(Form110Input);
   const [saveStatus, setSaveStatus] = useState<"idle" | "saving" | "saved">(
     "idle"
   );
@@ -16,7 +20,8 @@ const Form110 = () => {
   useEffect(() => {
     Form110Service.getForm110ForStudent()
       .then((response) => {
-        setData(response.data.r110Content);
+        const merged = mergeDeepPreservingOrder(Form110Input, response.data.r110Content);
+        setData(merged);
       })
       .catch((error) => {
         console.error("Error en la llamada a la API", error);

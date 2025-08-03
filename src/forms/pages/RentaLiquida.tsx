@@ -5,8 +5,12 @@ import { FormRender } from "../components/FormRender";
 import { FiLoader, FiCheckCircle, FiEdit3 } from "react-icons/fi";
 import { config } from "../utils/RentaLiquida";
 
+import { RentaLiquidaInput } from "../models/RentaLiquidaJson";
+
+import { mergeDeepPreservingOrder } from "../utils/mergeDeep";
+
 function RentaLiquidaForm() {
-  const [data, setData] = useState({});
+  const [data, setData] = useState(RentaLiquidaInput);
   const [saveStatus, setSaveStatus] = useState<"idle" | "saving" | "saved">(
     "idle"
   );
@@ -16,7 +20,8 @@ function RentaLiquidaForm() {
   useEffect(() => {
     RentaLiquidaService.getRentaLiquidaForStudent()
       .then((res) => {
-        setData(res.data.renContent);
+        const merged = mergeDeepPreservingOrder(RentaLiquidaInput, res.data.renContent);
+        setData(merged);
       })
       .catch((error) => {
         console.error("Error en la llamada a la API", error);

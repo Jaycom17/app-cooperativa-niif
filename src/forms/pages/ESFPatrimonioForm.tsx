@@ -4,8 +4,12 @@ import { EsfPatrimonioService } from "../services/esfPatrimonio.service";
 import { FormRender } from "../components/FormRender";
 import { FiLoader, FiCheckCircle, FiEdit3 } from "react-icons/fi";
 
+import { ESFPatrimonioInput } from "../models/EsfPatrimonioJson";
+
+import { mergeDeepPreservingOrder } from "../utils/mergeDeep";
+
 const ESFpatrimonio = () => {
-  const [data, setData] = useState({});
+  const [data, setData] = useState(ESFPatrimonioInput);
   const [saveStatus, setSaveStatus] = useState<"idle" | "saving" | "saved">(
     "idle"
   );
@@ -15,7 +19,8 @@ const ESFpatrimonio = () => {
   useEffect(() => {
     EsfPatrimonioService.getEsfPatrimonioFormStudent()
       .then((response) => {
-        setData(response.data.esfContent);
+        const merged = mergeDeepPreservingOrder(ESFPatrimonioInput, response.data.esfContent);
+        setData(merged);
       })
       .catch((error) => {
         console.error("Error en la llamada a la API", error);

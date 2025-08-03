@@ -6,10 +6,18 @@ import { FiLoader, FiCheckCircle, FiEdit3 } from "react-icons/fi";
 import {
   config,
   calculateDiferenciaTemporariaAcivoDiferidoPrimeraFormaUno,
+  calculateDiferenciaTemporariaAcivoDiferidoSegundaFormaUno,
+  calculateDiferenciaTemporariaAcivoDiferidoSegundaFormaDos,
+  calculateDiferenciaTemporariaAcivoDiferidoTerceraFormaDos,
 } from "../utils/impuestoDiferido";
 
+import { ImpuestoDiferidoInput } from "../models/ImpuestoDiferidoJson";
+
+import { mergeDeepPreservingOrder } from "../utils/mergeDeep";
+
+
 function ImpuestoDiferidoForm() {
-  const [data, setData] = useState({});
+  const [data, setData] = useState(ImpuestoDiferidoInput);
   const [saveStatus, setSaveStatus] = useState<"idle" | "saving" | "saved">(
     "idle"
   );
@@ -17,28 +25,134 @@ function ImpuestoDiferidoForm() {
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
-    ImpuestoDiferidoService.getImpuestoDiferidoForStudent()
-      .then((res) => {
-        setData(res.data.impContent);
-      })
-      .catch((error) => {
-        console.error("Error en la llamada a la API", error);
-      });
-  }, []);
+  ImpuestoDiferidoService.getImpuestoDiferidoForStudent()
+    .then((res) => {
+      const merged = mergeDeepPreservingOrder(ImpuestoDiferidoInput, res.data.impContent);
+      setData(merged);
+    })
+    .catch((error) => {
+      console.error("Error en la llamada a la API", error);
+    });
+}, []);
 
-  const handleChange = (newData: any) => {
-    const basePathDiferenciaTemporariaAcivoDiferido =
-      newData.ImpuestosDiferidosProvenientesDeDiferenciasTemporarias
-        .ActivoDiferidoDiferenciasTemporariasDeducibles;
 
-    for (const item of calculateDiferenciaTemporariaAcivoDiferidoPrimeraFormaUno) {
-      const elemento = basePathDiferenciaTemporariaAcivoDiferido[item];
-      if (
-        elemento?.BaseFiscal !== undefined &&
-        elemento?.BaseContable !== undefined
-      ) {
-        elemento.DiferenciaTemporaria =
-          elemento.BaseFiscal - elemento.BaseContable;
+  const handleChange = (newData: any, changedPath: any) => {
+
+    if (
+      changedPath ===
+      "ImpuestosDiferidosProvenientesDeDiferenciasTemporarias.ActivoDiferidoDiferenciasTemporariasDeducibles"
+    ) {
+      const basePathDiferenciaTemporariaAcivoDiferido =
+        newData.ImpuestosDiferidosProvenientesDeDiferenciasTemporarias
+          .ActivoDiferidoDiferenciasTemporariasDeducibles;
+
+      for (const item of calculateDiferenciaTemporariaAcivoDiferidoPrimeraFormaUno) {
+        const elemento = basePathDiferenciaTemporariaAcivoDiferido[item];
+        if (
+          elemento?.BaseFiscal !== undefined &&
+          elemento?.BaseContable !== undefined
+        ) {
+          elemento.DiferenciaTemporaria =
+            elemento.BaseFiscal - elemento.BaseContable;
+        }
+      }
+
+      for (const item of calculateDiferenciaTemporariaAcivoDiferidoSegundaFormaUno) {
+        const elemento = basePathDiferenciaTemporariaAcivoDiferido[item];
+        if (
+          elemento?.BaseFiscal !== undefined &&
+          elemento?.BaseContable !== undefined
+        ) {
+          elemento.DiferenciaTemporaria =
+            elemento.BaseContable - elemento.BaseFiscal;
+        }
+      }
+
+      for (const item of [
+        ...calculateDiferenciaTemporariaAcivoDiferidoPrimeraFormaUno,
+        ...calculateDiferenciaTemporariaAcivoDiferidoSegundaFormaUno,
+      ]) {
+        const elemento = basePathDiferenciaTemporariaAcivoDiferido[item];
+        if (elemento?.DiferenciaTemporaria !== undefined) {
+          elemento.SaldoImpuestoDiferidoActual = Number(
+            (elemento.DiferenciaTemporaria * 0.35).toFixed(3)
+          );
+        }
+
+        if (
+          elemento?.SaldoImpuestoDiferidoActual !== undefined &&
+          elemento?.SaldoImpuestoDiferidoAnterior !== undefined
+        ) {
+          elemento.Variacion =
+            elemento.SaldoImpuestoDiferidoAnterior -
+            elemento.SaldoImpuestoDiferidoActual;
+        }
+
+        if (elemento?.SaldoImpuestoDiferidoActual !== undefined && elemento?.DiferenciaTemporaria !== undefined) {
+          elemento.TasaFiscalAplicada = elemento.DiferenciaTemporaria > 0
+            ? elemento.SaldoImpuestoDiferidoActual / elemento.DiferenciaTemporaria * 100
+            : 0;
+        }
+      }
+
+      //TODO: calcular el total
+    }
+
+    if (
+      changedPath ===
+      "ImpuestosDiferidosProvenientesDeDiferenciasTemporarias.PasivoDiferidoDiferenciasTemporariasImponibles"
+    ) {
+      const basePathDiferenciaTemporariaAcivoDiferido =
+        newData.ImpuestosDiferidosProvenientesDeDiferenciasTemporarias
+          .PasivoDiferidoDiferenciasTemporariasImponibles;
+
+      for (const item of calculateDiferenciaTemporariaAcivoDiferidoSegundaFormaDos) {
+        const elemento = basePathDiferenciaTemporariaAcivoDiferido[item];
+        if (
+          elemento?.BaseFiscal !== undefined &&
+          elemento?.BaseContable !== undefined
+        ) {
+          elemento.DiferenciaTemporaria =
+            elemento.BaseContable - elemento.BaseFiscal;
+        }
+      }
+
+      for (const item of calculateDiferenciaTemporariaAcivoDiferidoTerceraFormaDos) {
+        const elemento = basePathDiferenciaTemporariaAcivoDiferido[item];
+        if (
+          elemento?.BaseFiscal !== undefined &&
+          elemento?.BaseContable !== undefined
+        ) {
+          elemento.DiferenciaTemporaria =
+            elemento.BaseFiscal - elemento.BaseContable;
+        }
+      }
+
+      for (const item of [
+        ...calculateDiferenciaTemporariaAcivoDiferidoSegundaFormaDos,
+        ...calculateDiferenciaTemporariaAcivoDiferidoTerceraFormaDos,
+      ]) {
+        const elemento = basePathDiferenciaTemporariaAcivoDiferido[item];
+        if (elemento?.DiferenciaTemporaria !== undefined) {
+          elemento.SaldoImpuestoDiferidoActual = Number(
+            (elemento.DiferenciaTemporaria * 0.35).toFixed(3)
+          );
+        }
+
+        if (
+          elemento?.SaldoImpuestoDiferidoActual !== undefined &&
+          elemento?.SaldoImpuestoDiferidoAnterior !== undefined
+        ) {
+          elemento.Variacion =
+            elemento.SaldoImpuestoDiferidoAnterior -
+            elemento.SaldoImpuestoDiferidoActual;
+        }
+
+        if (elemento?.SaldoImpuestoDiferidoActual !== undefined && elemento?.DiferenciaTemporaria !== undefined) {
+          elemento.TasaFiscalAplicada = elemento.DiferenciaTemporaria > 0
+            ? elemento.SaldoImpuestoDiferidoActual / elemento.DiferenciaTemporaria * 100
+            : 0;
+        }
       }
     }
 

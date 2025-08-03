@@ -5,8 +5,12 @@ import { FormRender } from "../components/FormRender";
 import { FiLoader, FiCheckCircle, FiEdit3 } from "react-icons/fi";
 import { config } from "../utils/DetalleReng";
 
+import { DetalleRenglonesInput } from "../models/DetalleRenglonesJson";
+
+import { mergeDeepPreservingOrder } from "../utils/mergeDeep";
+
 const DetalleRenglones = () => {
-  const [data, setData] = useState({});
+  const [data, setData] = useState(DetalleRenglonesInput);
   const [saveStatus, setSaveStatus] = useState<"idle" | "saving" | "saved">(
     "idle"
   );
@@ -16,7 +20,8 @@ const DetalleRenglones = () => {
   useEffect(() => {
     DetalleReglonesService.getDetalleReglonesFormStudent()
       .then((response) => {
-        setData(response.data.detContent);
+        const merged = mergeDeepPreservingOrder(DetalleRenglonesInput, response.data.detContent);
+        setData(merged);
       })
       .catch((error) => {
         console.error("Error en la llamada a la API", error);

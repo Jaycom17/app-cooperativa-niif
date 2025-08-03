@@ -4,8 +4,12 @@ import { ResumenESFService } from "../services/resumenESF.service";
 import { FormRender } from "../components/FormRender";
 import { FiLoader, FiCheckCircle, FiEdit3 } from "react-icons/fi";
 
+import { ResumenESFInput } from "../models/ResumenEsfJson";
+
+import { mergeDeepPreservingOrder } from "../utils/mergeDeep";
+
 function ResumenESFForm() {
-  const [data, setData] = useState({});
+  const [data, setData] = useState(ResumenESFInput);
   const [saveStatus, setSaveStatus] = useState<"idle" | "saving" | "saved">(
     "idle"
   );
@@ -15,7 +19,8 @@ function ResumenESFForm() {
   useEffect(() => {
     ResumenESFService.getResumenESFForStudent()
       .then((response) => {
-        setData(response.data.resContent);
+        const merged = mergeDeepPreservingOrder(ResumenESFInput, response.data.resContent);
+        setData(merged);
       })
       .catch((error) => {
         console.error("Error en la llamada a la API", error);

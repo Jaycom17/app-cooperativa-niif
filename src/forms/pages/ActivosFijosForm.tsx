@@ -4,8 +4,12 @@ import { ActivosFijosService } from "../services/activosFijos.service";
 import { FormRender } from "../components/FormRender";
 import { FiCheckCircle, FiEdit3, FiLoader } from "react-icons/fi";
 
+import { ActivosFijosInput } from "../models/ActivosFijosJson";
+
+import { mergeDeepPreservingOrder } from "../utils/mergeDeep";
+
 const ActivosFijosForm = () => {
-  const [data, setData] = useState({});
+  const [data, setData] = useState(ActivosFijosInput);
   const [saveStatus, setSaveStatus] = useState<"idle" | "saving" | "saved">(
     "idle"
   );
@@ -15,7 +19,8 @@ const ActivosFijosForm = () => {
   useEffect(() => {
     ActivosFijosService.getActivosFijosFormStudent()
       .then((response) => {
-        setData(response.data.actContent);
+        const merged = mergeDeepPreservingOrder(ActivosFijosInput, response.data.actContent);
+        setData(merged);
       })
       .catch((error) => {
         console.error("Error en la llamada a la API", error);

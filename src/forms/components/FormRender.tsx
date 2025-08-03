@@ -1,12 +1,6 @@
 import React, { useCallback, useMemo } from "react";
 
-type JSONValue =
-  | string
-  | number
-  | boolean
-  | null
-  | JSONObject
-  | JSONArray;
+type JSONValue = string | number | boolean | null | JSONObject | JSONArray;
 
 interface JSONObject {
   [k: string]: JSONValue;
@@ -25,7 +19,7 @@ type FieldConfig = {
   step?: number;
   options?: Array<{ label: string; value: string | number }>;
   hidden?: boolean;
-  disabled?: boolean;
+  readonly?: boolean;
 };
 
 type JSONFormConfig = {
@@ -35,7 +29,7 @@ type JSONFormConfig = {
 
 type JSONFormProps = {
   value: JSONValue;
-  onChange?: (val: JSONValue) => void;
+  onChange?: (val: JSONValue, path?: string) => void;
   config?: JSONFormConfig;
   defaultOpen?: boolean;
   canEdit?: boolean;
@@ -76,7 +70,7 @@ function inferWidget(v: JSONValue): WidgetType {
 /* ---------------- PRIMITIVE INPUT ---------------- */
 const PrimitiveInput: React.FC<{
   value: JSONValue;
-  onChange: (v: JSONValue) => void;
+  onChange: (v: JSONValue, path?: string) => void;
   path: (string | number)[];
   label?: string;
   cfg?: FieldConfig;
@@ -94,9 +88,8 @@ const PrimitiveInput: React.FC<{
             <input
               type="checkbox"
               checked={!!value}
-              onChange={(e) => onChange(e.target.checked)}
-              disabled={cfg?.disabled}
-              readOnly={!canEdit}
+              onChange={(e) => onChange(e.target.checked, pathToString(path.slice(0, -2)))}
+              readOnly={!canEdit || cfg?.readonly}
               className="h-4 w-4 text-blue-600 rounded focus:ring-blue-500"
             />
             {effectiveLabel}
@@ -109,7 +102,8 @@ const PrimitiveInput: React.FC<{
     case "text":
     case "textarea": {
       const Component = widget === "textarea" ? "textarea" : "input";
-      const strValue = value === null || value === undefined ? "" : String(value);
+      const strValue =
+        value === null || value === undefined ? "" : String(value);
 
       return (
         <div className="mb-4">
@@ -120,14 +114,20 @@ const PrimitiveInput: React.FC<{
             value={strValue}
             placeholder={cfg?.placeholder}
             onChange={(e: any) =>
-              onChange(widget === "number" ? Number(e.target.value) || 0 : e.target.value)
+              onChange(
+                widget === "number"
+                  ? Number(e.target.value) || 0
+                  : e.target.value,
+                pathToString(path.slice(0, -2))
+              )
             }
-            readOnly={!canEdit}
+            readOnly={!canEdit || cfg?.readonly}
             rows={widget === "textarea" ? 3 : undefined}
-            disabled={cfg?.disabled}
             className="w-full rounded-lg border border-gray-300 p-2 text-sm shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200"
           />
-          {cfg?.help && <p className="text-xs text-gray-500 mt-1">{cfg.help}</p>}
+          {cfg?.help && (
+            <p className="text-xs text-gray-500 mt-1">{cfg.help}</p>
+          )}
         </div>
       );
     }
@@ -140,8 +140,7 @@ const PrimitiveInput: React.FC<{
           </label>
           <select
             value={str}
-            onChange={(e) => onChange(e.target.value)}
-            disabled={cfg?.disabled}
+            onChange={(e) => onChange(e.target.value, pathToString(path.slice(0, -2)))}
             className="w-full rounded-lg border border-gray-300 p-2 text-sm shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200"
           >
             <option value="">{cfg?.placeholder ?? "Selecciona..."}</option>
@@ -151,7 +150,9 @@ const PrimitiveInput: React.FC<{
               </option>
             ))}
           </select>
-          {cfg?.help && <p className="text-xs text-gray-500 mt-1">{cfg.help}</p>}
+          {cfg?.help && (
+            <p className="text-xs text-gray-500 mt-1">{cfg.help}</p>
+          )}
         </div>
       );
     }
@@ -162,7 +163,7 @@ const PrimitiveInput: React.FC<{
 const ObjectFieldset: React.FC<{
   obj: JSONObject;
   path: (string | number)[];
-  onChange: (newObj: JSONObject) => void;
+  onChange: (newObj: JSONObject, path?: string) => void;
   config?: JSONFormConfig;
   defaultOpen?: boolean;
   canEdit?: boolean;
@@ -187,7 +188,9 @@ const ObjectFieldset: React.FC<{
                 <ObjectFieldset
                   obj={val}
                   path={childPath}
-                  onChange={(newChild) => onChange({ ...obj, [k]: newChild })}
+                  onChange={(newChild, path) =>
+                    onChange({ ...obj, [k]: newChild }, path)
+                  }
                   config={config}
                   defaultOpen={defaultOpen}
                   canEdit={canEdit}
@@ -207,7 +210,9 @@ const ObjectFieldset: React.FC<{
                 <ArrayFieldset
                   arr={val}
                   path={childPath}
-                  onChange={(newArr) => onChange({ ...obj, [k]: newArr })}
+                  onChange={(newArr, path) =>
+                    onChange({ ...obj, [k]: newArr }, path)
+                  }
                   config={config}
                   defaultOpen={defaultOpen}
                   canEdit={canEdit}
@@ -223,7 +228,7 @@ const ObjectFieldset: React.FC<{
             value={val}
             path={childPath}
             canEdit={canEdit}
-            onChange={(newVal) => onChange({ ...obj, [k]: newVal })}
+            onChange={(newVal, path) => onChange({ ...obj, [k]: newVal }, path)}
             label={labelCfg?.label}
             cfg={labelCfg}
           />
@@ -237,18 +242,42 @@ const ObjectFieldset: React.FC<{
 const ArrayFieldset: React.FC<{
   arr: JSONArray;
   path: (string | number)[];
-  onChange: (newArr: JSONArray) => void;
+  onChange: (newArr: JSONArray, path?: string) => void;
   config?: JSONFormConfig;
   defaultOpen?: boolean;
   canEdit?: boolean;
 }> = ({ arr, path, onChange, config, defaultOpen, canEdit }) => {
+
   const addItem = useCallback(() => {
-    onChange([...arr, null]);
-  }, [arr, onChange]);
+  if (arr.length === 0) return; // Evitar si no hay elementos para duplicar
+
+  const lastItem = arr[arr.length - 1];
+
+  // Clonar el último ítem (profundamente si es un objeto/array)
+  const cloneItem =
+    isObject(lastItem) || isArray(lastItem)
+      ? structuredClone(lastItem)
+      : lastItem;
+
+  if (isObject(cloneItem)) {
+    for (const key in cloneItem) {
+      if (typeof cloneItem[key] === "number") {
+        cloneItem[key] = 0; // Reiniciar números a 0
+      } else if (typeof cloneItem[key] === "string") {
+        cloneItem[key] = ""; // Reiniciar strings a vacío
+      } else if (typeof cloneItem[key] === "boolean") {
+        cloneItem[key] = false; // Reiniciar booleanos a false
+      }
+    }
+  }
+
+  onChange([...arr, cloneItem]);
+}, [arr, onChange]);
+
 
   const removeAt = (idx: number) => {
     const newArr = arr.filter((_, i) => i !== idx);
-    onChange(newArr);
+    onChange(newArr, pathToString(path));
   };
 
   return (
@@ -269,7 +298,7 @@ const ArrayFieldset: React.FC<{
                   onChange={(newItem) => {
                     const clone = [...arr];
                     clone[idx] = newItem;
-                    onChange(clone);
+                    onChange(clone, pathToString(itemPath.slice(0, -2)));
                   }}
                   config={config}
                   canEdit={canEdit}
@@ -295,7 +324,7 @@ const ArrayFieldset: React.FC<{
               onChange={(newVal) => {
                 const clone = [...arr];
                 clone[idx] = newVal;
-                onChange(clone);
+                onChange(clone, pathToString(itemPath.slice(0, -2)));
               }}
               canEdit={canEdit}
               label={`Item ${idx + 1}`}
@@ -315,7 +344,7 @@ const ArrayFieldset: React.FC<{
         onClick={addItem}
         className="text-sm px-3 py-1 mt-2 bg-blue-100 rounded-md text-black p-2 hover:bg-blue-200"
       >
-      + Agregar item
+        + Agregar item
       </button>
     </div>
   );
@@ -329,7 +358,6 @@ export const FormRender: React.FC<JSONFormProps> = ({
   defaultOpen = true,
   canEdit = true,
 }) => {
-
   if (isObject(value)) {
     return (
       <div className="bg-gray-50 p-4 rounded-xl shadow-md">
@@ -360,7 +388,5 @@ export const FormRender: React.FC<JSONFormProps> = ({
     );
   }
 
-  return (
-    <PrimitiveInput value={value} onChange={onChange} path={[]} />
-  );
+  return <PrimitiveInput value={value} onChange={onChange} path={[]} />;
 };
