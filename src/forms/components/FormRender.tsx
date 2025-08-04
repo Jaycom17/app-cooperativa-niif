@@ -276,6 +276,8 @@ const ArrayFieldset: React.FC<{
 
 
   const removeAt = (idx: number) => {
+    if(idx === 0) return;
+
     const newArr = arr.filter((_, i) => i !== idx);
     onChange(newArr, pathToString(path));
   };

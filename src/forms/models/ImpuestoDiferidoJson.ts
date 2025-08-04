@@ -161,7 +161,6 @@ export const ImpuestoDiferidoInput = {
         Variacion: 0,
         TasaFiscalAplicada: 0,
       },
-      //TODO: cambiar nombre bien
       ActivosReconocidosSolamenteParaFinesFiscales: {
         BaseContable: 0,
         BaseFiscal: 0,
@@ -354,7 +353,7 @@ export const ImpuestoDiferidoInput = {
         Variacion: 0,
         TasaFiscalAplicada: 0,
       },
-      Fiscales: {
+      ActivosReconocidosSolamenteParaFinesFiscales: {
         BaseContable: 0,
         BaseFiscal: 0,
         DiferenciaTemporaria: 0,
