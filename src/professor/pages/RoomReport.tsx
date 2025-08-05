@@ -16,6 +16,18 @@ import { IngresosFacturacionService } from "../../forms/services/ingresosFactura
 import { Form110Service } from "../../forms/services/form110.service";
 import { ResumenESFService } from "../../forms/services/resumenESF.service";
 
+import { CaratulaInput } from "../../forms/models/CaratulaJson";
+import { ActivosFijosInput } from "../../forms/models/ActivosFijosJson";
+import { RentaLiquidaInput } from "../../forms/models/RentaLiquidaJson";
+import { ESFPatrimonioInput } from "../../forms/models/EsfPatrimonioJson";
+import { DetalleRenglonesInput } from "../../forms/models/DetalleRenglonesJson";
+import { ImpuestoDiferidoInput } from "../../forms/models/ImpuestoDiferidoJson";
+import { IngresosFacturacionInput } from "../../forms/models/IngFactJson";
+import { Form110Input } from "../../forms/models/Form110Json";
+import { ResumenESFInput } from "../../forms/models/ResumenEsfJson";
+
+import { mergeDeepPreservingOrder } from "../../forms/utils/mergeDeep";
+
 function RoomReport() {
   const { roomID } = useParams();
   const [form, setForm] = useState("");
@@ -32,8 +44,8 @@ function RoomReport() {
         setData({});
         Form110Service.getForm110ForProfessor(stuID!, roomID!)
           .then((res) => {
-            setData(res.data.r110Content);
-            console.log(data);
+            const mergedData = mergeDeepPreservingOrder(Form110Input, res.data.r110Content);
+            setData(mergedData);
           })
           .catch((error) => {
             console.log(error);
@@ -43,8 +55,8 @@ function RoomReport() {
         setData({});
         DetalleReglonesService.getDetalleReglonesFormProfessor(stuID!, roomID!)
           .then((res) => {
-            setData(res.data.detContent);
-            console.log(data);
+            const mergedData = mergeDeepPreservingOrder(DetalleRenglonesInput, res.data.detContent);
+            setData(mergedData);
           })
           .catch((error) => {
             console.log(error);
@@ -54,8 +66,8 @@ function RoomReport() {
         setData({});
         CaratulaService.getCaratulaForProfessor(stuID!, roomID!)
           .then((res) => {
-            setData(res.data.carContent);
-            console.log(data);
+            const mergedData = mergeDeepPreservingOrder(CaratulaInput, res.data.carContent);
+            setData(mergedData);
           })
           .catch((error) => {
             console.log(error);
@@ -65,8 +77,8 @@ function RoomReport() {
         setData({});
         EsfPatrimonioService.getEsfPatrimonioFormProfessor(stuID!, roomID!)
           .then((res) => {
-            setData(res.data.esfContent);
-            console.log(data);
+            const mergedData = mergeDeepPreservingOrder(ESFPatrimonioInput, res.data.esfContent);
+            setData(mergedData);
           })
           .catch((error) => {
             console.log(error);
@@ -76,8 +88,8 @@ function RoomReport() {
         setData({});
         RentaLiquidaService.getRentaLiquidaForProfessor(stuID!, roomID!)
           .then((res) => {
-            setData(res.data.renContent);
-            console.log(data);
+            const mergedData = mergeDeepPreservingOrder(RentaLiquidaInput, res.data.rentContent);
+            setData(mergedData);
           })
           .catch((error) => {
             console.log(error);
@@ -87,8 +99,8 @@ function RoomReport() {
         setData({});
         ImpuestoDiferidoService.getImpuestoDiferidoForProfessor(stuID!, roomID!)
           .then((res) => {
-            setData(res.data.impContent);
-            console.log(data);
+            const mergedData = mergeDeepPreservingOrder(ImpuestoDiferidoInput, res.data.impContent);
+            setData(mergedData);
           })
           .catch((error) => {
             console.log(error);
@@ -98,8 +110,8 @@ function RoomReport() {
         setData({});
         IngresosFacturacionService.getIngresosFacturacionForProfessor(stuID!, roomID!)
           .then((res) => {
-            setData(res.data.ingContent);
-            console.log(data);
+            const mergedData = mergeDeepPreservingOrder(IngresosFacturacionInput, res.data.ingContent);
+            setData(mergedData);
           })
           .catch((error) => {
             console.log(error);
@@ -109,8 +121,8 @@ function RoomReport() {
         setData({});
         ActivosFijosService.getActivosFijosFormProfessor(stuID!, roomID!)
           .then((res) => {
-            setData(res.data.actContent);
-            console.log(data);
+            const mergedData = mergeDeepPreservingOrder(ActivosFijosInput, res.data.actContent);
+            setData(mergedData);
           })
           .catch((error) => {
             console.log(error);
@@ -120,8 +132,8 @@ function RoomReport() {
         setData({});
         ResumenESFService.getResumenESFForProfessor(stuID!, roomID!)
           .then((res) => {
-            setData(res.data.resContent);
-            console.log(data);
+            const mergedData = mergeDeepPreservingOrder(ResumenESFInput, res.data.resContent);
+            setData(mergedData);
           })
           .catch((error) => {
             console.log(error);
