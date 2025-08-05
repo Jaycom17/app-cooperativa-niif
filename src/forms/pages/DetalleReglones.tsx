@@ -20,7 +20,10 @@ const DetalleRenglones = () => {
   useEffect(() => {
     DetalleReglonesService.getDetalleReglonesFormStudent()
       .then((response) => {
-        const merged = mergeDeepPreservingOrder(DetalleRenglonesInput, response.data.detContent);
+        const merged = mergeDeepPreservingOrder(
+          DetalleRenglonesInput,
+          response.data.detContent
+        );
         setData(merged);
       })
       .catch((error) => {
@@ -29,52 +32,20 @@ const DetalleRenglones = () => {
   }, []);
 
   const calculateSaldosFiscalesParciales = (data: any) => {
-    data.SaldosFiscalesADiciembre31Parciales = (data.SaldosContablesADiciembre31Parciales || 0) + (data.AjustesParaLlegarASaldosFiscales1 || 0) - (data.AjustesParaLlegarASaldosFiscales3 || 0); 
-  }
+    data.SaldosFiscalesADiciembre31Parciales =
+      (data.SaldosContablesADiciembre31Parciales || 0) +
+      (data.AjustesParaLlegarASaldosFiscales1 || 0) -
+      (data.AjustesParaLlegarASaldosFiscales3 || 0);
+  };
 
   const handleChange = (newData: any, changedPath?: string) => {
-
     const arrayPath = changedPath!.split(".");
 
-    if (changedPath!.startsWith("Reglon33")){
-      const element = newData.Reglon33[arrayPath[arrayPath.length - 1]];
+    const element = arrayPath.reduce((acc, key) => acc?.[key], newData);
 
-      calculateSaldosFiscalesParciales(element);
-    }
+    calculateSaldosFiscalesParciales(element);
 
-    if (changedPath!.startsWith("Reglon34")){
-      const element = newData.Reglon34[arrayPath[arrayPath.length - 1]];
-
-      calculateSaldosFiscalesParciales(element);
-    }
-
-    if (changedPath!.startsWith("Reglon35")){
-      const element = newData.Reglon35[arrayPath[arrayPath.length - 1]];
-
-      calculateSaldosFiscalesParciales(element);
-    }
-
-    if (changedPath!.startsWith("Reglon36")){
-
-      const element = changedPath!.startsWith("Reglon36.1110Bancos") ? newData.Reglon36[arrayPath[arrayPath.length - 2]][arrayPath[arrayPath.length - 1]] : newData.Reglon36[arrayPath[arrayPath.length - 1]];
-
-      calculateSaldosFiscalesParciales(element);
-    }
-
-    //TODO: revisar el reglon 37
-
-    if (changedPath!.startsWith("Reglon38")){
-      const element = newData.Reglon38[arrayPath[arrayPath.length - 1]];
-
-      calculateSaldosFiscalesParciales(element);
-    }
-
-    if (changedPath!.startsWith("Reglon39")){
-      const element = newData.Reglon39[arrayPath[arrayPath.length - 1]];
-      calculateSaldosFiscalesParciales(element);
-    }
-
-    console.log(changedPath)
+    console.log(changedPath);
 
     setData(newData);
     setSaveStatus("saving");
