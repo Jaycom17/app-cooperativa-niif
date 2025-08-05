@@ -5,10 +5,8 @@ import { FormRender } from "../components/FormRender";
 import { FiLoader, FiCheckCircle, FiEdit3 } from "react-icons/fi";
 import {
   config,
-  calculateDiferenciaTemporariaAcivoDiferidoPrimeraFormaUno,
-  calculateDiferenciaTemporariaAcivoDiferidoSegundaFormaUno,
-  calculateDiferenciaTemporariaAcivoDiferidoSegundaFormaDos,
-  calculateDiferenciaTemporariaAcivoDiferidoTerceraFormaDos,
+  calculateDiferenciaTemporariaAcivoDiferidoPrimeraForma,
+  calculateDiferenciaTemporariaAcivoDiferidoSegundaForma,
 } from "../utils/impuestoDiferido";
 
 import { ImpuestoDiferidoInput } from "../models/ImpuestoDiferidoJson";
@@ -37,246 +35,203 @@ function ImpuestoDiferidoForm() {
       });
   }, []);
 
-  const handleChange = (newData: any, changedPath: any) => {
+  const handleChange = (newData: any, changedPath?: string) => {
+    const arrayPath: string[] = changedPath!.split(".");
+
     if (
-      changedPath ===
-      "ImpuestosDiferidosProvenientesDeDiferenciasTemporarias.ActivoDiferidoDiferenciasTemporariasDeducibles"
+      changedPath?.startsWith(
+        "ImpuestosDiferidosProvenientesDeDiferenciasTemporarias"
+      )
     ) {
-      const basePath =
-        newData.ImpuestosDiferidosProvenientesDeDiferenciasTemporarias
-          .ActivoDiferidoDiferenciasTemporariasDeducibles;
+      const element =
+        newData.ImpuestosDiferidosProvenientesDeDiferenciasTemporarias[
+          arrayPath![arrayPath!.length - 2]
+        ][arrayPath![arrayPath!.length - 1]];
 
-      for (const item of calculateDiferenciaTemporariaAcivoDiferidoPrimeraFormaUno) {
-        const elemento = basePath[item];
+      if (
+        calculateDiferenciaTemporariaAcivoDiferidoPrimeraForma.includes(
+          arrayPath![arrayPath!.length - 1]
+        )
+      ) {
         if (
-          elemento?.BaseFiscal !== undefined &&
-          elemento?.BaseContable !== undefined
+          element?.BaseFiscal !== undefined &&
+          element?.BaseContable !== undefined
         ) {
-          elemento.DiferenciaTemporaria =
-            elemento.BaseFiscal - elemento.BaseContable;
+          element.DiferenciaTemporaria =
+            element.BaseFiscal - element.BaseContable;
+        }
+      } else if (
+        calculateDiferenciaTemporariaAcivoDiferidoSegundaForma.includes(
+          arrayPath![arrayPath!.length - 1]
+        )
+      ) {
+        if (
+          element?.BaseFiscal !== undefined &&
+          element?.BaseContable !== undefined
+        ) {
+          element.DiferenciaTemporaria =
+            element.BaseContable - element.BaseFiscal;
         }
       }
 
-      for (const item of calculateDiferenciaTemporariaAcivoDiferidoSegundaFormaUno) {
-        const elemento = basePath[item];
-        if (
-          elemento?.BaseFiscal !== undefined &&
-          elemento?.BaseContable !== undefined
-        ) {
-          elemento.DiferenciaTemporaria =
-            elemento.BaseContable - elemento.BaseFiscal;
-        }
-      }
+      element.SaldoImpuestoDiferidoActual = Number(
+        (element.DiferenciaTemporaria * 0.35).toFixed(3)
+      );
 
-      for (const item of [
-        ...calculateDiferenciaTemporariaAcivoDiferidoPrimeraFormaUno,
-        ...calculateDiferenciaTemporariaAcivoDiferidoSegundaFormaUno,
-      ]) {
-        const elemento = basePath[item];
+      element.Variacion =
+        element.SaldoImpuestoDiferidoAnterior -
+        element.SaldoImpuestoDiferidoActual;
 
-        if (elemento?.DiferenciaTemporaria !== undefined) {
-          elemento.SaldoImpuestoDiferidoActual = Number(
-            (elemento.DiferenciaTemporaria * 0.35).toFixed(3)
-          );
-        }
+      element.TasaFiscalAplicada =
+        element.DiferenciaTemporaria > 0
+          ? (element.SaldoImpuestoDiferidoActual /
+              element.DiferenciaTemporaria) *
+            100
+          : 0;
 
-        if (
-          elemento?.SaldoImpuestoDiferidoActual !== undefined &&
-          elemento?.SaldoImpuestoDiferidoAnterior !== undefined
-        ) {
-          elemento.Variacion =
-            elemento.SaldoImpuestoDiferidoAnterior -
-            elemento.SaldoImpuestoDiferidoActual;
-        }
+      const total = {
+        SaldoImpuestoDiferidoActual: 0,
+        SaldoImpuestoDiferidoAnterior: 0,
+        Variacion: 0,
+      };
 
-        if (
-          elemento?.SaldoImpuestoDiferidoActual !== undefined &&
-          elemento?.DiferenciaTemporaria !== undefined
-        ) {
-          elemento.TasaFiscalAplicada =
-            elemento.DiferenciaTemporaria > 0
-              ? (elemento.SaldoImpuestoDiferidoActual /
-                  elemento.DiferenciaTemporaria) *
-                100
-              : 0;
-        }
-      }
+      [
+        ...calculateDiferenciaTemporariaAcivoDiferidoPrimeraForma,
+        ...calculateDiferenciaTemporariaAcivoDiferidoSegundaForma,
+      ].forEach((item) => {
+        const basePath =
+          newData.ImpuestosDiferidosProvenientesDeDiferenciasTemporarias[
+            arrayPath![arrayPath!.length - 2]
+          ];
 
-      for (const item of [
-        ...calculateDiferenciaTemporariaAcivoDiferidoPrimeraFormaUno,
-        ...calculateDiferenciaTemporariaAcivoDiferidoSegundaFormaUno,
-      ]) {
-        const elemento = basePath[item];
+        total.SaldoImpuestoDiferidoActual +=
+          basePath[item].SaldoImpuestoDiferidoActual || 0;
+        total.SaldoImpuestoDiferidoAnterior +=
+          basePath[item].SaldoImpuestoDiferidoAnterior || 0;
+        total.Variacion += basePath[item].Variacion || 0;
+      });
 
-        basePath[
-          "ValorTotal"
-        ].SaldoImpuestoDiferidoActual +=
-          elemento.SaldoImpuestoDiferidoActual || 0;
-        basePath[
-          "ValorTotal"
-        ].SaldoImpuestoDiferidoAnterior +=
-          elemento.SaldoImpuestoDiferidoAnterior || 0;
-        basePath["ValorTotal"].Variacion +=
-          elemento.Variacion || 0;
-      }
+      newData.ImpuestosDiferidosProvenientesDeDiferenciasTemporarias[
+        arrayPath![arrayPath!.length - 2]
+      ].ValorTotal.SaldoImpuestoDiferidoActual =
+        Number(
+          total.SaldoImpuestoDiferidoActual.toFixed(3)
+        ) || 0;
+      newData.ImpuestosDiferidosProvenientesDeDiferenciasTemporarias[
+        arrayPath![arrayPath!.length - 2]
+      ].ValorTotal.SaldoImpuestoDiferidoAnterior =
+        Number(total.SaldoImpuestoDiferidoAnterior.toFixed(3)) || 0;
+      newData.ImpuestosDiferidosProvenientesDeDiferenciasTemporarias[
+        arrayPath![arrayPath!.length - 2]
+      ].ValorTotal.Variacion = Number(
+        total.Variacion.toFixed(3)
+      );
     }
 
     if (
-      changedPath ===
-      "ImpuestosDiferidosProvenientesDeDiferenciasTemporarias.PasivoDiferidoDiferenciasTemporariasImponibles"
-    ) {
-      const basePath =
-        newData.ImpuestosDiferidosProvenientesDeDiferenciasTemporarias
-          .PasivoDiferidoDiferenciasTemporariasImponibles;
-
-      for (const item of calculateDiferenciaTemporariaAcivoDiferidoSegundaFormaDos) {
-        const elemento = basePath[item];
-        if (
-          elemento?.BaseFiscal !== undefined &&
-          elemento?.BaseContable !== undefined
-        ) {
-          elemento.DiferenciaTemporaria =
-            elemento.BaseContable - elemento.BaseFiscal;
-        }
-      }
-
-      for (const item of calculateDiferenciaTemporariaAcivoDiferidoTerceraFormaDos) {
-        const elemento = basePath[item];
-        if (
-          elemento?.BaseFiscal !== undefined &&
-          elemento?.BaseContable !== undefined
-        ) {
-          elemento.DiferenciaTemporaria =
-            elemento.BaseFiscal - elemento.BaseContable;
-        }
-      }
-
-      for (const item of [
-        ...calculateDiferenciaTemporariaAcivoDiferidoSegundaFormaDos,
-        ...calculateDiferenciaTemporariaAcivoDiferidoTerceraFormaDos,
-      ]) {
-        const elemento = basePath[item];
-        if (elemento?.DiferenciaTemporaria !== undefined) {
-          elemento.SaldoImpuestoDiferidoActual = Number(
-            (elemento.DiferenciaTemporaria * 0.35).toFixed(3)
-          );
-        }
-
-        if (
-          elemento?.SaldoImpuestoDiferidoActual !== undefined &&
-          elemento?.SaldoImpuestoDiferidoAnterior !== undefined
-        ) {
-          elemento.Variacion =
-            elemento.SaldoImpuestoDiferidoAnterior -
-            elemento.SaldoImpuestoDiferidoActual;
-        }
-
-        if (
-          elemento?.SaldoImpuestoDiferidoActual !== undefined &&
-          elemento?.DiferenciaTemporaria !== undefined
-        ) {
-          elemento.TasaFiscalAplicada =
-            elemento.DiferenciaTemporaria > 0
-              ? (elemento.SaldoImpuestoDiferidoActual /
-                  elemento.DiferenciaTemporaria) *
-                100
-              : 0;
-        }
-      }
-
-      for (const item of [
-        ...calculateDiferenciaTemporariaAcivoDiferidoSegundaFormaDos,
-        ...calculateDiferenciaTemporariaAcivoDiferidoTerceraFormaDos,
-      ]) {
-        const elemento = basePath[item];
-
-        basePath[
-          "ValorTotal"
-        ].SaldoImpuestoDiferidoActual +=
-          elemento!.SaldoImpuestoDiferidoActual || 0;
-        basePath[
-          "ValorTotal"
-        ].SaldoImpuestoDiferidoAnterior +=
-          elemento!.SaldoImpuestoDiferidoAnterior || 0;
-        basePath["ValorTotal"].Variacion +=
-          elemento!.Variacion || 0;
-      }
-    }
-
-    if (
-      changedPath.includes(
+      changedPath!.includes(
         "ActivosPorCreditosTributariosSaldosAfavorEImpuestosPagadosEnElEsterior"
       )
     ) {
-
       const basePath =
         newData.ActivosPorCreditosTributariosSaldosAfavorEImpuestosPagadosEnElEsterior;
 
       basePath.SaldosAFavor.Variacion =
-        basePath.SaldosAFavor
-          .Saldo31VigenciaActual || 0 -
-        basePath.SaldosAFavor
-          .Saldo31VigenciaAnterior || 0;
+        basePath.SaldosAFavor.Saldo31VigenciaActual ||
+        0 - basePath.SaldosAFavor.Saldo31VigenciaAnterior ||
+        0;
 
       basePath.ImpuestosPagadosEnELExterior.Variacion =
-        basePath.ImpuestosPagadosEnELExterior
-          .Saldo31VigenciaActual || 0 -
-        basePath.ImpuestosPagadosEnELExterior
-          .Saldo31VigenciaAnterior || 0;
+        basePath.ImpuestosPagadosEnELExterior.Saldo31VigenciaActual ||
+        0 - basePath.ImpuestosPagadosEnELExterior.Saldo31VigenciaAnterior ||
+        0;
 
-      basePath.SaldosAFavor.ExplicacionDeLaVariacion.ReduccionCompensacionApliacion = basePath.SaldosAFavor.Variacion || 0;
+      basePath.SaldosAFavor.ExplicacionDeLaVariacion.ReduccionCompensacionApliacion =
+        basePath.SaldosAFavor.Variacion || 0;
     }
 
-    if (
-      changedPath.includes(
-        "DetalleCompensacionPerdidasFiscales"
-      )
-    ) {
-      const basePath =
-        newData.DetalleCompensacionPerdidasFiscales;
+    if (changedPath!.includes("DetalleCompensacionPerdidasFiscales")) {
+      const basePath = newData.DetalleCompensacionPerdidasFiscales;
 
       basePath.AñoAnterior.PerdidaFiscalAcumuladaPorCompensarAlFinalDelPeriodo =
-        (basePath.AñoAnterior.perdidasFiscalesAcumuladasPorCompensarAlInicioDelPeriodo || 0) + (basePath.AñoAnterior.PerdidaFiscalGeneradaEnElPeriodo || 0) - (basePath.AñoAnterior.PerdidaFiscalCompensadaEnElPeriodo || 0) - (basePath.AñoAnterior.ValoresNoCompensadosPorCaducidad || 0) + (basePath.AñoAnterior.AjustesPorCorreccionDeLaDeclaracionMayorValor || 0) - (basePath.AñoAnterior.AjustesPorCorreccionDeLaDeclaracionMenorValor || 0);
+        (basePath.AñoAnterior
+          .perdidasFiscalesAcumuladasPorCompensarAlInicioDelPeriodo || 0) +
+        (basePath.AñoAnterior.PerdidaFiscalGeneradaEnElPeriodo || 0) -
+        (basePath.AñoAnterior.PerdidaFiscalCompensadaEnElPeriodo || 0) -
+        (basePath.AñoAnterior.ValoresNoCompensadosPorCaducidad || 0) +
+        (basePath.AñoAnterior.AjustesPorCorreccionDeLaDeclaracionMayorValor ||
+          0) -
+        (basePath.AñoAnterior.AjustesPorCorreccionDeLaDeclaracionMenorValor ||
+          0);
 
       basePath.AñoAnterior.SaldoActivoPorImpuestoDiferidoAlFinalDelPeriodo =
-      Number(
-            (basePath.AñoAnterior.PerdidaFiscalAcumuladaPorCompensarAlFinalDelPeriodo * 0.35).toFixed(3)
-          ) || 0;
+        Number(
+          (
+            basePath.AñoAnterior
+              .PerdidaFiscalAcumuladaPorCompensarAlFinalDelPeriodo * 0.35
+          ).toFixed(3)
+        ) || 0;
 
-      
       basePath.AñoActual.PerdidaFiscalAcumuladaPorCompensarAlFinalDelPeriodo =
-        (basePath.AñoActual.perdidasFiscalesAcumuladasPorCompensarAlInicioDelPeriodo || 0) + (basePath.AñoActual.PerdidaFiscalGeneradaEnElPeriodo || 0) - (basePath.AñoActual.PerdidaFiscalCompensadaEnElPeriodo || 0) - (basePath.AñoActual.ValoresNoCompensadosPorCaducidad || 0) + (basePath.AñoActual.AjustesPorCorreccionDeLaDeclaracionMayorValor || 0) - (basePath.AñoActual.AjustesPorCorreccionDeLaDeclaracionMenorValor || 0);
+        (basePath.AñoActual
+          .perdidasFiscalesAcumuladasPorCompensarAlInicioDelPeriodo || 0) +
+        (basePath.AñoActual.PerdidaFiscalGeneradaEnElPeriodo || 0) -
+        (basePath.AñoActual.PerdidaFiscalCompensadaEnElPeriodo || 0) -
+        (basePath.AñoActual.ValoresNoCompensadosPorCaducidad || 0) +
+        (basePath.AñoActual.AjustesPorCorreccionDeLaDeclaracionMayorValor ||
+          0) -
+        (basePath.AñoActual.AjustesPorCorreccionDeLaDeclaracionMenorValor || 0);
 
       basePath.AñoActual.SaldoActivoPorImpuestoDiferidoAlFinalDelPeriodo =
-      Number(
-            (basePath.AñoActual.PerdidaFiscalAcumuladaPorCompensarAlFinalDelPeriodo * 0.35).toFixed(3)
-          ) || 0;
+        Number(
+          (
+            basePath.AñoActual
+              .PerdidaFiscalAcumuladaPorCompensarAlFinalDelPeriodo * 0.35
+          ).toFixed(3)
+        ) || 0;
     }
 
     if (
-      changedPath.includes(
-        "DetalleDeLaCompensacionPorExcesoDeRentaPresuntiva"
-      )
+      changedPath!.includes("DetalleDeLaCompensacionPorExcesoDeRentaPresuntiva")
     ) {
       const basePath =
         newData.DetalleDeLaCompensacionPorExcesoDeRentaPresuntiva;
 
       basePath.AñoAnterior.ValorAcumuladoPorCompensarAlFinalDelPeriodo =
-        (basePath.AñoAnterior.ValorAcumuladoPorCompensarAlInicioDelPeriodo || 0) + (basePath.AñoAnterior.ValorGeneradoEnElPeriodo || 0) - (basePath.AñoAnterior.ValorCompensadoEnElPeriodo || 0) - (basePath.AñoAnterior.ValoresNoCompensadosPorCaducidad || 0) + (basePath.AñoAnterior.AjustesPorCorreccionDeLaDeclaracionMayorValor || 0) - (basePath.AñoAnterior.AjustesPorCorreccionDeLaDeclaracionMenorValor || 0);
+        (basePath.AñoAnterior.ValorAcumuladoPorCompensarAlInicioDelPeriodo ||
+          0) +
+        (basePath.AñoAnterior.ValorGeneradoEnElPeriodo || 0) -
+        (basePath.AñoAnterior.ValorCompensadoEnElPeriodo || 0) -
+        (basePath.AñoAnterior.ValoresNoCompensadosPorCaducidad || 0) +
+        (basePath.AñoAnterior.AjustesPorCorreccionDeLaDeclaracionMayorValor ||
+          0) -
+        (basePath.AñoAnterior.AjustesPorCorreccionDeLaDeclaracionMenorValor ||
+          0);
 
       basePath.AñoAnterior.SaldoActivoPorImpuestoDiferidoAlFinalDelPeriodo =
-      Number(
-            (basePath.AñoAnterior.ValorAcumuladoPorCompensarAlFinalDelPeriodo * 0.35).toFixed(3)
-          ) || 0;
-
+        Number(
+          (
+            basePath.AñoAnterior.ValorAcumuladoPorCompensarAlFinalDelPeriodo *
+            0.35
+          ).toFixed(3)
+        ) || 0;
 
       basePath.AñoActual.ValorAcumuladoPorCompensarAlFinalDelPeriodo =
-        (basePath.AñoActual.ValorAcumuladoPorCompensarAlInicioDelPeriodo || 0) + (basePath.AñoActual.ValorGeneradoEnElPeriodo || 0) - (basePath.AñoActual.ValorCompensadoEnElPeriodo || 0) - (basePath.AñoActual.ValoresNoCompensadosPorCaducidad || 0) + (basePath.AñoActual.AjustesPorCorreccionDeLaDeclaracionMayorValor || 0) - (basePath.AñoActual.AjustesPorCorreccionDeLaDeclaracionMenorValor || 0);
+        (basePath.AñoActual.ValorAcumuladoPorCompensarAlInicioDelPeriodo || 0) +
+        (basePath.AñoActual.ValorGeneradoEnElPeriodo || 0) -
+        (basePath.AñoActual.ValorCompensadoEnElPeriodo || 0) -
+        (basePath.AñoActual.ValoresNoCompensadosPorCaducidad || 0) +
+        (basePath.AñoActual.AjustesPorCorreccionDeLaDeclaracionMayorValor ||
+          0) -
+        (basePath.AñoActual.AjustesPorCorreccionDeLaDeclaracionMenorValor || 0);
 
       basePath.AñoActual.SaldoActivoPorImpuestoDiferidoAlFinalDelPeriodo =
-      Number(
-            (basePath.AñoActual.ValorAcumuladoPorCompensarAlFinalDelPeriodo * 0.35).toFixed(3)
-          ) || 0;
+        Number(
+          (
+            basePath.AñoActual.ValorAcumuladoPorCompensarAlFinalDelPeriodo *
+            0.35
+          ).toFixed(3)
+        ) || 0;
     }
 
     setData(newData);

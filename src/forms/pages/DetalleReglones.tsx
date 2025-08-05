@@ -28,7 +28,10 @@ const DetalleRenglones = () => {
       });
   }, []);
 
-  const handleChange = (newData: any) => {
+  const handleChange = (newData: any, changedPath?: string) => {
+
+    console.log(changedPath)
+
     setData(newData);
     setSaveStatus("saving");
 

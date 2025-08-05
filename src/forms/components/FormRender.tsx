@@ -88,7 +88,7 @@ const PrimitiveInput: React.FC<{
             <input
               type="checkbox"
               checked={!!value}
-              onChange={(e) => onChange(e.target.checked, pathToString(path.slice(0, -2)))}
+              onChange={(e) => onChange(e.target.checked, pathToString(path.slice(0, -1)))}
               readOnly={!canEdit || cfg?.readonly}
               className="h-4 w-4 text-blue-600 rounded focus:ring-blue-500"
             />
@@ -118,7 +118,7 @@ const PrimitiveInput: React.FC<{
                 widget === "number"
                   ? Number(e.target.value) || 0
                   : e.target.value,
-                pathToString(path.slice(0, -2))
+                pathToString(path.slice(0, -1))
               )
             }
             readOnly={!canEdit || cfg?.readonly}
@@ -140,7 +140,7 @@ const PrimitiveInput: React.FC<{
           </label>
           <select
             value={str}
-            onChange={(e) => onChange(e.target.value, pathToString(path.slice(0, -2)))}
+            onChange={(e) => onChange(e.target.value, pathToString(path.slice(0, -1)))}
             className="w-full rounded-lg border border-gray-300 p-2 text-sm shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200"
           >
             <option value="">{cfg?.placeholder ?? "Selecciona..."}</option>
@@ -300,7 +300,7 @@ const ArrayFieldset: React.FC<{
                   onChange={(newItem) => {
                     const clone = [...arr];
                     clone[idx] = newItem;
-                    onChange(clone, pathToString(itemPath.slice(0, -2)));
+                    onChange(clone, pathToString(itemPath.slice(0, -1)));
                   }}
                   config={config}
                   canEdit={canEdit}
@@ -326,7 +326,7 @@ const ArrayFieldset: React.FC<{
               onChange={(newVal) => {
                 const clone = [...arr];
                 clone[idx] = newVal;
-                onChange(clone, pathToString(itemPath.slice(0, -2)));
+                onChange(clone, pathToString(itemPath.slice(0, -1)));
               }}
               canEdit={canEdit}
               label={`Item ${idx + 1}`}

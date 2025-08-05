@@ -22,7 +22,7 @@ export const config = {
   },
 };
 
-export const calculateDiferenciaTemporariaAcivoDiferidoPrimeraFormaUno = [
+export const calculateDiferenciaTemporariaAcivoDiferidoPrimeraForma = [
   "EfectivoYEquivalentesAlEfectivo",
   "InversionesEInstrumentosDerivados",
   "CuentasPorCobrar",
@@ -34,31 +34,7 @@ export const calculateDiferenciaTemporariaAcivoDiferidoPrimeraFormaUno = [
   "ActivosNoCorrientesMantenidosParaLaVentaEntregarAPropietarios",
 ];
 
-export const calculateDiferenciaTemporariaAcivoDiferidoSegundaFormaUno = [
-  "PasivosFinancierosYCuentasPorPagar",
-  "ImpuestosGravamenesYTasas",
-  "BeneficiosAEmpleados",
-  "Provisiones",
-  "OtrosPasivosAnticiposYAvancesRecibidos",
-  "OperacionesConTitulosYDerivados",
-  "PerdidasFiscalesYExcesosDeRentaPresuntiva",
-  "ActivosReconocidosSolamenteParaFinesFiscales",
-  "OtrosActivos"
-];
-
-export const calculateDiferenciaTemporariaAcivoDiferidoSegundaFormaDos = [
-  "EfectivoYEquivalentesAlEfectivo",
-  "InversionesEInstrumentosDerivados",
-  "CuentasPorCobrar",
-  "Inventarios",
-  "PropiedadesPlantaYEquipo",
-  "ActivosIntangibles",
-  "PropiedadesDeInversion",
-  "ActivosBiologicos",
-  "ActivosNoCorrientesMantenidosParaLaVentaEntregarAPropietarios"
-];
-
-export const calculateDiferenciaTemporariaAcivoDiferidoTerceraFormaDos =[
+export const calculateDiferenciaTemporariaAcivoDiferidoSegundaForma = [
   "PasivosFinancierosYCuentasPorPagar",
   "ImpuestosGravamenesYTasas",
   "BeneficiosAEmpleados",
