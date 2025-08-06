@@ -32,6 +32,11 @@ const DetalleRenglones = () => {
   }, []);
 
   const calculateSaldosFiscalesParciales = (data: any) => {
+
+    if(data.SaldosContablesADiciembre31Parciales) {
+      return;
+    }
+
     data.SaldosFiscalesADiciembre31Parciales =
       (data.SaldosContablesADiciembre31Parciales || 0) +
       (data.AjustesParaLlegarASaldosFiscales1 || 0) -

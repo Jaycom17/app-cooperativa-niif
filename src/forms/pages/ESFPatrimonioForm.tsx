@@ -27,7 +27,22 @@ const ESFpatrimonio = () => {
       });
   }, []);
 
-  const handleChange = (newData: any) => {
+  const calculatedValorFiscal = (data: any) => {
+    if (data.ValorFiscal) {
+      return;
+    }
+
+    data.ValorFiscal = (data.ValorContable || 0) + (data.EfectoConversion || 0) - (data.MenorValorFiscal || 0) + (data.MayorValorFiscal || 0);
+  }
+
+  const handleChange = (newData: any, changedPath?: string) => {
+
+    const arrayPath = changedPath!.split(".");
+
+    const element = arrayPath.reduce((acc, key) => acc?.[key], newData);
+
+    calculatedValorFiscal(element);
+
     setData(newData);
     setSaveStatus("saving");
 
