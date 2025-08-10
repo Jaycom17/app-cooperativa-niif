@@ -28,7 +28,7 @@ const ESFpatrimonio = () => {
   }, []);
 
   const calculatedValorFiscal = (data: any) => {
-    if (data.ValorFiscal) {
+    if (data.ValorFiscal == null) {
       return;
     }
 

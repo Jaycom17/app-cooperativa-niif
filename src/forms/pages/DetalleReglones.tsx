@@ -33,7 +33,7 @@ const DetalleRenglones = () => {
 
   const calculateSaldosFiscalesParciales = (data: any) => {
 
-    if(data.SaldosContablesADiciembre31Parciales) {
+    if(data.SaldosFiscalesADiciembre31Parciales == null) {
       return;
     }
 

@@ -27,7 +27,43 @@ const ActivosFijosForm = () => {
       });
   }, []);
 
-  const handleChange = (newData: any) => {
+  const calculateImporteNetoFinalPeriodoCosto = (data: any) => {
+
+    if (data.ImporteNetoAlFinalDelPeriodo.Costo) {
+
+      data.ImporteNetoAlFinalDelPeriodo.Costo = (data.ImporteAlComienzoDelPeriodo.Costo || 0) + (data.ImporteAlComienzoDelPeriodo.EfectoDeConversion || 0) + (data.Incrementos.TransferenciasAdquisiciones || 0) - (data.Disminuciones.TransferenciasEliminaciones || 0) - (data.Depreciacion.PorCosto || 0) - (data.Depreciacion.EfectoDeConversion || 0) - (data.DeterioroAcumuladoAlFinalDelPeriodo || 0);
+    }
+  }
+
+  const calculateImporteNetoFinalPeriodoAjustePorRevaluacion = (data: any) => {
+
+    if (data.ImporteNetoAlFinalDelPeriodo.AjustePorRevaluacionesOReExpresiones == null) {
+      return;
+    }
+
+    data.ImporteNetoAlFinalDelPeriodo.AjustePorRevaluacionesOReExpresiones = (data.ImporteAlComienzoDelPeriodo.AjustePorRevaluacionesOReExpresiones || 0) + (data.ImporteAlComienzoDelPeriodo.EfectoDeConversion || 0) + (data.Incrementos.CambiosEnValorRazonable || 0) - (data.Disminuciones.CambiosEnValorRazonable || 0) - (data.Depreciacion.AjustePorRevaluacionesOReExpresiones || 0);
+  }
+
+  const calculateSubtotalAlFinalDelPeriodo = (data: any) => {
+
+    if (data.ValorTotalIncluyendoArrendamientoFinancieroOLeasingFinanciero.SubtotalAlFinalPeriodo == null) {
+      return;
+    }
+
+    data.ValorTotalIncluyendoArrendamientoFinancieroOLeasingFinanciero.SubtotalAlFinalPeriodo = (data.ValorTotalIncluyendoArrendamientoFinancieroOLeasingFinanciero.SaldoAlComienzoDelPeriodo || 0) + (data.ValorTotalIncluyendoArrendamientoFinancieroOLeasingFinanciero.IncrementosPorTransferenciasAdquisicionesYOtrosCambios || 0) - (data.ValorTotalIncluyendoArrendamientoFinancieroOLeasingFinanciero.DisminucionesPorTransferenciasYOtrosCambios || 0);
+  }
+
+  const handleChange = (newData: any, changedPath?: string) => {
+
+    const arrayPath = changedPath!.split(".").slice(0, -1);
+
+    const element = arrayPath.reduce((acc, key) => acc?.[key], newData);
+
+    calculateImporteNetoFinalPeriodoCosto(element);
+    calculateImporteNetoFinalPeriodoAjustePorRevaluacion(element);
+    calculateSubtotalAlFinalDelPeriodo(element);
+
+    console.log(element);
 
     setData(newData);
     setSaveStatus("saving");
