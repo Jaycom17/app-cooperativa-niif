@@ -33,14 +33,14 @@ const DetalleRenglones = () => {
 
   const calculateSaldosFiscalesParciales = (data: any) => {
 
-    if(data.SaldosFiscalesADiciembre31Parciales == null) {
+    if(data?.SaldosFiscalesADiciembre31Parciales == null) {
       return;
     }
 
     data.SaldosFiscalesADiciembre31Parciales =
-      (data.SaldosContablesADiciembre31Parciales || 0) +
-      (data.AjustesParaLlegarASaldosFiscales1 || 0) -
-      (data.AjustesParaLlegarASaldosFiscales3 || 0);
+      (data?.SaldosContablesADiciembre31Parciales || 0) +
+      (data?.AjustesParaLlegarASaldosFiscales1 || 0) -
+      (data?.AjustesParaLlegarASaldosFiscales3 || 0);
   };
 
   const handleChange = (newData: any, changedPath?: string) => {

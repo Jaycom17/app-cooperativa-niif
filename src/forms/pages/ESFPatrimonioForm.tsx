@@ -28,11 +28,11 @@ const ESFpatrimonio = () => {
   }, []);
 
   const calculatedValorFiscal = (data: any) => {
-    if (data.ValorFiscal == null) {
+    if (data?.ValorFiscal == null) {
       return;
     }
 
-    data.ValorFiscal = (data.ValorContable || 0) + (data.EfectoConversion || 0) - (data.MenorValorFiscal || 0) + (data.MayorValorFiscal || 0);
+    data.ValorFiscal = (data?.ValorContable || 0) + (data?.EfectoConversion || 0) - (data?.MenorValorFiscal || 0) + (data?.MayorValorFiscal || 0);
   }
 
   const handleChange = (newData: any, changedPath?: string) => {
