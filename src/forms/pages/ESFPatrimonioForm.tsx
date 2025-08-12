@@ -8,7 +8,7 @@ import { ESFPatrimonioInput } from "../models/EsfPatrimonioJson";
 
 import { mergeDeepPreservingOrder } from "../utils/mergeDeep";
 
-import { calculateTotals } from "../utils/totalOperations";
+import { calculateTotals, calculateTotalsSources } from "../utils/totalOperations";
 
 const ESFpatrimonio = () => {
   const [data, setData] = useState(ESFPatrimonioInput);
@@ -129,6 +129,28 @@ const ESFpatrimonio = () => {
       (data?.Activos?.ActivosBiologicos?.PlantasProductorasCultivosConsumibles?.Total?.ValorFiscal || 0);
   }
 
+  const calculateTotalPatrimonio = (data: any) => {
+    data.TotalPatrimonio.ValorContable = 
+      (data?.Activos?.Total?.ValorContable || 0) - 
+      (data?.Pasivos?.Total?.ValorContable || 0);
+
+    data.TotalPatrimonio.EfectoConversion = 
+      (data?.Activos?.Total?.EfectoConversion || 0) - 
+      (data?.Pasivos?.Total?.EfectoConversion || 0);
+
+    data.TotalPatrimonio.MenorValorFiscal = 
+      (data?.Activos?.Total?.MenorValorFiscal || 0) - 
+      (data?.Pasivos?.Total?.MenorValorFiscal || 0);
+
+    data.TotalPatrimonio.MayorValorFiscal = 
+      (data?.Activos?.Total?.MayorValorFiscal || 0) - 
+      (data?.Pasivos?.Total?.MayorValorFiscal || 0);
+
+    data.TotalPatrimonio.ValorFiscal = 
+      (data?.Activos?.Total?.ValorFiscal || 0) - 
+      (data?.Pasivos?.Total?.ValorFiscal || 0);
+  }
+
   const handleChange = (newData: any, changedPath?: string) => {
 
     const arrayPath = changedPath!.split(".");
@@ -143,6 +165,53 @@ const ESFpatrimonio = () => {
     calculateTotalCuentasComercialesPorCobrar(newData);
     calculateTotalActivosIntangibles(newData);
     calculateTotalActivosBiologicos(newData);
+
+    calculateTotalsSources(newData?.Activos,
+      [
+        newData?.Activos?.ActivosEquivalentesEfectivo?.Total,
+        newData?.Activos?.InversionesInstrumentosFinancierosDerivadosVN?.Total,
+        newData?.Activos?.CuentasComercialesCobrarOtrasPorCobrar?.Total,
+        newData?.Activos?.Inventarios?.Total,
+        newData?.Activos?.GastosPagadosPorAnticipado?.Total,
+        newData?.Activos?.ActivosImpuestosCorrientes?.Total,
+        newData?.Activos?.ActivosImpuestosDiferidos?.Total,
+        newData?.Activos?.PropiedadesPlantaEquipo?.Total,
+        newData?.Activos?.ActivosIntangibles?.Total,
+        newData?.Activos?.PropiedadesInversion?.Total,
+        newData?.Activos?.ActivosNoCorrientes?.Total,
+        newData?.Activos?.ActivosBiologicos?.Total,
+        newData?.Activos?.OtrosActivos?.Total,
+      ],
+      "Total"
+    );
+
+    calculateTotalsSources(newData?.Pasivos,
+      [
+        newData?.Pasivos?.ObligacionesFinancierasCuentasPorPagar?.Total,
+        newData?.Pasivos?.ArrendamientosPorPagar?.Total,
+        newData?.Pasivos?.OtrosPasivosFinancieros?.Total,
+        newData?.Pasivos?.ImpuestosGravamenesTasasPorPagar?.Total,
+        newData?.Pasivos?.PasivosImpuestosDiferidos?.Total,
+        newData?.Pasivos?.PasivosBeneficiosEmpleados?.Total,
+        newData?.Pasivos?.Provisiones?.Total,
+        newData?.Pasivos?.PasivosIngresosDiferidos?.Total,
+        newData?.Pasivos?.OtrosPasivos?.Total
+      ],
+      "Total"
+    );
+
+    calculateTotalPatrimonio(newData);
+
+    calculateTotalsSources(newData?.PatrimonioContable,
+      [
+        newData?.PatrimonioContable?.CapitalSocialReservas?.Total,
+        newData?.PatrimonioContable?.ResultadoEjercicio?.Total,
+        newData?.PatrimonioContable?.ResultadosAcumulados?.Total,
+        newData?.PatrimonioContable?.GananciasPerdidasAcumuladasRetenidasAdopcionPrimera?.Total,
+        newData?.PatrimonioContable?.OtroResultadoIntegralAcumulado?.Total
+      ],
+      "Total"
+    );
 
     setData(newData);
     setSaveStatus("saving");
