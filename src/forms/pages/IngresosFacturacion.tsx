@@ -10,6 +10,8 @@ import { mergeDeepPreservingOrder } from "../utils/mergeDeep";
 
 import { calculateTotals } from "../utils/totalOperations";
 
+import { config } from "../utils/IngresosFacturacion";
+
 function IngresosFacturacionForm() {
   const [data, setData] = useState(IngresosFacturacionInput);
   const [saveStatus, setSaveStatus] = useState<"idle" | "saving" | "saved">(
@@ -124,6 +126,7 @@ function IngresosFacturacionForm() {
           onChange={handleChange}
           canEdit={true}
           defaultOpen={false}
+          config={config}
         />
       </main>
     </StudentLayout>

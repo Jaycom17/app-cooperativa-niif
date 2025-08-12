@@ -68,13 +68,6 @@ export const ESFPatrimonioInput = {
             MayorValorFiscal: 0,
             ValorFiscal: 0,
           },
-          Total: {
-            ValorContable: 0,
-            EfectoConversion: 0,
-            MenorValorFiscal: 0,
-            MayorValorFiscal: 0,
-            ValorFiscal: 0,
-          },
         },
         InstrumentosDeudaCostoAmortizado: {
           ValorContable: 0,
@@ -157,13 +150,6 @@ export const ESFPatrimonioInput = {
             ValorFiscal: 0,
           },
           Costo: {
-            ValorContable: 0,
-            EfectoConversion: 0,
-            MenorValorFiscal: 0,
-            MayorValorFiscal: 0,
-            ValorFiscal: 0,
-          },
-          Total: {
             ValorContable: 0,
             EfectoConversion: 0,
             MenorValorFiscal: 0,
@@ -600,13 +586,6 @@ export const ESFPatrimonioInput = {
           MayorValorFiscal: 0,
           ValorFiscal: 0,
         },
-        Total: {
-          ValorContable: 0,
-          EfectoConversion: 0,
-          MenorValorFiscal: 0,
-          MayorValorFiscal: 0,
-          ValorFiscal: 0,
-        },
       },
       DepreciacionAcumuladaPropiedadesPlantaEquipo: {
         ValorContable: 0,
@@ -661,13 +640,6 @@ export const ESFPatrimonioInput = {
             MayorValorFiscal: 0,
             ValorFiscal: 0,
           },
-          Total: {
-            ValorContable: 0,
-            EfectoConversion: 0,
-            MenorValorFiscal: 0,
-            MayorValorFiscal: 0,
-            ValorFiscal: 0,
-          },
         },
         ArrendamientoFinanciero: {
           Costo: {
@@ -683,14 +655,7 @@ export const ESFPatrimonioInput = {
             MenorValorFiscal: 0,
             MayorValorFiscal: 0,
             ValorFiscal: 0,
-          },
-          Total: {
-            ValorContable: 0,
-            EfectoConversion: 0,
-            MenorValorFiscal: 0,
-            MayorValorFiscal: 0,
-            ValorFiscal: 0,
-          },
+          }
         },
         OtrosActivosIntangibles: {
           Costo: {
@@ -701,13 +666,6 @@ export const ESFPatrimonioInput = {
             ValorFiscal: 0,
           },
           AjusteAcumuladoRevaluacionesReexpresiones: {
-            ValorContable: 0,
-            EfectoConversion: 0,
-            MenorValorFiscal: 0,
-            MayorValorFiscal: 0,
-            ValorFiscal: 0,
-          },
-          Total: {
             ValorContable: 0,
             EfectoConversion: 0,
             MenorValorFiscal: 0,
@@ -761,13 +719,6 @@ export const ESFPatrimonioInput = {
             ValorFiscal: 0,
           },
           CompraAcciones: {
-            ValorContable: 0,
-            EfectoConversion: 0,
-            MenorValorFiscal: 0,
-            MayorValorFiscal: 0,
-            ValorFiscal: 0,
-          },
-          Total: {
             ValorContable: 0,
             EfectoConversion: 0,
             MenorValorFiscal: 0,

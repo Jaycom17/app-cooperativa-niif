@@ -34,8 +34,6 @@ export const calculateTotals = (
     return;
   }
 
-  console.log(total);
-
   const totalCopy = { ...total };
 
   const resetValues = (obj: any): void => {
@@ -55,6 +53,8 @@ export const calculateTotals = (
       if (typeof sourceObj[key] === "object" && sourceObj[key] !== null) {
         if (typeof targetObj[key] === "object" && targetObj[key] !== null) {
           addToTotal(sourceObj[key], targetObj[key]);
+        }else if (targetObj[key] === undefined) {
+          addToTotal(sourceObj[key], targetObj);
         }
       } else if (typeof sourceObj[key] === "number") {
         targetObj[key] += sourceObj[key] || 0;
