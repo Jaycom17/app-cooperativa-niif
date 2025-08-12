@@ -1,5 +1,5 @@
 export const DetalleRenglonesInput = {
-  Reglon33: {
+  Renglon33: {
     "510506Sueldos": {
       SaldosContablesADiciembre31Parciales: 0,
       AjustesParaLlegarASaldosFiscales1: 0,
@@ -157,7 +157,7 @@ export const DetalleRenglonesInput = {
     TotalCostosYGastosDeNominaSaldosContablesADiciembre31: 0,
     TotalCostosYGastosDeNominaSaldosFiscalesADiciembre31: 0,
   },
-  Reglon34: {
+  Renglon34: {
     "510568ARL": {
       SaldosContablesADiciembre31Parciales: 0,
       AjustesParaLlegarASaldosFiscales1: 0,
@@ -224,7 +224,7 @@ export const DetalleRenglonesInput = {
     TotalAportesAlSistemaDeSeguridadSocialSaldosContablesADiciembre31: 0,
     TotalAportesAlSistemaDeSeguridadSocialSaldosFiscalesADiciembre31: 0,
   },
-  Reglon35: {
+  Renglon35: {
     "510572CajaComp": {
       SaldosContablesADiciembre31Parciales: 0,
       AjustesParaLlegarASaldosFiscales1: 0,
@@ -291,7 +291,7 @@ export const DetalleRenglonesInput = {
     TotalAportesAlSENAICBFCajaCompensacionSaldosContablesADiciembre31: 0,
     TotalAportesAlSENAICBFCajaCompensacionSaldosFiscalesADiciembre31: 0,
   },
-  Reglon36: {
+  Renglon36: {
     "1105CajaGeneral": {
       SaldosContablesADiciembre31Parciales: 0,
       AjustesParaLlegarASaldosFiscales1: 0,
@@ -346,7 +346,7 @@ export const DetalleRenglonesInput = {
     TotalEfectivoYEquivalentesDeEfectivoSaldosContablesADiciembre31: 0,
     TotalEfectivoYEquivalentesDeEfectivoSaldosFiscalesADiciembre31: 0,
   },
-  Reglon37: {
+  Renglon37: {
     "1205InversionesEnAsociadasYSubsidiariasAccionesYAportesEnSociedades": {
       MedidasAlCosto: {
         ValorDelCosto: {
@@ -545,7 +545,7 @@ export const DetalleRenglonesInput = {
     TotalInversionesEInstrumentosFinancierosDerivadosSaldosContablesADiciembre31: 0,
     TotalInversionesEInstrumentosFinancierosDerivadosSaldosFiscalesADiciembre31: 0,
   },
-  Reglon38: {
+  Renglon38: {
     "1305Clientes": {
       SaldosContablesADiciembre31Parciales: 0,
       AjustesParaLlegarASaldosFiscales1: 0,
@@ -655,7 +655,7 @@ export const DetalleRenglonesInput = {
     TotalCuentasDocumentosYArrendamientosFinancierosPorCobrarSaldosContablesADiciembre31: 0,
     TotalCuentasDocumentosYArrendamientosFinancierosPorCobrarSaldosFiscalesADiciembre31: 0,
   },
-  Reglon39: {
+  Renglon39: {
     "1405MateriasPrimas": {
       SaldosContablesADiciembre31Parciales: 0,
       AjustesParaLlegarASaldosFiscales1: 0,
@@ -729,7 +729,7 @@ export const DetalleRenglonesInput = {
     TotalInventariosSaldosContablesADiciembre31: 0,
     TotalInventariosSaldosFiscalesADiciembre31: 0,
   },
-  Reglon40: {
+  Renglon40: {
     "1505AcuerdosDeConcesionModeloDelActivoIntangible": {
       SaldosContablesADiciembre31Parciales: 0,
       AjustesParaLlegarASaldosFiscales1: 0,
@@ -826,7 +826,7 @@ export const DetalleRenglonesInput = {
     TotalActivosIntangiblesSaldosContablesADiciembre31: 0,
     TotalActivosIntangiblesSaldosFiscalesADiciembre31: 0,
   },
-  Reglon41: {
+  Renglon41: {
     "1605AnimalesProductoresMedidosAlCosto": {
       AnimalesProductoresMedidosAlCosto: {
         ValorDelCosto: {
@@ -980,7 +980,7 @@ export const DetalleRenglonesInput = {
     TotalActivosBiologicosSaldosContablesADiciembre31: 0,
     TotalActivosBiologicosSaldosFiscalesADiciembre31: 0,
   },
-  Reglon42: {
+  Renglon42: {
     "1704Terrenos": {
       SaldosContablesADiciembre31Parciales: 0,
       AjustesParaLlegarASaldosFiscales1: 0,
@@ -1146,7 +1146,7 @@ export const DetalleRenglonesInput = {
     TotalPropiedadesPlantaEquipoPropiedadesDeInversionANCMVSaldosContablesADiciembre31: 0,
     TotalPropiedadesPlantaEquipoPropiedadesDeInversionANCMVSaldosFiscalesADiciembre31: 0,
   },
-  Reglon43: {
+  Renglon43: {
     "1805AnticiposPorImpuestosCorrientes": {
       AnticipoDelImpuestoDeRentaYDeSobretasa: {
         SaldosContablesADiciembre31Parciales: 0,
@@ -1259,11 +1259,11 @@ export const DetalleRenglonesInput = {
     TotalOtrosActivosSaldosContablesADiciembre31: 0,
     TotalOtrosActivosSaldosFiscalesADiciembre31: 0,
   },
-  Reglon44TotalPatrimonioBruto: {
+  Renglon44TotalPatrimonioBruto: {
     TotalSaldosContablesADiciembre31: 0,
     TotalSaldosFiscalesADiciembre31: 0,
   },
-  Reglon45: {
+  Renglon45: {
     "2105BancosNacionales": {
       SaldosContablesADiciembre31Parciales: 0,
       AjustesParaLlegarASaldosFiscales1: 0,
@@ -1513,7 +1513,7 @@ export const DetalleRenglonesInput = {
     TotalPasivosSaldosContablesADiciembre31: 0,
     TotalPasivosSaldosFiscalesADiciembre31: 0,
   },
-  Reglon46: {
+  Renglon46: {
     TotalPatrimonioLiquidoPositivoSaldosContablesADiciembre31: 0,
     TotalPatrimonioLiquidoPositivoSaldosFiscalesADiciembre31: 0,
     "3130CapitalDePersonasNaturales": {
@@ -1558,7 +1558,7 @@ export const DetalleRenglonesInput = {
       },
     },
   },
-  Reglon47: {
+  Renglon47: {
     VentaDeBienes: {
       AClientesNacionalesPorFueraDeZonaFranca: {
         SaldosContablesADiciembre31Parciales: 0,
@@ -1720,7 +1720,7 @@ export const DetalleRenglonesInput = {
     TotalIngresosBrutosDeActividadesOrdinariasSaldosContablesADiciembre31: 0,
     TotalIngresosBrutosDeACtividadesOrdinariasSaldosFiscalesADiciembre31: 0,
   },
-  Reglon48: {
+  Renglon48: {
     "421005FinancierosIntereses": {
       ArrendamientoFinancieroOMercantilLeasing: {
         SaldosContablesADiciembre31Parciales: 0,
@@ -1781,7 +1781,7 @@ export const DetalleRenglonesInput = {
     TotalIngresosFinancierosSaldosContablesADiciembre31: 0,
     TotalIngresosFinancierosSaldosFiscalesADiciembre31: 0,
   },
-  Reglon49: {
+  Renglon49: {
     RecibidosDeSociedadNacionalDelRegimenOrdinarioQueSiLlevaACaboLasMegainversionesDelArt235:
       {
         SaldosContablesADiciembre31Parciales: 0,
@@ -1816,12 +1816,12 @@ export const DetalleRenglonesInput = {
     TotalDividentosOParticipacionesGananciaOcasionalSaldosContablesADiciembre31: 0,
     TotalDividentosOParticipacionesGananciaOcasionalSaldosFiscalesADiciembre31: 0,
   },
-  Reglon50DividendosOParticipacionesDistribuidosPorEntidadesResidentesEnColombia:
+  Renglon50DividendosOParticipacionesDistribuidosPorEntidadesResidentesEnColombia:
     {
       TotalSaldosContablesADiciembre31Parciales: 0,
       TotalSaldosFiscalesADiciembre31Parciales: 0,
     },
-  Reglon51DividendosOParticipacionesGravadasAñoRecibidosPorSociedadesExtranjeras:
+  Renglon51DividendosOParticipacionesGravadasAñoRecibidosPorSociedadesExtranjeras:
     {
       TotalSaldosContablesADiciembre31Parciales: 0,
       TotalSaldosFiscalesADiciembre31Parciales: 0,
@@ -1833,7 +1833,7 @@ export const DetalleRenglonesInput = {
         SaldosFiscalesADiciembre31Parciales: 0,
       },
     },
-  Reglon52: {
+  Renglon52: {
     RecibidosDeSociedadNacionalDelRegimenOrdinarioQueSiLlevaACaboLasMegainversionesDelArt235:
       {
         SaldosContablesADiciembre31Parciales: 0,
@@ -1868,7 +1868,7 @@ export const DetalleRenglonesInput = {
     TotalDividendosYParticipacionesGravadasPorPersonasNaturalesSaldosContablesADiciembre3152: 0,
     TotalDividendosYParticipacionesGravadasPorPersonasNaturalesSaldosFiscalesADiciembre3152: 0,
   },
-  Reglon53: {
+  Renglon53: {
     RecibidosDeSociedadNacionalDelRegimenOrdinarioQueNoLlevaACaboLasMegainversionesDelArt235YQueNoEstaAcogidaAlRegimenDeSociedadesCHCDeLosArts894A898DelET:
       {
         SaldosContablesADiciembre31Parciales: 0,
@@ -1895,7 +1895,7 @@ export const DetalleRenglonesInput = {
     Total53SaldosContablesADiciembre31: 0,
     Total53SaldosFiscalesADiciembre31: 0,
   },
-  Reglon54: {
+  Renglon54: {
     RecibidosDeSociedadNacionalDelRegimenOrdinarioQueNoLlevaACaboLasMegainversionesDelArt235YQueNoEstaAcogidaAlRegimenDeSociedadesCHCDeLosArts894A898DelET:
       {
         SaldosContablesADiciembre31Parciales: 0,
@@ -1922,11 +1922,11 @@ export const DetalleRenglonesInput = {
     Total54SaldosContablesADiciembre31: 0,
     Total54SaldosFiscalesADiciembre31: 0,
   },
-  Reglon55: {
+  Renglon55: {
     TotalSaldosContablesADiciembre31Parciales: 0,
     TotalSaldosFiscalesADiciembre31Parciales: 0,
   },
-  Reglon56: {
+  Renglon56: {
     Total56SaldosContablesADiciembre31: 0,
     Total56SaldosFiscalesADiciembre31: 0,
     RecibidosDeSociedadNacionalDelRegimenOrdinarioQueSiLlevaACaboLasMegainversionesDelArt235:
@@ -1938,7 +1938,7 @@ export const DetalleRenglonesInput = {
         SaldosFiscalesADiciembre31Parciales: 0,
       },
   },
-  Reglon57: {
+  Renglon57: {
     "4245UtilidadEnVentaDeActivoFijo": {
       PorVentasDeActivosPoseidosMenosDe2Anios: {
         PropiedadesPlantaYEquipo: {
@@ -2352,11 +2352,11 @@ export const DetalleRenglonesInput = {
     TotalOtrosIngresosSaldosContablesADiciembre31: 0,
     TotalOtrosIngresosSaldosFiscalesADiciembre31: 0,
   },
-  Reglon58: {
+  Renglon58: {
     TotalIngresosBrutosSaldosContablesADiciembre31: 0,
     TotalIngresosBrutosSaldosFiscalesADiciembre31: 0,
   },
-  Reglon59: {
+  Renglon59: {
     "4175DevolucionesYRebajasEnVentas": {
       EnVentaDeBienes: {
         SaldosContablesADiciembre31Parciales: 0,
@@ -2383,7 +2383,7 @@ export const DetalleRenglonesInput = {
       TotalMenosDevolucionesDescuentosRebajasSaldosFiscalesADiciembre31: 0,
     },
   },
-  Reglon60: {
+  Renglon60: {
     DiviNoGrav: {
       AjustesParaLlegarASaldosFiscales1: 0,
       SaldosFiscalesADiciembre31Parciales: 0,
@@ -2422,11 +2422,11 @@ export const DetalleRenglonesInput = {
     },
     TotalIngresosNoConstituidosDeRentaNiGananciaOcasionalSaldosFiscalesADiciembre31: 0,
   },
-  Reglon61: {
+  Renglon61: {
     TotalIngresosNetosSaldosContablesADiciembre31: 0,
     TotalIngresosNetosSaldosFiscalesADiciembre31: 0,
   },
-  Reglon62: {
+  Renglon62: {
     "61CostosDeLasMercanciasFabricadasYVendidas": {
       InventarioInicialDeTrabajoEnProceso: {
         SaldosContablesADiciembre31Parciales: 0,
@@ -2854,7 +2854,7 @@ export const DetalleRenglonesInput = {
     TotalCostosSaldosContablesADiciembre31: 0,
     TotalCostosSaldosFiscalesADiciembre31: 0,
   },
-  Reglon63: {
+  Renglon63: {
     "5105BeneficiosAEmpleadosDeCortoPlayzo": {
       SalariosYOtros: {
         SaldosContablesADiciembre31Parciales: 0,
@@ -3245,7 +3245,7 @@ export const DetalleRenglonesInput = {
     TotalGastosDeAdministracionSaldosContablesADiciembre31: 0,
     TotalGastosDeAdministracionSaldosFiscalesADiciembre31: 0,
   },
-  Reglon64: {
+  Renglon64: {
     "5205BeneficiosALosEmpleadosCortoPlayzo": {
       SalariosYOtros: {
         SaldosContablesADiciembre31Parciales: 0,
@@ -3680,7 +3680,7 @@ export const DetalleRenglonesInput = {
     TotalGastosDeDistribucionYVentasSaldosContablesADiciembre31: 0,
     TotalGastosDeDistribucionYVentasSaldosFiscalesADiciembre31: 0,
   },
-  Reglon65: {
+  Renglon65: {
     5305: {
       IntDevSecFin: {
         SaldosContablesADiciembre31Parciales: 0,
@@ -3756,7 +3756,7 @@ export const DetalleRenglonesInput = {
     TotalesSaldosContablesADiciembre31: 0,
     TotalesSaldosFiscalesADiciembre31: 0,
   },
-  Reglon66: {
+  Renglon66: {
     "5310PerdidaEnVentaYRetiroDeBienesPoseidosMenosDeDosAnios": {
       PerdidaEnVentaYRetiroDeBienesPoseidosMenosDeDosAnios: {
         DePropiedadesPlantaYEquipo: {
@@ -4031,19 +4031,19 @@ export const DetalleRenglonesInput = {
     TotalOtrosGastosYDeduccionesSaldosContablesADiciembre31: 0,
     TotalOtrosGastosYDeduccionesSaldosFiscalesADiciembre31: 0,
   },
-  Reglon67: {
+  Renglon67: {
     TotalCostosYGastosDeduciblesSaldosContablesADiciembre31: 0,
     TotalCostosYGastosDeduciblesSaldosFiscalesADiciembre31: 0,
   },
-  Reglon68: {
+  Renglon68: {
     SaldosContablesADiciembre31Parciales: 0,
     SaldosFiscalesADiciembre31Parciales: 0,
   },
-  Reglon69: {
+  Renglon69: {
     SaldosContablesADiciembre31Parciales: 0,
     SaldosFiscalesADiciembre31Parciales: 0,
   },
-  Reglon70: {
+  Renglon70: {
     IndmnCompAseg: {
       SaldosContablesADiciembre31Parciales: 0,
       AjustesParaLlegarASaldosFiscales1: 0,
@@ -4068,19 +4068,19 @@ export const DetalleRenglonesInput = {
     TotalRentaPorRecuperacionDeDeduccionesSaldosContablesADiciembre31: 0,
     TotalRentaPorRecuperacionDeDeduccionesSaldosFiscalesADiciembre31: 0,
   },
-  Reglon71ValorIngresosBrutosQueCorresponden: {
+  Renglon71ValorIngresosBrutosQueCorresponden: {
     SaldosContablesADiciembre31Parciales: 0,
     SaldosFiscalesADiciembre31Parciales: 0,
   },
-  Reglon72: {
+  Renglon72: {
     TotalRentaLiquidaOrdinariaDelEjercicioSaldosContablesADiciembre31: 0,
     TotalRentaLiquidaOrdinariaDelEjercicioSaldosFiscalesADiciembre31: 0,
   },
-  Reglon73: {
+  Renglon73: {
     TotalPerdidaLiquidaDelEjercicioSaldosContablesADiciembre31: 0,
     TotalPerdidaLiquidaDelEjercicioSaldosFiscalesADiciembre31: 0,
   },
-  Reglon74: {
+  Renglon74: {
     CompenPerFisc: {
       SaldosFiscalesADiciembre31Parciales: 0,
     },
@@ -4097,13 +4097,13 @@ export const DetalleRenglonesInput = {
     },
     TotalCompensacionesSaldosFiscalesADiciembre31: 0,
   },
-  Reglon75: {
+  Renglon75: {
     TotalRentaLiquidaSaldosFiscalesADiciembre31: 0,
   },
-  Reglon76: {
+  Renglon76: {
     SaldosFiscalesADiciembre31Parciales: 0,
   },
-  Reglon77: {
+  Renglon77: {
     Act235: {
       SaldosFiscalesADiciembre31Parciales: 0,
     },
@@ -4122,7 +4122,7 @@ export const DetalleRenglonesInput = {
     TotalRentasExentasSaldosFiscalesADiciembre31: 0,
   },
 
-  Reglon78: {
+  Renglon78: {
     ActOmi: {
       SaldosFiscalesADiciembre31Parciales: 0,
     },
@@ -4140,10 +4140,10 @@ export const DetalleRenglonesInput = {
     },
     TotalRentasGravablesSaldosFiscalesADiciembre31: 0,
   },
-  Reglon79: {
+  Renglon79: {
     TotalesSaldosFiscalesADiciembre31: 0,
   },
-  Reglon80: {
+  Renglon80: {
     "429543PremiosRifasYLoterias": {
       PremiosRifasYLoterias: {
         SaldosContablesADiciembre31Parciales: 0,
@@ -4175,7 +4175,7 @@ export const DetalleRenglonesInput = {
     TotalesSaldosContablesADiciembre31: 0,
     TotalesSaldosFiscalesADiciembre31: 0,
   },
-  Reglon81: {
+  Renglon81: {
     ValoresQuitasCap: {
       SaldosContablesADiciembre31Parciales: 0,
       AjustesParaLlegarASaldosFiscales1: 0,
@@ -4187,13 +4187,13 @@ export const DetalleRenglonesInput = {
     TotalRentaDeudoresSaldosFiscalesADiciembre31: 0,
   },
 
-  Reglon82: {
+  Renglon82: {
     VerLasInstruccionesAl: {
       SaldosFiscalesADiciembre31Parciales: 0,
     },
     TotalUtilizacionPerdidasFiscalesAcumuladasSaldosFiscalesADiciembre31: 0,
   },
-  Reglon83: {
+  Renglon83: {
     CostoFiscalDeActivoFijoOBiologicoVendidoYPoseidoPorMasDeDosAños: {
       SaldosContablesADiciembre31Parciales: 0,
       AjustesParaLlegarASaldosFiscales1: 0,
@@ -4211,7 +4211,7 @@ export const DetalleRenglonesInput = {
     TotalCostosYDeduccionesPorGananciasOcasionalesSaldosContablesADiciembre31: 0,
     TotalCostosYDeduccionesPorGananciasOcasionalesSaldosFiscalesADiciembre31: 0,
   },
-  Reglon84: {
+  Renglon84: {
     UtilVent: {
       AjustesParaLlegarASaldosFiscales1: 0,
       SaldosFiscalesADiciembre31Parciales: 0,
@@ -4230,7 +4230,7 @@ export const DetalleRenglonesInput = {
     },
     TotalGananciasOcasionalesNoGravadasYExentasSaldosFiscalesADiciembre31: 0,
   },
-  Reglon85: {
+  Renglon85: {
     Esc1: {
       SaldosFiscalesADiciembre31Parciales: 0,
     },
@@ -4245,28 +4245,28 @@ export const DetalleRenglonesInput = {
     },
     TotalGananciasOcasionalesGravablesSaldosFiscalesADiciembre31: 0,
   },
-  Reglon86: {
+  Renglon86: {
     TotalImpuestoSobreLaRentaLiquidaSaldosFiscalesADiciembre31: 0,
   },
-  Reglon87: {
+  Renglon87: {
     TotalDeDividendosYParticipacionesGravadasALaTarifaSaldosFiscalesADiciembre31: 0,
   },
-  Reglon88: {
+  Renglon88: {
     Total88SaldosFiscalesADiciembre31: 0,
   },
-  Reglon89: {
+  Renglon89: {
     Total89SaldosFiscalesADiciembre31: 0,
   },
-  Reglon90: {
+  Renglon90: {
     Total90SaldosFiscalesADiciembre31: 0,
   },
-  Reglon91: {
+  Renglon91: {
     Total91SaldosFiscalesADiciembre31: 0,
   },
-  Reglon92: {
+  Renglon92: {
     Total92SaldosFiscalesADiciembre31: 0,
   },
-  Reglon93: {
+  Renglon93: {
     DescuentosTributarios: {
       AjustesParaLlegarASaldosFiscales1: 0,
       SaldosFiscalesADiciembre31Parciales: 0,
@@ -4295,42 +4295,42 @@ export const DetalleRenglonesInput = {
     },
     TotalDescuentosTributariosSaldosFiscalesADiciembre31: 0,
   },
-  Reglon94: {
+  Renglon94: {
     TotalImpuestoNetoRentaSaldosFiscalesADiciembre31: 0,
   },
-  Reglon95ImpuestoDeGananciasOcasionales: {
+  Renglon95ImpuestoDeGananciasOcasionales: {
     SobreLoteriasYSimilares: { SaldosFiscalesADiciembre31Parciales: 0 },
     SobreLasDemasGananciasOcasionales: {
       SaldosFiscalesADiciembre31Parciales: 0,
     },
     TotalImpuestoDeGananciasOcasionalesSaldosFiscalesADiciembre31: 0,
   },
-  Reglon96: {
+  Renglon96: {
     SaldosFiscalesADiciembre31Parciales: 0,
   },
-  Reglon97: {
+  Renglon97: {
     TotalSaldosFiscalesADiciembre31: 0,
   },
-  Reglon98: {
+  Renglon98: {
     TotalSaldosFiscalesADiciembre31: 0,
   },
-  Reglon99: {
+  Renglon99: {
     TotalSaldosFiscalesADiciembre31: 0,
   },
-  Reglon100: {
+  Renglon100: {
     TotalSaldosFiscalesADiciembre31: 0,
   },
-  Reglon101MenosAnticipoRentaLiquidadiGravableAnterior: {
+  Renglon101MenosAnticipoRentaLiquidadiGravableAnterior: {
     TotalesSaldosFiscalesADiciembre31: 0,
   },
-  Reglon102MenosSaldoAFavorRentaSinSolicitudDeDevolucionNiCompensacion: {
+  Renglon102MenosSaldoAFavorRentaSinSolicitudDeDevolucionNiCompensacion: {
     TotalesSaldosFiscalesADiciembre31: 0,
   },
-  Reglon103Autocorretenciones: {
+  Renglon103Autocorretenciones: {
     TotalesSaldosContablesADiciembre31: 0,
     TotalesSaldosFiscalesADiciembre31: 0,
   },
-  Reglon104: {
+  Renglon104: {
     PorVentas: {
       InformacionPorEmpresa: [
         {
@@ -4424,38 +4424,38 @@ export const DetalleRenglonesInput = {
     TotalOtrasRetencionesSaldosContablesADiciembre31: 0,
     TotalOtrasRetencionesSaldosFiscalesADiciembre31: 0,
   },
-  Reglon105: {
+  Renglon105: {
     TotalSaldosFiscalesADiciembre31: 0,
   },
-  Reglon106: {
+  Renglon106: {
     TotalSaldosFiscalesADiciembre31: 0,
   },
-  Reglon107: {
+  Renglon107: {
     TotalSaldosFiscalesADiciembre31: 0,
   },
-  Reglon108: {
+  Renglon108: {
     TotalSaldosFiscalesADiciembre31: 0,
   },
-  Reglon109: {
+  Renglon109: {
     TotalSaldosFiscalesADiciembre31: 0,
   },
-  Reglon110: {
+  Renglon110: {
     TotalSaldosFiscalesADiciembre31: 0,
   },
-  Reglon111Sanciones: {
+  Renglon111Sanciones: {
     PorExtemporaneidad: 0,
     TotalesSaldosFiscalesADiciembre31: 0,
   },
-  Reglon112: {
+  Renglon112: {
     TotalSaldosFiscalesADiciembre31: 0,
   },
-  Reglon113: {
+  Renglon113: {
     TotalSaldosFiscalesADiciembre31: 0,
   },
-  Reglon114: {
+  Renglon114: {
     TotalSaldosFiscalesADiciembre31: 0,
   },
-  Reglon115: {
+  Renglon115: {
     TotalSaldosFiscalesADiciembre31: 0,
   },
 };
