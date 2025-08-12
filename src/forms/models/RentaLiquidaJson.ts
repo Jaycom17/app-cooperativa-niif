@@ -2031,7 +2031,8 @@ export const RentaLiquidaInput = {
           MegaInversiones: 0,
           MegaInversiones27Porciento: 0,
           TarifaGeneralArticulo240ET: 0,
-          Otras: 0,},
+          Otras: 0,
+        },
       OtrasDepreciacionesYAmortizaciones: {
         DelCosto: {
           ValorContable: 0,
@@ -4674,7 +4675,7 @@ export const RentaLiquidaInput = {
     Otras: 0,
   },
   InformativoClasificacionDiferencias: {
-    IngresosNoConstitutivosDeRentaNiGananciaOcasional: {
+    DiferenciasPermanentesQueDisminuyenLaRentaLiquida: {
       IngresosNoConstitutivosRenta: {
         ValorFiscalAlQueTieneDerecho: 0,
         ValorFiscalSolicitado: 0,
@@ -5165,12 +5166,6 @@ export const RentaLiquidaInput = {
         ReversionesDeducibles: 0,
         ReversionesImponibles: 0,
       },
-    },
-    Total: {
-      GeneracionesDeducibles: 0,
-      GeneracionesImponibles: 0,
-      ReversionesDeducibles: 0,
-      ReversionesImponibles: 0,
     },
   },
   RentaLiquidaOrdinariaDelEjercicioIncluyendeoDividendosYAntesDeLasRentasLiquidasPasivasECE: 0,
