@@ -2379,9 +2379,9 @@ export const DetalleRenglonesInput = {
         AjustesParaLlegarASaldosFiscales3: 0,
         SaldosFiscalesADiciembre31Parciales: 0,
       },
-      TotalMenosDevolucionesDescuentosRebajasSaldosContablesADiciembre31: 0,
-      TotalMenosDevolucionesDescuentosRebajasSaldosFiscalesADiciembre31: 0,
     },
+    TotalMenosDevolucionesDescuentosRebajasSaldosContablesADiciembre31: 0,
+      TotalMenosDevolucionesDescuentosRebajasSaldosFiscalesADiciembre31: 0,
   },
   Renglon60: {
     DiviNoGrav: {

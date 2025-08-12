@@ -3,7 +3,7 @@ import { useState, useEffect, useRef } from "react";
 import { DetalleReglonesService } from "../services/detalleReglones.service";
 import { FormRender } from "../components/FormRender";
 import { FiLoader, FiCheckCircle, FiEdit3 } from "react-icons/fi";
-import { config } from "../utils/DetalleReng";
+import { config, calculateTotalSaldos, calculateTotalPatrimonioBruto, calculateRenglon86, calculateRentaLiquidaGravadaSinCasillas, calculateRentaLiquidaOrdinariaSinCasillas, calculateRentaLiquidaSinCasillas72, calculateTotalCostosGastosDeducibles, calculateTotalIngresosBrutos, calculateTotalIngresosNetos, calculateTotalPatrimonioLiquidoPositivo, perdidaLiquidaSinCasillas } from "../utils/DetalleReng";
 
 import { DetalleRenglonesInput } from "../models/DetalleRenglonesJson";
 
@@ -43,6 +43,7 @@ const DetalleRenglones = () => {
       (data?.AjustesParaLlegarASaldosFiscales3 || 0);
   };
 
+
   const handleChange = (newData: any, changedPath?: string) => {
     const arrayPath = changedPath!.split(".");
 
@@ -50,7 +51,18 @@ const DetalleRenglones = () => {
 
     calculateSaldosFiscalesParciales(element);
 
-    console.log(changedPath);
+    calculateTotalSaldos(newData, arrayPath[0]);
+
+    calculateTotalPatrimonioBruto(newData);
+    calculateRenglon86(newData);
+    calculateRentaLiquidaGravadaSinCasillas(newData);
+    calculateRentaLiquidaOrdinariaSinCasillas(newData);
+    calculateRentaLiquidaSinCasillas72(newData);
+    calculateTotalCostosGastosDeducibles(newData);
+    calculateTotalIngresosBrutos(newData);
+    calculateTotalIngresosNetos(newData);
+    calculateTotalPatrimonioLiquidoPositivo(newData);
+    perdidaLiquidaSinCasillas(newData);
 
     setData(newData);
     setSaveStatus("saving");
