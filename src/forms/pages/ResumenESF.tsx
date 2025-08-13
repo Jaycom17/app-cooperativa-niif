@@ -69,7 +69,7 @@ function ResumenESFForm() {
         <FormRender
           value={data}
           onChange={handleChange}
-          canEdit={true}
+          canEdit={false}
           defaultOpen={false}
         />
       </main>

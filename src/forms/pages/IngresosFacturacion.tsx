@@ -27,6 +27,13 @@ function IngresosFacturacionForm() {
           IngresosFacturacionInput,
           response.data.ingContent
         );
+
+        calculateValorTotalFacturacion(merged?.VentaDeBienes);
+        calculateValorTotalIngresoContable(merged?.VentaDeBienes);
+
+        calculateValorTotalFacturacion(merged?.PrestacionDeServicios);
+        calculateValorTotalIngresoContable(merged?.PrestacionDeServicios);
+
         setData(merged);
       })
       .catch((error) => {
@@ -78,8 +85,6 @@ function IngresosFacturacionForm() {
     calculateSaldofinalPeriodo(element);
     calculateValorTotalFacturacion(element);
     calculateValorTotalIngresoContable(element);
-
-    console.log(arrayPath)
 
     calculateTotals(arrayPath, newData, "Total");
 

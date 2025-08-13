@@ -50,8 +50,10 @@ function humanizeKey(key: string): string {
     .replace(/\bValor Contable\b/gi, "Valor contable")
     .replace(/\bValor Fiscal\b/gi, "Valor fiscal")
     .replace(/\bVariacion\b/gi, "Variación")
+    .replace(/\bAnio\b/gi, "Año") // aquí agregas la conversión
     .trim();
 }
+
 
 function pathToString(path: (string | number)[]) {
   return path

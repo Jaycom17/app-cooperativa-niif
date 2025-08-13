@@ -7,6 +7,7 @@ import { FiLoader, FiCheckCircle, FiEdit3 } from "react-icons/fi";
 import { CaratulaInput } from "../models/CaratulaJson";
 
 import { mergeDeepPreservingOrder } from "../utils/mergeDeep";
+import { config } from "../utils/caratula";
 
 function CaratulaForm() {
   const [data, setData] = useState(CaratulaInput);
@@ -69,6 +70,7 @@ function CaratulaForm() {
         <FormRender
           value={data}
           onChange={handleChange}
+          config={config}
           canEdit={true}
           defaultOpen={false}
         />

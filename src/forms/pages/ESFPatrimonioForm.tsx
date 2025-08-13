@@ -10,6 +10,8 @@ import { mergeDeepPreservingOrder } from "../utils/mergeDeep";
 
 import { calculateTotals, calculateTotalsSources } from "../utils/totalOperations";
 
+import { config } from "../utils/esfPatrimonio";
+
 const ESFpatrimonio = () => {
   const [data, setData] = useState(ESFPatrimonioInput);
   const [saveStatus, setSaveStatus] = useState<"idle" | "saving" | "saved">(
@@ -256,6 +258,7 @@ const ESFpatrimonio = () => {
           onChange={handleChange}
           canEdit={true}
           defaultOpen={false}
+          config={config}
         />
       </main>
     </StudentLayout>
