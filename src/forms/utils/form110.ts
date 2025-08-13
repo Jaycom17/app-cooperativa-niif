@@ -95,6 +95,12 @@ export const config = {
     SaldoAPagarPorImpuesto: { readonly: true },
     Sanciones: { readonly: true },
     TotalSaldoAPagar: { readonly: true },
-    OTotalSaldoAFavor: { readonly: true }
+    OTotalSaldoAFavor: { readonly: true },
+    Año: { widget: 'number' },
+    NumeroDeFormulario: { widget: 'number' },
+    NIT: { widget: 'number' },
+    DV: { widget: 'number' },
+    Cod: { widget: 'number' },
+    CodigoFormularioAnterior: { widget: 'number' },
   }
 }

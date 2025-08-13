@@ -8,6 +8,9 @@ import { useStudentStore } from "../../stores/StudentStore";
 
 function AsideStudent() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  const selectedForm = "/" + window.location.pathname.split("/").pop() || "";
+
   const asideRef = useRef<HTMLElement | null>(null);
 
   const { leaveRoom } = useRoomStore();
@@ -79,7 +82,7 @@ function AsideStudent() {
           {forms.map((form, index) => (
             <Link
               key={index}
-              className="flex items-center justify-center w-full p-4 bg-transparent text-white text-sm md:text-base hover:bg-unicoop-slate-blue duration-200 font-medium"
+              className={`flex items-center justify-center w-full p-4 ${selectedForm === form.to ? "bg-unicoop-slate-blue" : "bg-transparent"} text-white text-sm md:text-base hover:bg-unicoop-slate-blue duration-200 font-medium`}
               to={form.to}
             >
               {form.label}

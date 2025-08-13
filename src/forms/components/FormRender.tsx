@@ -7,7 +7,8 @@ interface JSONObject {
 }
 type JSONArray = JSONValue[];
 
-type WidgetType = "text" | "number" | "checkbox" | "textarea" | "select";
+// Agregamos 'currency' como nuevo tipo de widget
+type WidgetType = "text" | "number" | "checkbox" | "textarea" | "select" | "currency";
 
 type FieldConfig = {
   label?: string;
@@ -20,6 +21,9 @@ type FieldConfig = {
   options?: Array<{ label: string; value: string | number }>;
   hidden?: boolean;
   readonly?: boolean;
+  // Nuevas opciones para currency
+  currency?: string; // 'COP', 'USD', etc.
+  locale?: string;   // 'es-CO', 'en-US', etc.
 };
 
 type JSONFormConfig = {
@@ -50,10 +54,9 @@ function humanizeKey(key: string): string {
     .replace(/\bValor Contable\b/gi, "Valor contable")
     .replace(/\bValor Fiscal\b/gi, "Valor fiscal")
     .replace(/\bVariacion\b/gi, "Variación")
-    .replace(/\bAnio\b/gi, "Año") // aquí agregas la conversión
+    .replace(/\bAnio\b/gi, "Año")
     .trim();
 }
-
 
 function pathToString(path: (string | number)[]) {
   return path
@@ -63,10 +66,26 @@ function pathToString(path: (string | number)[]) {
 }
 
 function inferWidget(v: JSONValue): WidgetType {
-  if (typeof v === "number") return "number";
+  if (typeof v === "number") return "currency"; // Cambiamos "number" por "currency"
   if (typeof v === "boolean") return "checkbox";
   if (typeof v === "string") return v.length > 80 ? "textarea" : "text";
   return "text";
+}
+
+// Función helper para formatear moneda
+function formatCurrency(value: number, currency = 'COP', locale = 'es-CO'): string {
+  return new Intl.NumberFormat(locale, {
+    style: 'currency',
+    currency: currency,
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0,
+  }).format(value);
+}
+
+// Función helper para extraer números de string formateado
+function parseCurrencyInput(input: string): number {
+  const numericValue = input.replace(/[^0-9]/g, '');
+  return parseInt(numericValue) || 0;
 }
 
 /* ---------------- PRIMITIVE INPUT ---------------- */
@@ -97,6 +116,34 @@ const PrimitiveInput: React.FC<{
             {effectiveLabel}
           </label>
           {cfg?.help && <p className="text-xs text-gray-500">{cfg.help}</p>}
+        </div>
+      );
+    }
+    case "currency": {
+      const numValue = typeof value === 'number' ? value : 0;
+      const currency = cfg?.currency || 'COP';
+      const locale = cfg?.locale || 'es-CO';
+      const displayValue = formatCurrency(numValue, currency, locale);
+
+      return (
+        <div className="mb-4">
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            {effectiveLabel}
+          </label>
+          <input
+            type="text"
+            value={displayValue}
+            placeholder={cfg?.placeholder || formatCurrency(0, currency, locale)}
+            onChange={(e) => {
+              const numericValue = parseCurrencyInput(e.target.value);
+              onChange(numericValue, pathToString(path.slice(0, -1)));
+            }}
+            readOnly={!canEdit || cfg?.readonly}
+            className="w-full rounded-lg border border-gray-300 p-2 text-sm shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200"
+          />
+          {cfg?.help && (
+            <p className="text-xs text-gray-500 mt-1">{cfg.help}</p>
+          )}
         </div>
       );
     }
