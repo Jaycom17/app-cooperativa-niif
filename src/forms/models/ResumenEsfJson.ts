@@ -336,11 +336,6 @@ export const ResumenESFInput = {
         ValorFiscal: 0,
         Variacion: 0,
       },
-      MenorGastoDeduccionAjustePreciosTransferencia: {
-        ValorContable: 0,
-        ValorFiscal: 0,
-        Variacion: 0,
-      },
       MenorGastoODeduccionAjustePreciosTransferencia: {
         ValorContable: 0,
         ValorFiscal: 0,
