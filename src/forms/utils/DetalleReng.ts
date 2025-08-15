@@ -313,8 +313,16 @@ export const config = {
 const regexTotalContables = /^Total\S*SaldosContablesADiciembre31$/;
 const regexTotalFiscales = /^Total\S*SaldosFiscalesADiciembre31$/;
 
+const totalSaldosExceptions = [
+  "Renglon46"
+]
+
 export const calculateTotalSaldos = (data: any, currentLevel: string) => {
   if (!data) {
+    return;
+  }
+
+  if (totalSaldosExceptions.includes(currentLevel)) {
     return;
   }
 
@@ -327,7 +335,7 @@ export const calculateTotalSaldos = (data: any, currentLevel: string) => {
   let totalFiscal = 0;
   let totalContable = 0;
 
-  //nececito sacar de currentData los la propiedad que hace match con los regex
+  
   const labelFiscal = Object.keys(currentData).find((key) =>
     regexTotalFiscales.test(key)
   );
@@ -362,6 +370,21 @@ export const calculateTotalSaldos = (data: any, currentLevel: string) => {
   data[currentLevel][labelContable] = totalContable;
   data[currentLevel][labelFiscal] = totalFiscal;
 };
+
+export const calculateImpuestoPorPagarDeRentaYComplementarios = (data: any) => {
+  if (!data) {
+    return;
+  }
+  data.Renglon45["2404ImpuestoPorPagarDeRentaYComplementarios"].SaldosContablesADiciembre31Parciales = data?.Renglon112?.TotalSaldosFiscalesADiciembre31 || 0;
+}
+
+export const calculateTotalPasivos = (data: any) => {
+  if (data["3130CapitalDePersonasNaturales"] == null) {
+    return;
+  }
+
+  data["3130CapitalDePersonasNaturales"].SaldosContablesADiciembre31Parciales = data?.TotalPatrimonioLiquidoPositivoSaldosContablesADiciembre31 || 0 - ((data["3605ResultadoDelEjercicio"].UtilidadDespuesDeImpuestos.SaldosContablesADiciembre31Parciales ||  0) + (data["3605ResultadoDelEjercicio"].PerdidaDespuesDeImpuestos.SaldosContablesADiciembre31Parciales || 0) + (data["3705UtilidadesDePeriodosAnteriores"].SaldosContablesADiciembre31Parciales || 0) + (data["3710PerdidasDeEjerciciosAnteriores"].SaldosContablesADiciembre31Parciales || 0) + (data["3715GananciasPerdidasAcumuladasORetenidasPorLaAdopcionPorPrimera"].GananciasAcumuladas.SaldosContablesADiciembre31Parciales || 0) + (data["3715GananciasPerdidasAcumuladasORetenidasPorLaAdopcionPorPrimera"].PerdidasAcumuladas.SaldosContablesADiciembre31Parciales || 0) + (data["3720OtroResultadoIntegralAcumulado"].GananciasAcumuladasORI.SaldosContablesADiciembre31Parciales || 0) + (data["3720OtroResultadoIntegralAcumulado"].PerdidasAcumuladasORI.PorRevaluaciones.SaldosContablesADiciembre31Parciales || 0) + (data["3805Superavit"].SaldosContablesADiciembre31Parciales || 0) + (data["3805Superavit"].PorMetodoDeParticipacion.SaldosContablesADiciembre31Parciales || 0));
+}
 
 export const calculateTotalPatrimonioBruto = (data: any) => {
   data.Renglon44TotalPatrimonioBruto.TotalSaldosContablesADiciembre31 =

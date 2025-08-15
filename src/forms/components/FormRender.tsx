@@ -21,9 +21,8 @@ type FieldConfig = {
   options?: Array<{ label: string; value: string | number }>;
   hidden?: boolean;
   readonly?: boolean;
-  // Nuevas opciones para currency
-  currency?: string; // 'COP', 'USD', etc.
-  locale?: string;   // 'es-CO', 'en-US', etc.
+  currency?: string; 
+  locale?: string;   
 };
 
 type JSONFormConfig = {
