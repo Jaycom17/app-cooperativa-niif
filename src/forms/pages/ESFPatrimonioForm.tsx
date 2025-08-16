@@ -85,6 +85,35 @@ const ESFpatrimonio = () => {
       (data?.Activos?.CuentasComercialesCobrarOtrasPorCobrar?.DeterioroAcumuladoValorCuentasDocumentosCobrar?.Total?.ValorFiscal || 0);
   }
 
+  const calculateTotalInventarios = (data: any) => {
+    data.Activos.Inventarios.Total.ValorContable = (data?.Activos?.Inventarios?.Total?.ValorContable || 0) - ((data?.Activos?.Inventarios?.DeterioroAcumuladoValorInventarios?.ValorContable || 0)* 2);
+
+    data.Activos.Inventarios.Total.EfectoConversion = (data?.Activos?.Inventarios?.Total?.EfectoConversion || 0) - ((data?.Activos?.Inventarios?.DeterioroAcumuladoValorInventarios?.EfectoConversion || 0) * 2);
+
+    data.Activos.Inventarios.Total.MenorValorFiscal = (data?.Activos?.Inventarios?.Total?.MenorValorFiscal || 0) - ((data?.Activos?.Inventarios?.DeterioroAcumuladoValorInventarios?.MenorValorFiscal || 0) * 2);
+
+    data.Activos.Inventarios.Total.MayorValorFiscal = (data?.Activos?.Inventarios?.Total?.MayorValorFiscal || 0) - ((data?.Activos?.Inventarios?.DeterioroAcumuladoValorInventarios?.MayorValorFiscal || 0) * 2);
+
+    data.Activos.Inventarios.Total.ValorFiscal = (data?.Activos?.Inventarios?.Total?.ValorFiscal || 0) - ((data?.Activos?.Inventarios?.DeterioroAcumuladoValorInventarios?.ValorFiscal || 0) * 2);
+  }
+
+  const calculateTotalPropiedadesPlantaEquipo = (data: any) => {
+    data.Activos.PropiedadesPlantaEquipo.Total.ValorContable = 
+      (data?.Activos?.PropiedadesPlantaEquipo?.PropiedadesPlantaEquipo?.Total?.ValorContable || 0) - ((data?.Activos?.PropiedadesPlantaEquipo?.DepreciacionAcumuladaPropiedadesPlantaEquipo?.ValorContable || 0)*2) - ((data?.Activos?.PropiedadesPlantaEquipo?.DeterioroAcumuladoPropiedadesPlantaEquipo?.ValorContable || 0)*2);
+
+      data.Activos.PropiedadesPlantaEquipo.Total.EfectoConversion = 
+      (data?.Activos?.PropiedadesPlantaEquipo?.PropiedadesPlantaEquipo?.Total?.EfectoConversion || 0) - ((data?.Activos?.PropiedadesPlantaEquipo?.DepreciacionAcumuladaPropiedadesPlantaEquipo?.EfectoConversion || 0)*2) - ((data?.Activos?.PropiedadesPlantaEquipo?.DeterioroAcumuladoPropiedadesPlantaEquipo?.EfectoConversion || 0)*2);
+
+    data.Activos.PropiedadesPlantaEquipo.Total.MenorValorFiscal = 
+      (data?.Activos?.PropiedadesPlantaEquipo?.PropiedadesPlantaEquipo?.Total?.MenorValorFiscal || 0) - ((data?.Activos?.PropiedadesPlantaEquipo?.DeterioroAcumuladoPropiedadesPlantaEquipo?.Total?.MenorValorFiscal || 0) * 2);
+
+    data.Activos.PropiedadesPlantaEquipo.Total.MayorValorFiscal = 
+      (data?.Activos?.PropiedadesPlantaEquipo?.PropiedadesPlantaEquipo?.Total?.MayorValorFiscal || 0) - ((data?.Activos?.PropiedadesPlantaEquipo?.DeterioroAcumuladoPropiedadesPlantaEquipo?.Total?.MayorValorFiscal || 0) * 2);
+
+    data.Activos.PropiedadesPlantaEquipo.Total.ValorFiscal = 
+      (data?.Activos?.PropiedadesPlantaEquipo?.PropiedadesPlantaEquipo?.Total?.ValorFiscal || 0) - ((data?.Activos?.PropiedadesPlantaEquipo?.DeterioroAcumuladoPropiedadesPlantaEquipo?.Total?.ValorFiscal || 0) * 2);
+  }
+
   const calculateTotalActivosIntangibles = (data: any) => {
 
     data.Activos.ActivosIntangibles.Total.ValorContable = 
@@ -165,6 +194,7 @@ const ESFpatrimonio = () => {
 
     calculateTotalInversionesIntrumentosFinancierosDerivadosVN(newData);
     calculateTotalCuentasComercialesPorCobrar(newData);
+    calculateTotalInventarios(newData);
     calculateTotalActivosIntangibles(newData);
     calculateTotalActivosBiologicos(newData);
 
