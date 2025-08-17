@@ -114,6 +114,8 @@ const ESFpatrimonio = () => {
       (data?.Activos?.PropiedadesPlantaEquipo?.PropiedadesPlantaEquipo?.Total?.ValorFiscal || 0) - ((data?.Activos?.PropiedadesPlantaEquipo?.DeterioroAcumuladoPropiedadesPlantaEquipo?.Total?.ValorFiscal || 0) * 2);
   }
 
+  //Quede el activos intangibles en la parte de adentro para hacer las restas
+
   const calculateTotalActivosIntangibles = (data: any) => {
 
     data.Activos.ActivosIntangibles.Total.ValorContable = 

@@ -4272,7 +4272,7 @@ export const DetalleRenglonesInput = {
       SaldosFiscalesADiciembre31Parciales: 0,
     },
     DescuentosDonacionesEntidades: {
-      DonacionHechaAFundacionPor: {
+      DonacionHechaAFundacionPor: { SaldosFiscalesADiciembre31Parciales: 0 },
         PorcentajeAplicable: { SaldosFiscalesADiciembre31Parciales: 0 },
         ValorQueInicialmenteSePodriaTomarComoDescuento: {
           SaldosFiscalesADiciembre31Parciales: 0,
@@ -4284,7 +4284,6 @@ export const DetalleRenglonesInput = {
           SaldosFiscalesADiciembre31Parciales: 0,
         },
       },
-    },
     DescuentosOtros: {
       PorIndustriaYComercioYAvisosYTablerosPagadosDuranteElAño: {
         SaldosFiscalesADiciembre31Parciales: 0,
