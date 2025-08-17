@@ -18,6 +18,7 @@ import {
   calculateSubtotalAlFinalDelPeriodo,
   calculateTotalNetoAlFinalDelPeriodoFinanciero,
   calculateTotalNetoAlFinalDelPeriodoInformativo,
+  config
 } from "../utils/ActivosFijos";
 
 const ActivosFijosForm = () => {
@@ -47,30 +48,17 @@ const ActivosFijosForm = () => {
 
     const element = arrayPath.reduce((acc, key) => acc?.[key], newData);
 
-    calculateImporteNetoFinalPeriodoCosto(element);
+    if (element.hasOwnProperty("DatosContables")) {
+      calculateImporteNetoFinalPeriodoCosto(element.DatosContables);
+    }else {
+      calculateImporteNetoFinalPeriodoCosto(element);
+    }
+
+    
     calculateImporteNetoFinalPeriodoAjustePorRevaluacion(element);
     calculateSubtotalAlFinalDelPeriodo(element);
     calculateTotalNetoAlFinalDelPeriodoFinanciero(element);
     calculateTotalNetoAlFinalDelPeriodoInformativo(element);
-
-    calculateTotalsSources(
-      newData,
-      [
-        newData?.PropiedadesPlantasYEquipos?.TotalPropiedadesPlantasEquipo,
-        newData?.PropiedadesDeInversión?.TotalPorpiedadesDeInversion,
-        newData?.ANCMV,
-      ],
-      "TotalPPEPIANCMVYINTANGIBLES"
-    );
-
-    calculateTotalsSources(
-      newData,
-      [
-        newData?.TotalPPEPIANCMV,
-        newData?.ActivosIntangibles?.TotalActivosIntangibles,
-      ],
-      "TotalPPEPIANCMV"
-    );
 
     setData(newData);
     setSaveStatus("saving");
@@ -83,6 +71,24 @@ const ActivosFijosForm = () => {
       calculateTotals(arrayPath, newData, "TotalPropiedadesPlantasEquipo");
       calculateTotals(arrayPath, newData, "TotalPorpiedadesDeInversion");
       calculateTotals(arrayPath, newData, "TotalActivosIntangibles");
+      calculateTotalsSources(
+      newData,
+      [
+        newData?.PropiedadesPlantasYEquipos?.TotalPropiedadesPlantasEquipo,
+        newData?.PropiedadesDeInversión?.TotalPorpiedadesDeInversion,
+        newData?.ANCMV,
+      ],
+      "TotalPPEPIANCMV"
+    );
+
+    calculateTotalsSources(
+      newData,
+      [
+        newData?.TotalPPEPIANCMV,
+        newData?.ActivosIntangibles?.TotalActivosIntangibles,
+      ],
+      "TotalPPEPIANCMVYINTANGIBLES"
+    );
       ActivosFijosService.updateACtivosFijosFormStudent(newData)
         .then(() => setSaveStatus("saved"))
         .catch(() => setSaveStatus("idle"));
@@ -118,6 +124,7 @@ const ActivosFijosForm = () => {
           onChange={handleChange}
           canEdit={true}
           defaultOpen={false}
+          config={config}
         />
       </main>
     </StudentLayout>

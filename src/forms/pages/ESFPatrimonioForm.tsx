@@ -8,7 +8,9 @@ import { ESFPatrimonioInput } from "../models/EsfPatrimonioJson";
 
 import { mergeDeepPreservingOrder } from "../utils/mergeDeep";
 
-import { calculateTotals, calculateTotalsSources } from "../utils/totalOperations";
+import {
+  calculateTotalsSources,
+} from "../utils/totalOperations";
 
 import { config } from "../utils/esfPatrimonio";
 
@@ -23,7 +25,10 @@ const ESFpatrimonio = () => {
   useEffect(() => {
     EsfPatrimonioService.getEsfPatrimonioFormStudent()
       .then((response) => {
-        const merged = mergeDeepPreservingOrder(ESFPatrimonioInput, response.data.esfContent);
+        const merged = mergeDeepPreservingOrder(
+          ESFPatrimonioInput,
+          response.data.esfContent
+        );
         setData(merged);
       })
       .catch((error) => {
@@ -36,171 +41,273 @@ const ESFpatrimonio = () => {
       return;
     }
 
-    data.ValorFiscal = (data?.ValorContable || 0) + (data?.EfectoConversion || 0) - (data?.MenorValorFiscal || 0) + (data?.MayorValorFiscal || 0);
-  }
+    data.ValorFiscal =
+      (data?.ValorContable || 0) +
+      (data?.EfectoConversion || 0) -
+      (data?.MenorValorFiscal || 0) +
+      (data?.MayorValorFiscal || 0);
+  };
 
-  const calculateTotalInversionesIntrumentosFinancierosDerivadosVN = (data: any) => {
+  const regex = /^(AmortizacionAcumulada|DeterioroAcumulado|DepreciacionAcumulada|AccionesCuotasPartesInteresSocialPropiasCartera|PerdidaODeficitDelEjercicioEnOperacionesContinuadas|PerdidaODeficitDelEjercicioEnOperacionesDiscontinuadas|PerdidasODeficitAcumulados|PerdidasAcumuladasPorAjustesPorCorreccionesDeErrores|PerdidasPorAjustesPorCambiosEnPoliticasContables|PerdidasPrimeraVez|AjusteNegativoPorEfectoConversion|PerdidasAcumuladasORI)/;
 
-    data.Activos.InversionesInstrumentosFinancierosDerivadosVN.Total.ValorContable = 
-      (data?.Activos?.InversionesInstrumentosFinancierosDerivadosVN?.InversionesInstrumentosFinancierosDerivados?.Total?.ValorContable || 0) - 
-      (data?.Activos?.InversionesInstrumentosFinancierosDerivadosVN?.DeterioroAcumuladoInversiones?.Total?.ValorContable || 0);
+  const calcualteTotalsWithDeterioroAndDepreciation = (
+    arrayPath: string[],
+    data: any,
+    totalLabel: string
+  ) => {
+    let currentPath = [...arrayPath];
+    let globalElement = null;
 
-    data.Activos.InversionesInstrumentosFinancierosDerivadosVN.Total.EfectoConversion = 
-      (data?.Activos?.InversionesInstrumentosFinancierosDerivadosVN?.InversionesInstrumentosFinancierosDerivados?.Total?.EfectoConversion || 0) - 
-      (data?.Activos?.InversionesInstrumentosFinancierosDerivadosVN?.DeterioroAcumuladoInversiones?.Total?.EfectoConversion || 0);
+    if (currentPath.length === 1) {
+      globalElement = data;
+    } else {
+      while (currentPath.length > 0) {
+        globalElement = currentPath.reduce((acc, key) => acc?.[key], data);
 
-    data.Activos.InversionesInstrumentosFinancierosDerivadosVN.Total.MenorValorFiscal = 
-      (data?.Activos?.InversionesInstrumentosFinancierosDerivadosVN?.InversionesInstrumentosFinancierosDerivados?.Total?.MenorValorFiscal || 0) - 
-      (data?.Activos?.InversionesInstrumentosFinancierosDerivadosVN?.DeterioroAcumuladoInversiones?.Total?.MenorValorFiscal || 0);
+        if (globalElement && globalElement.hasOwnProperty(totalLabel)) {
+          break;
+        }
 
-    data.Activos.InversionesInstrumentosFinancierosDerivadosVN.Total.MayorValorFiscal = 
-      (data?.Activos?.InversionesInstrumentosFinancierosDerivadosVN?.InversionesInstrumentosFinancierosDerivados?.Total?.MayorValorFiscal || 0) - 
-      (data?.Activos?.InversionesInstrumentosFinancierosDerivadosVN?.DeterioroAcumuladoInversiones?.Total?.MayorValorFiscal || 0);
+        currentPath = currentPath.slice(0, -1);
+      }
+    }
 
-    data.Activos.InversionesInstrumentosFinancierosDerivadosVN.Total.ValorFiscal = 
-      (data?.Activos?.InversionesInstrumentosFinancierosDerivadosVN?.InversionesInstrumentosFinancierosDerivados?.Total?.ValorFiscal || 0) - 
-      (data?.Activos?.InversionesInstrumentosFinancierosDerivadosVN?.DeterioroAcumuladoInversiones?.Total?.ValorFiscal || 0);
-  }
+    if (!globalElement || !globalElement.hasOwnProperty(totalLabel)) {
+      return;
+    }
+
+    if (!globalElement) {
+      return;
+    }
+
+    const total = globalElement[totalLabel];
+
+    if (!total) {
+      return;
+    }
+
+    const totalCopy = { ...total };
+
+    const resetValues = (obj: any): void => {
+      Object.keys(obj).forEach((key) => {
+        if (typeof obj[key] === "object" && obj[key] !== null) {
+          resetValues(obj[key]);
+        } else if (typeof obj[key] === "number") {
+          obj[key] = 0;
+        }
+      });
+    };
+
+    resetValues(totalCopy);
+
+    const addToTotal = (sourceObj: any, targetObj: any, add: boolean): void => {
+      Object.keys(sourceObj).forEach((key) => {
+        if (typeof sourceObj[key] === "object" && sourceObj[key] !== null) {
+          if (typeof targetObj[key] === "object" && targetObj[key] !== null) {
+            addToTotal(sourceObj[key], targetObj[key], add);
+          } else if (targetObj[key] === undefined) {
+            addToTotal(sourceObj[key], targetObj, add);
+          }
+        } else if (typeof sourceObj[key] === "number") {
+          if (add) {
+            targetObj[key] += sourceObj[key] || 0;
+          } else {
+            targetObj[key] -= sourceObj[key] || 0;
+          } 
+        }
+      });
+    };
+
+    Object.keys(globalElement).forEach((key) => {
+      if (key !== totalLabel) {
+        const item = globalElement[key];
+        if (typeof item === "object" && item !== null) {
+          addToTotal(item, totalCopy, !regex.test(key));
+        }
+      }
+    });
+
+    globalElement[totalLabel] = totalCopy;
+  };
+
+  const calculateTotalInversionesIntrumentosFinancierosDerivadosVN = (
+    data: any
+  ) => {
+    data.Activos.InversionesInstrumentosFinancierosDerivadosVN.Total.ValorContable =
+      (data?.Activos?.InversionesInstrumentosFinancierosDerivadosVN
+        ?.InversionesInstrumentosFinancierosDerivados?.Total?.ValorContable ||
+        0) -
+      (data?.Activos?.InversionesInstrumentosFinancierosDerivadosVN
+        ?.DeterioroAcumuladoInversiones?.Total?.ValorContable || 0);
+
+    data.Activos.InversionesInstrumentosFinancierosDerivadosVN.Total.EfectoConversion =
+      (data?.Activos?.InversionesInstrumentosFinancierosDerivadosVN
+        ?.InversionesInstrumentosFinancierosDerivados?.Total
+        ?.EfectoConversion || 0) -
+      (data?.Activos?.InversionesInstrumentosFinancierosDerivadosVN
+        ?.DeterioroAcumuladoInversiones?.Total?.EfectoConversion || 0);
+
+    data.Activos.InversionesInstrumentosFinancierosDerivadosVN.Total.MenorValorFiscal =
+      (data?.Activos?.InversionesInstrumentosFinancierosDerivadosVN
+        ?.InversionesInstrumentosFinancierosDerivados?.Total
+        ?.MenorValorFiscal || 0) -
+      (data?.Activos?.InversionesInstrumentosFinancierosDerivadosVN
+        ?.DeterioroAcumuladoInversiones?.Total?.MenorValorFiscal || 0);
+
+    data.Activos.InversionesInstrumentosFinancierosDerivadosVN.Total.MayorValorFiscal =
+      (data?.Activos?.InversionesInstrumentosFinancierosDerivadosVN
+        ?.InversionesInstrumentosFinancierosDerivados?.Total
+        ?.MayorValorFiscal || 0) -
+      (data?.Activos?.InversionesInstrumentosFinancierosDerivadosVN
+        ?.DeterioroAcumuladoInversiones?.Total?.MayorValorFiscal || 0);
+
+    data.Activos.InversionesInstrumentosFinancierosDerivadosVN.Total.ValorFiscal =
+      (data?.Activos?.InversionesInstrumentosFinancierosDerivadosVN
+        ?.InversionesInstrumentosFinancierosDerivados?.Total?.ValorFiscal ||
+        0) -
+      (data?.Activos?.InversionesInstrumentosFinancierosDerivadosVN
+        ?.DeterioroAcumuladoInversiones?.Total?.ValorFiscal || 0);
+  };
 
   const calculateTotalCuentasComercialesPorCobrar = (data: any) => {
+    data.Activos.CuentasComercialesCobrarOtrasPorCobrar.Total.ValorContable =
+      (data?.Activos?.CuentasComercialesCobrarOtrasPorCobrar
+        ?.CuentasDocumentosPorCobrar?.Total?.ValorContable || 0) -
+      (data?.Activos?.CuentasComercialesCobrarOtrasPorCobrar
+        ?.DeterioroAcumuladoValorCuentasDocumentosCobrar?.Total
+        ?.ValorContable || 0);
 
-    data.Activos.CuentasComercialesCobrarOtrasPorCobrar.Total.ValorContable = 
-      (data?.Activos?.CuentasComercialesCobrarOtrasPorCobrar?.CuentasDocumentosPorCobrar?.Total?.ValorContable || 0) - 
-      (data?.Activos?.CuentasComercialesCobrarOtrasPorCobrar?.DeterioroAcumuladoValorCuentasDocumentosCobrar?.Total?.ValorContable || 0);
+    data.Activos.CuentasComercialesCobrarOtrasPorCobrar.Total.EfectoConversion =
+      (data?.Activos?.CuentasComercialesCobrarOtrasPorCobrar
+        ?.CuentasDocumentosPorCobrar?.Total?.EfectoConversion || 0) -
+      (data?.Activos?.CuentasComercialesCobrarOtrasPorCobrar
+        ?.DeterioroAcumuladoValorCuentasDocumentosCobrar?.Total
+        ?.EfectoConversion || 0);
 
-    data.Activos.CuentasComercialesCobrarOtrasPorCobrar.Total.EfectoConversion = 
-      (data?.Activos?.CuentasComercialesCobrarOtrasPorCobrar?.CuentasDocumentosPorCobrar?.Total?.EfectoConversion || 0) - 
-      (data?.Activos?.CuentasComercialesCobrarOtrasPorCobrar?.DeterioroAcumuladoValorCuentasDocumentosCobrar?.Total?.EfectoConversion || 0);
+    data.Activos.CuentasComercialesCobrarOtrasPorCobrar.Total.MenorValorFiscal =
+      (data?.Activos?.CuentasComercialesCobrarOtrasPorCobrar
+        ?.CuentasDocumentosPorCobrar?.Total?.MenorValorFiscal || 0) -
+      (data?.Activos?.CuentasComercialesCobrarOtrasPorCobrar
+        ?.DeterioroAcumuladoValorCuentasDocumentosCobrar?.Total
+        ?.MenorValorFiscal || 0);
 
-    data.Activos.CuentasComercialesCobrarOtrasPorCobrar.Total.MenorValorFiscal = 
-      (data?.Activos?.CuentasComercialesCobrarOtrasPorCobrar?.CuentasDocumentosPorCobrar?.Total?.MenorValorFiscal || 0) - 
-      (data?.Activos?.CuentasComercialesCobrarOtrasPorCobrar?.DeterioroAcumuladoValorCuentasDocumentosCobrar?.Total?.MenorValorFiscal || 0);
+    data.Activos.CuentasComercialesCobrarOtrasPorCobrar.Total.MayorValorFiscal =
+      (data?.Activos?.CuentasComercialesCobrarOtrasPorCobrar
+        ?.CuentasDocumentosPorCobrar?.Total?.MayorValorFiscal || 0) -
+      (data?.Activos?.CuentasComercialesCobrarOtrasPorCobrar
+        ?.DeterioroAcumuladoValorCuentasDocumentosCobrar?.Total
+        ?.MayorValorFiscal || 0);
 
-    data.Activos.CuentasComercialesCobrarOtrasPorCobrar.Total.MayorValorFiscal = 
-      (data?.Activos?.CuentasComercialesCobrarOtrasPorCobrar?.CuentasDocumentosPorCobrar?.Total?.MayorValorFiscal || 0) - 
-      (data?.Activos?.CuentasComercialesCobrarOtrasPorCobrar?.DeterioroAcumuladoValorCuentasDocumentosCobrar?.Total?.MayorValorFiscal || 0);
-
-    data.Activos.CuentasComercialesCobrarOtrasPorCobrar.Total.ValorFiscal = 
-      (data?.Activos?.CuentasComercialesCobrarOtrasPorCobrar?.CuentasDocumentosPorCobrar?.Total?.ValorFiscal || 0) - 
-      (data?.Activos?.CuentasComercialesCobrarOtrasPorCobrar?.DeterioroAcumuladoValorCuentasDocumentosCobrar?.Total?.ValorFiscal || 0);
-  }
-
-  const calculateTotalInventarios = (data: any) => {
-    data.Activos.Inventarios.Total.ValorContable = (data?.Activos?.Inventarios?.Total?.ValorContable || 0) - ((data?.Activos?.Inventarios?.DeterioroAcumuladoValorInventarios?.ValorContable || 0)* 2);
-
-    data.Activos.Inventarios.Total.EfectoConversion = (data?.Activos?.Inventarios?.Total?.EfectoConversion || 0) - ((data?.Activos?.Inventarios?.DeterioroAcumuladoValorInventarios?.EfectoConversion || 0) * 2);
-
-    data.Activos.Inventarios.Total.MenorValorFiscal = (data?.Activos?.Inventarios?.Total?.MenorValorFiscal || 0) - ((data?.Activos?.Inventarios?.DeterioroAcumuladoValorInventarios?.MenorValorFiscal || 0) * 2);
-
-    data.Activos.Inventarios.Total.MayorValorFiscal = (data?.Activos?.Inventarios?.Total?.MayorValorFiscal || 0) - ((data?.Activos?.Inventarios?.DeterioroAcumuladoValorInventarios?.MayorValorFiscal || 0) * 2);
-
-    data.Activos.Inventarios.Total.ValorFiscal = (data?.Activos?.Inventarios?.Total?.ValorFiscal || 0) - ((data?.Activos?.Inventarios?.DeterioroAcumuladoValorInventarios?.ValorFiscal || 0) * 2);
-  }
-
-  const calculateTotalPropiedadesPlantaEquipo = (data: any) => {
-    data.Activos.PropiedadesPlantaEquipo.Total.ValorContable = 
-      (data?.Activos?.PropiedadesPlantaEquipo?.PropiedadesPlantaEquipo?.Total?.ValorContable || 0) - ((data?.Activos?.PropiedadesPlantaEquipo?.DepreciacionAcumuladaPropiedadesPlantaEquipo?.ValorContable || 0)*2) - ((data?.Activos?.PropiedadesPlantaEquipo?.DeterioroAcumuladoPropiedadesPlantaEquipo?.ValorContable || 0)*2);
-
-      data.Activos.PropiedadesPlantaEquipo.Total.EfectoConversion = 
-      (data?.Activos?.PropiedadesPlantaEquipo?.PropiedadesPlantaEquipo?.Total?.EfectoConversion || 0) - ((data?.Activos?.PropiedadesPlantaEquipo?.DepreciacionAcumuladaPropiedadesPlantaEquipo?.EfectoConversion || 0)*2) - ((data?.Activos?.PropiedadesPlantaEquipo?.DeterioroAcumuladoPropiedadesPlantaEquipo?.EfectoConversion || 0)*2);
-
-    data.Activos.PropiedadesPlantaEquipo.Total.MenorValorFiscal = 
-      (data?.Activos?.PropiedadesPlantaEquipo?.PropiedadesPlantaEquipo?.Total?.MenorValorFiscal || 0) - ((data?.Activos?.PropiedadesPlantaEquipo?.DeterioroAcumuladoPropiedadesPlantaEquipo?.Total?.MenorValorFiscal || 0) * 2);
-
-    data.Activos.PropiedadesPlantaEquipo.Total.MayorValorFiscal = 
-      (data?.Activos?.PropiedadesPlantaEquipo?.PropiedadesPlantaEquipo?.Total?.MayorValorFiscal || 0) - ((data?.Activos?.PropiedadesPlantaEquipo?.DeterioroAcumuladoPropiedadesPlantaEquipo?.Total?.MayorValorFiscal || 0) * 2);
-
-    data.Activos.PropiedadesPlantaEquipo.Total.ValorFiscal = 
-      (data?.Activos?.PropiedadesPlantaEquipo?.PropiedadesPlantaEquipo?.Total?.ValorFiscal || 0) - ((data?.Activos?.PropiedadesPlantaEquipo?.DeterioroAcumuladoPropiedadesPlantaEquipo?.Total?.ValorFiscal || 0) * 2);
-  }
-
-  //Quede el activos intangibles en la parte de adentro para hacer las restas
+    data.Activos.CuentasComercialesCobrarOtrasPorCobrar.Total.ValorFiscal =
+      (data?.Activos?.CuentasComercialesCobrarOtrasPorCobrar
+        ?.CuentasDocumentosPorCobrar?.Total?.ValorFiscal || 0) -
+      (data?.Activos?.CuentasComercialesCobrarOtrasPorCobrar
+        ?.DeterioroAcumuladoValorCuentasDocumentosCobrar?.Total?.ValorFiscal ||
+        0);
+  };
 
   const calculateTotalActivosIntangibles = (data: any) => {
+    data.Activos.ActivosIntangibles.Total.ValorContable =
+      (data?.Activos?.ActivosIntangibles?.ActivosIntangiblesDistintosPlusvalia
+        ?.Total?.ValorContable || 0) +
+      (data?.Activos?.ActivosIntangibles?.PlusvaliaGoodwill?.Total
+        ?.ValorContable || 0);
 
-    data.Activos.ActivosIntangibles.Total.ValorContable = 
-      (data?.Activos?.ActivosIntangibles?.ActivosIntangiblesDistintosPlusvalia?.Total?.ValorContable || 0) + 
-      (data?.Activos?.ActivosIntangibles?.PlusvaliaGoodwill?.Total?.ValorContable || 0);
+    data.Activos.ActivosIntangibles.Total.EfectoConversion =
+      (data?.Activos?.ActivosIntangibles?.ActivosIntangiblesDistintosPlusvalia
+        ?.Total?.EfectoConversion || 0) +
+      (data?.Activos?.ActivosIntangibles?.PlusvaliaGoodwill?.Total
+        ?.EfectoConversion || 0);
 
-    data.Activos.ActivosIntangibles.Total.EfectoConversion = 
-      (data?.Activos?.ActivosIntangibles?.ActivosIntangiblesDistintosPlusvalia?.Total?.EfectoConversion || 0) + 
-      (data?.Activos?.ActivosIntangibles?.PlusvaliaGoodwill?.Total?.EfectoConversion || 0);
+    data.Activos.ActivosIntangibles.Total.MenorValorFiscal =
+      (data?.Activos?.ActivosIntangibles?.ActivosIntangiblesDistintosPlusvalia
+        ?.Total?.MenorValorFiscal || 0) +
+      (data?.Activos?.CuentasComercialesCobrarOtrasPorCobrar?.PlusvaliaGoodwill
+        ?.Total?.MenorValorFiscal || 0);
 
-    data.Activos.ActivosIntangibles.Total.MenorValorFiscal = 
-      (data?.Activos?.ActivosIntangibles?.ActivosIntangiblesDistintosPlusvalia?.Total?.MenorValorFiscal || 0) + 
-      (data?.Activos?.CuentasComercialesCobrarOtrasPorCobrar?.PlusvaliaGoodwill?.Total?.MenorValorFiscal || 0);
+    data.Activos.ActivosIntangibles.Total.MayorValorFiscal =
+      (data?.Activos?.ActivosIntangibles?.ActivosIntangiblesDistintosPlusvalia
+        ?.Total?.MayorValorFiscal || 0) +
+      (data?.Activos?.ActivosIntangibles?.PlusvaliaGoodwill?.Total
+        ?.MayorValorFiscal || 0);
 
-    data.Activos.ActivosIntangibles.Total.MayorValorFiscal = 
-      (data?.Activos?.ActivosIntangibles?.ActivosIntangiblesDistintosPlusvalia?.Total?.MayorValorFiscal || 0) + 
-      (data?.Activos?.ActivosIntangibles?.PlusvaliaGoodwill?.Total?.MayorValorFiscal || 0);
-
-    data.Activos.ActivosIntangibles.Total.ValorFiscal = 
-      (data?.Activos?.ActivosIntangibles?.ActivosIntangiblesDistintosPlusvalia?.Total?.ValorFiscal || 0) + 
-      (data?.Activos?.ActivosIntangibles?.PlusvaliaGoodwill?.Total?.ValorFiscal || 0);
-  }
+    data.Activos.ActivosIntangibles.Total.ValorFiscal =
+      (data?.Activos?.ActivosIntangibles?.ActivosIntangiblesDistintosPlusvalia
+        ?.Total?.ValorFiscal || 0) +
+      (data?.Activos?.ActivosIntangibles?.PlusvaliaGoodwill?.Total
+        ?.ValorFiscal || 0);
+  };
 
   const calculateTotalActivosBiologicos = (data: any) => {
+    data.Activos.ActivosBiologicos.Total.ValorContable =
+      (data?.Activos?.ActivosBiologicos?.AnimalesVivos?.Total?.ValorContable ||
+        0) +
+      (data?.Activos?.ActivosBiologicos?.PlantasProductorasCultivosConsumibles
+        ?.Total?.ValorContable || 0);
 
-    data.Activos.ActivosBiologicos.Total.ValorContable = 
-      (data?.Activos?.ActivosBiologicos?.AnimalesVivos?.Total?.ValorContable || 0) + 
-      (data?.Activos?.ActivosBiologicos?.PlantasProductorasCultivosConsumibles?.Total?.ValorContable || 0);
+    data.Activos.ActivosBiologicos.Total.EfectoConversion =
+      (data?.Activos?.ActivosBiologicos?.AnimalesVivos?.Total
+        ?.EfectoConversion || 0) +
+      (data?.Activos?.ActivosBiologicos?.PlantasProductorasCultivosConsumibles
+        ?.Total?.EfectoConversion || 0);
 
-    data.Activos.ActivosBiologicos.Total.EfectoConversion = 
-      (data?.Activos?.ActivosBiologicos?.AnimalesVivos?.Total?.EfectoConversion || 0) + 
-      (data?.Activos?.ActivosBiologicos?.PlantasProductorasCultivosConsumibles?.Total?.EfectoConversion || 0);
+    data.Activos.ActivosBiologicos.Total.MenorValorFiscal =
+      (data?.Activos?.ActivosBiologicos?.AnimalesVivos?.Total
+        ?.MenorValorFiscal || 0) +
+      (data?.Activos?.ActivosBiologicos?.PlantasProductorasCultivosConsumibles
+        ?.Total?.MenorValorFiscal || 0);
 
-    data.Activos.ActivosBiologicos.Total.MenorValorFiscal = 
-      (data?.Activos?.ActivosBiologicos?.AnimalesVivos?.Total?.MenorValorFiscal || 0) + 
-      (data?.Activos?.ActivosBiologicos?.PlantasProductorasCultivosConsumibles?.Total?.MenorValorFiscal || 0);
+    data.Activos.ActivosBiologicos.Total.MayorValorFiscal =
+      (data?.Activos?.ActivosBiologicos?.AnimalesVivos?.Total
+        ?.MayorValorFiscal || 0) +
+      (data?.Activos?.ActivosBiologicos?.PlantasProductorasCultivosConsumibles
+        ?.Total?.MayorValorFiscal || 0);
 
-    data.Activos.ActivosBiologicos.Total.MayorValorFiscal = 
-      (data?.Activos?.ActivosBiologicos?.AnimalesVivos?.Total?.MayorValorFiscal || 0) + 
-      (data?.Activos?.ActivosBiologicos?.PlantasProductorasCultivosConsumibles?.Total?.MayorValorFiscal || 0);
-
-    data.Activos.ActivosBiologicos.Total.ValorFiscal = 
-      (data?.Activos?.ActivosBiologicos?.AnimalesVivos?.Total?.ValorFiscal || 0) + 
-      (data?.Activos?.ActivosBiologicos?.PlantasProductorasCultivosConsumibles?.Total?.ValorFiscal || 0);
-  }
+    data.Activos.ActivosBiologicos.Total.ValorFiscal =
+      (data?.Activos?.ActivosBiologicos?.AnimalesVivos?.Total?.ValorFiscal ||
+        0) +
+      (data?.Activos?.ActivosBiologicos?.PlantasProductorasCultivosConsumibles
+        ?.Total?.ValorFiscal || 0);
+  };
 
   const calculateTotalPatrimonio = (data: any) => {
-    data.TotalPatrimonio.ValorContable = 
-      (data?.Activos?.Total?.ValorContable || 0) - 
+    data.TotalPatrimonio.ValorContable =
+      (data?.Activos?.Total?.ValorContable || 0) -
       (data?.Pasivos?.Total?.ValorContable || 0);
 
-    data.TotalPatrimonio.EfectoConversion = 
-      (data?.Activos?.Total?.EfectoConversion || 0) - 
+    data.TotalPatrimonio.EfectoConversion =
+      (data?.Activos?.Total?.EfectoConversion || 0) -
       (data?.Pasivos?.Total?.EfectoConversion || 0);
 
-    data.TotalPatrimonio.MenorValorFiscal = 
-      (data?.Activos?.Total?.MenorValorFiscal || 0) - 
+    data.TotalPatrimonio.MenorValorFiscal =
+      (data?.Activos?.Total?.MenorValorFiscal || 0) -
       (data?.Pasivos?.Total?.MenorValorFiscal || 0);
 
-    data.TotalPatrimonio.MayorValorFiscal = 
-      (data?.Activos?.Total?.MayorValorFiscal || 0) - 
+    data.TotalPatrimonio.MayorValorFiscal =
+      (data?.Activos?.Total?.MayorValorFiscal || 0) -
       (data?.Pasivos?.Total?.MayorValorFiscal || 0);
 
-    data.TotalPatrimonio.ValorFiscal = 
-      (data?.Activos?.Total?.ValorFiscal || 0) - 
+    data.TotalPatrimonio.ValorFiscal =
+      (data?.Activos?.Total?.ValorFiscal || 0) -
       (data?.Pasivos?.Total?.ValorFiscal || 0);
-  }
+  };
 
   const handleChange = (newData: any, changedPath?: string) => {
-
     const arrayPath = changedPath!.split(".");
 
     const element = arrayPath.reduce((acc, key) => acc?.[key], newData);
 
     calculatedValorFiscal(element);
 
-    calculateTotals(arrayPath, newData, "Total");
+    calcualteTotalsWithDeterioroAndDepreciation(arrayPath, newData, "Total");
 
     calculateTotalInversionesIntrumentosFinancierosDerivadosVN(newData);
     calculateTotalCuentasComercialesPorCobrar(newData);
-    calculateTotalInventarios(newData);
     calculateTotalActivosIntangibles(newData);
     calculateTotalActivosBiologicos(newData);
 
-    calculateTotalsSources(newData?.Activos,
+    calculateTotalsSources(
+      newData?.Activos,
       [
         newData?.Activos?.ActivosEquivalentesEfectivo?.Total,
         newData?.Activos?.InversionesInstrumentosFinancierosDerivadosVN?.Total,
@@ -219,7 +326,8 @@ const ESFpatrimonio = () => {
       "Total"
     );
 
-    calculateTotalsSources(newData?.Pasivos,
+    calculateTotalsSources(
+      newData?.Pasivos,
       [
         newData?.Pasivos?.ObligacionesFinancierasCuentasPorPagar?.Total,
         newData?.Pasivos?.ArrendamientosPorPagar?.Total,
@@ -229,20 +337,22 @@ const ESFpatrimonio = () => {
         newData?.Pasivos?.PasivosBeneficiosEmpleados?.Total,
         newData?.Pasivos?.Provisiones?.Total,
         newData?.Pasivos?.PasivosIngresosDiferidos?.Total,
-        newData?.Pasivos?.OtrosPasivos?.Total
+        newData?.Pasivos?.OtrosPasivos?.Total,
       ],
       "Total"
     );
 
     calculateTotalPatrimonio(newData);
 
-    calculateTotalsSources(newData?.PatrimonioContable,
+    calculateTotalsSources(
+      newData?.PatrimonioContable,
       [
         newData?.PatrimonioContable?.CapitalSocialReservas?.Total,
         newData?.PatrimonioContable?.ResultadoEjercicio?.Total,
         newData?.PatrimonioContable?.ResultadosAcumulados?.Total,
-        newData?.PatrimonioContable?.GananciasPerdidasAcumuladasRetenidasAdopcionPrimera?.Total,
-        newData?.PatrimonioContable?.OtroResultadoIntegralAcumulado?.Total
+        newData?.PatrimonioContable
+          ?.GananciasPerdidasAcumuladasRetenidasAdopcionPrimera?.Total,
+        newData?.PatrimonioContable?.OtroResultadoIntegralAcumulado?.Total,
       ],
       "Total"
     );

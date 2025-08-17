@@ -96,11 +96,11 @@ export const config = {
     Sanciones: { readonly: true },
     TotalSaldoAPagar: { readonly: true },
     OTotalSaldoAFavor: { readonly: true },
-    Año: { widget: 'number' },
-    NumeroDeFormulario: { widget: 'number' },
-    NIT: { widget: 'number' },
-    DV: { widget: 'number' },
-    Cod: { widget: 'number' },
-    CodigoFormularioAnterior: { widget: 'number' },
+    Año: { widget: 'number' as const },
+    NumeroDeFormulario: { widget: 'number' as const },
+    NIT: { widget: 'number' as const },
+    DV: { widget: 'number' as const },
+    Cod: { widget: 'number' as const },
+    CodigoFormularioAnterior: { widget: 'number' as const },
   }
 }

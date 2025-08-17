@@ -3,7 +3,7 @@ import { useState, useEffect, useRef } from "react";
 import { DetalleReglonesService } from "../services/detalleReglones.service";
 import { FormRender } from "../components/FormRender";
 import { FiLoader, FiCheckCircle, FiEdit3 } from "react-icons/fi";
-import { config, calculateTotalSaldos, calculateTotalPatrimonioBruto, calculateRenglon86, calculateRentaLiquidaGravadaSinCasillas, calculateRentaLiquidaOrdinariaSinCasillas, calculateRentaLiquidaSinCasillas72, calculateTotalCostosGastosDeducibles, calculateTotalIngresosBrutos, calculateTotalIngresosNetos, calculateTotalPatrimonioLiquidoPositivo, perdidaLiquidaSinCasillas } from "../utils/DetalleReng";
+import { config, calculateTotalSaldos, calculateTotalPatrimonioBruto, calculateRenglon86, calculateRentaLiquidaGravadaSinCasillas, calculateRentaLiquidaOrdinariaSinCasillas,  calculateTotalCostosGastosDeducibles, calculateTotalIngresosBrutos, calculateTotalIngresosNetos, calculateTotalPatrimonioLiquidoPositivo, perdidaLiquidaSinCasillas } from "../utils/DetalleReng";
 
 import { DetalleRenglonesInput } from "../models/DetalleRenglonesJson";
 
@@ -57,7 +57,6 @@ const DetalleRenglones = () => {
     calculateRenglon86(newData);
     calculateRentaLiquidaGravadaSinCasillas(newData);
     calculateRentaLiquidaOrdinariaSinCasillas(newData);
-    calculateRentaLiquidaSinCasillas72(newData);
     calculateTotalCostosGastosDeducibles(newData);
     calculateTotalIngresosBrutos(newData);
     calculateTotalIngresosNetos(newData);
