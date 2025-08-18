@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo } from "react";
+import React, { useCallback, useMemo, useState } from "react";
 
 type JSONValue = string | number | boolean | null | JSONObject | JSONArray;
 
@@ -21,8 +21,9 @@ type FieldConfig = {
   options?: Array<{ label: string; value: string | number }>;
   hidden?: boolean;
   readonly?: boolean;
-  currency?: string; 
-  locale?: string;   
+  // Nuevas opciones para currency
+  currency?: string; // 'COP', 'USD', etc.
+  locale?: string;   // 'es-CO', 'en-US', etc.
 };
 
 type JSONFormConfig = {
@@ -71,20 +72,33 @@ function inferWidget(v: JSONValue): WidgetType {
   return "text";
 }
 
-// Función helper para formatear moneda
+// Función helper para formatear moneda (incluye negativos)
 function formatCurrency(value: number, currency = 'COP', locale = 'es-CO'): string {
   return new Intl.NumberFormat(locale, {
     style: 'currency',
     currency: currency,
     minimumFractionDigits: 0,
     maximumFractionDigits: 0,
+    signDisplay: 'auto', // Esto asegura que se muestre el signo negativo
   }).format(value);
 }
 
-// Función helper para extraer números de string formateado
+// Función helper para extraer números de string formateado (incluye negativos)
 function parseCurrencyInput(input: string): number {
-  const numericValue = input.replace(/[^0-9]/g, '');
-  return parseInt(numericValue) || 0;
+  // Limpiar todo excepto números y el primer signo negativo
+  const cleanInput = input.replace(/[^\d-]/g, '');
+  
+  // Si solo hay un signo negativo, retornar 0
+  if (cleanInput === '-' || cleanInput === '') return 0;
+  
+  // Convertir a número
+  const number = parseInt(cleanInput) || 0;
+  return number;
+}
+
+// Función para verificar si el usuario está escribiendo un negativo
+function isTypingNegative(input: string): boolean {
+  return input.trim() === '-' || input.includes('-') && input.replace(/[^\d]/g, '').length === 0;
 }
 
 /* ---------------- PRIMITIVE INPUT ---------------- */
@@ -122,7 +136,15 @@ const PrimitiveInput: React.FC<{
       const numValue = typeof value === 'number' ? value : 0;
       const currency = cfg?.currency || 'COP';
       const locale = cfg?.locale || 'es-CO';
-      const displayValue = formatCurrency(numValue, currency, locale);
+      
+      // Estado local para saber si el input está enfocado
+      const [isFocused, setIsFocused] = React.useState(false);
+      const [editingValue, setEditingValue] = React.useState('');
+
+      // Determinar qué valor mostrar
+      const displayValue = isFocused 
+        ? editingValue 
+        : formatCurrency(numValue, currency, locale);
 
       return (
         <div className="mb-4">
@@ -134,7 +156,28 @@ const PrimitiveInput: React.FC<{
             value={displayValue}
             placeholder={cfg?.placeholder || formatCurrency(0, currency, locale)}
             onChange={(e) => {
-              const numericValue = parseCurrencyInput(e.target.value);
+              const input = e.target.value;
+              setEditingValue(input);
+              
+              // Si está escribiendo solo el signo negativo, no actualizar el valor real
+              if (isTypingNegative(input)) {
+                return;
+              }
+              
+              // Parsear y actualizar el valor
+              const numericValue = parseCurrencyInput(input);
+              onChange(numericValue, pathToString(path.slice(0, -1)));
+            }}
+            onFocus={(e) => {
+              setIsFocused(true);
+              // Al hacer foco, mostrar solo el número para fácil edición
+              const currentValue = numValue === 0 ? '' : numValue.toString();
+              setEditingValue(currentValue);
+            }}
+            onBlur={(e) => {
+              setIsFocused(false);
+              // Al perder el foco, asegurar que el valor final esté actualizado
+              const numericValue = parseCurrencyInput(editingValue);
               onChange(numericValue, pathToString(path.slice(0, -1)));
             }}
             readOnly={!canEdit || cfg?.readonly}
