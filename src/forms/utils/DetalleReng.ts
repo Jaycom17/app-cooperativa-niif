@@ -307,45 +307,354 @@ export const config = {
       label:
         "Reglon 115: Valor total proyecto obras por impuestos modalidad de pago 2",
     },
+    IntDevSecFin: {
+      label: "Intereses  devengados - sector financiero",
+    },
+    IntDevPrestTer: {
+      label:
+        "Intereses devengados por préstamos de terceros (distinto al sector financiero)",
+    },
+    InstFin: {
+      label:
+        "Por instrumentos financieros medidos a costo amortizado distinto a préstamos",
+    },
+    CstTrans: {
+      label: "Costos de transacción (comisiones bancarias, tasas, entre otros)",
+    },
+    DifCamb: {
+      label: "Diferencia en cambio",
+    },
+    IntImpl: {
+      label: "Intereses implícitos (transacciones de financiación)",
+    },
+    ActProvRecValPres: {
+      label: "Actualización de provisiones reconocidas a valor presente",
+    },
+    IntAccPref: {
+      label: "Intereses por acciones preferenciales",
+    },
+    IntDIANSegSoc: {
+      label: "Intereses de mora DIAN y entidades seguridad social",
+    },
   },
   byPath: {
-    "Renglon93.DescuentosDonacionesEntidades.PorcentajeAplicable.SaldosFiscalesADiciembre31Parciales": {
-      widget: 'number' as const,
-      label: "Porcentaje aplicable a los descuentos por donaciones (escribir el procentaje sin el símbolo % y en entre 0 y 100)",
-    }
-  }
+    "Renglon93.DescuentosDonacionesEntidades.PorcentajeAplicable.SaldosFiscalesADiciembre31Parciales":
+      {
+        widget: "number" as const,
+        label:
+          "Porcentaje aplicable a los descuentos por donaciones (escribir el procentaje sin el símbolo % y en entre 0 y 100)",
+      },
+    // Paths calculados automáticamente - Solo lectura
+    "Renglon45.2404ImpuestoPorPagarDeRentaYComplementarios.SaldosContablesADiciembre31Parciales": {
+      readonly: true
+    },
+    "Renglon46.TotalPatrimonioLiquidoPositivoSaldosContablesADiciembre31": {
+      readonly: true
+    },
+    "Renglon46.TotalPatrimonioLiquidoPositivoSaldosFiscalesADiciembre31": {
+      readonly: true
+    },
+    "3130CapitalDePersonasNaturales.SaldosContablesADiciembre31Parciales": {
+      readonly: true
+    },
+    "Renglon44TotalPatrimonioBruto.TotalSaldosContablesADiciembre31": {
+      readonly: true
+    },
+    "Renglon44TotalPatrimonioBruto.TotalSaldosFiscalesADiciembre31": {
+      readonly: true
+    },
+    "Renglon58.TotalIngresosBrutosSaldosContablesADiciembre31": {
+      readonly: true
+    },
+    "Renglon58.TotalIngresosBrutosSaldosFiscalesADiciembre31": {
+      readonly: true
+    },
+    "Renglon61.TotalIngresosNetosSaldosContablesADiciembre31": {
+      readonly: true
+    },
+    "Renglon61.TotalIngresosNetosSaldosFiscalesADiciembre31": {
+      readonly: true
+    },
+    "61CostosDeLasMercanciasFabricadasYVendidas.AsistenciaTecnica.MasCostoDeFabricacionDelPeriodo.SaldosContablesADiciembre31Parciales": {
+      readonly: true
+    },
+    "Renglon63.5105BeneficiosAEmpleadosDeCortoPlayzo.AportesAEPS.SaldosContablesADiciembre31Parciales": {
+      readonly: true
+    },
+    "Renglon63.5105BeneficiosAEmpleadosDeCortoPlayzo.AportesAARL.SaldosContablesADiciembre31Parciales": {
+      readonly: true
+    },
+    "Renglon63.5105BeneficiosAEmpleadosDeCortoPlayzo.AportesAFondosDePensiones.SaldosContablesADiciembre31Parciales": {
+      readonly: true
+    },
+    "Renglon63.5105BeneficiosAEmpleadosDeCortoPlayzo.AportesAlSENA.SaldosContablesADiciembre31Parciales": {
+      readonly: true
+    },
+    "Renglon63.5105BeneficiosAEmpleadosDeCortoPlayzo.AportesAlICBF.SaldosContablesADiciembre31Parciales": {
+      readonly: true
+    },
+    "Renglon63.5105BeneficiosAEmpleadosDeCortoPlayzo.AportesACajasDeCompensacion.SaldosContablesADiciembre31Parciales": {
+      readonly: true
+    },
+    "Renglon63.5105BeneficiosAEmpleadosDeCortoPlayzo.AportesAEPS.AjustesParaLlegarASaldosFiscales1": {
+      readonly: true
+    },
+    "Renglon63.5105BeneficiosAEmpleadosDeCortoPlayzo.AportesAARL.AjustesParaLlegarASaldosFiscales1": {
+      readonly: true
+    },
+    "Renglon63.5105BeneficiosAEmpleadosDeCortoPlayzo.AportesAFondosDePensiones.AjustesParaLlegarASaldosFiscales1": {
+      readonly: true
+    },
+    "Renglon63.5105BeneficiosAEmpleadosDeCortoPlayzo.AportesAlSENA.AjustesParaLlegarASaldosFiscales1": {
+      readonly: true
+    },
+    "Renglon63.5105BeneficiosAEmpleadosDeCortoPlayzo.AportesAlICBF.AjustesParaLlegarASaldosFiscales1": {
+      readonly: true
+    },
+    "Renglon63.5105BeneficiosAEmpleadosDeCortoPlayzo.AportesACajasDeCompensacion.AjustesParaLlegarASaldosFiscales1": {
+      readonly: true
+    },
+    "Renglon64.5205BeneficiosALosEmpleadosCortoPlayzo.AportesAEPS.SaldosContablesADiciembre31Parciales": {
+      readonly: true
+    },
+    "Renglon64.5205BeneficiosALosEmpleadosCortoPlayzo.AportesAARL.SaldosContablesADiciembre31Parciales": {
+      readonly: true
+    },
+    "Renglon64.5205BeneficiosALosEmpleadosCortoPlayzo.AportesAFondosDePensiones.SaldosContablesADiciembre31Parciales": {
+      readonly: true
+    },
+    "Renglon64.5205BeneficiosALosEmpleadosCortoPlayzo.AportesAlSENA.SaldosContablesADiciembre31Parciales": {
+      readonly: true
+    },
+    "Renglon64.5205BeneficiosALosEmpleadosCortoPlayzo.AportesAlICBF.SaldosContablesADiciembre31Parciales": {
+      readonly: true
+    },
+    "Renglon64.5205BeneficiosALosEmpleadosCortoPlayzo.AportesACajasDeCompensacion.SaldosContablesADiciembre31Parciales": {
+      readonly: true
+    },
+    "Renglon64.5205BeneficiosALosEmpleadosCortoPlayzo.AportesAEPS.AjustesParaLlegarASaldosFiscales1": {
+      readonly: true
+    },
+    "Renglon64.5205BeneficiosALosEmpleadosCortoPlayzo.AportesAARL.AjustesParaLlegarASaldosFiscales1": {
+      readonly: true
+    },
+    "Renglon64.5205BeneficiosALosEmpleadosCortoPlayzo.AportesAFondosDePensiones.AjustesParaLlegarASaldosFiscales1": {
+      readonly: true
+    },
+    "Renglon64.5205BeneficiosALosEmpleadosCortoPlayzo.AportesAlSENA.AjustesParaLlegarASaldosFiscales1": {
+      readonly: true
+    },
+    "Renglon64.5205BeneficiosALosEmpleadosCortoPlayzo.AportesAlICBF.AjustesParaLlegarASaldosFiscales1": {
+      readonly: true
+    },
+    "Renglon64.5205BeneficiosALosEmpleadosCortoPlayzo.AportesACajasDeCompensacion.AjustesParaLlegarASaldosFiscales1": {
+      readonly: true
+    },
+    "Renglon67.TotalCostosYGastosDeduciblesSaldosContablesADiciembre31": {
+      readonly: true
+    },
+    "Renglon67.TotalCostosYGastosDeduciblesSaldosFiscalesADiciembre31": {
+      readonly: true
+    },
+    "Renglon72.TotalRentaLiquidaOrdinariaDelEjercicioSaldosContablesADiciembre31": {
+      readonly: true
+    },
+    "Renglon72.TotalRentaLiquidaOrdinariaDelEjercicioSaldosFiscalesADiciembre31": {
+      readonly: true
+    },
+    "Renglon73.TotalPerdidaLiquidaDelEjercicioSaldosContablesADiciembre31": {
+      readonly: true
+    },
+    "Renglon73.TotalPerdidaLiquidaDelEjercicioSaldosFiscalesADiciembre31": {
+      readonly: true
+    },
+    "Renglon74.CompensacionesDeExcesosDeRentaPresuntiva.SubRentPres.SaldosFiscalesADiciembre31Parciales": {
+      readonly: true
+    },
+    "Renglon74.CompensacionesDeExcesosDeRentaPresuntiva.ValFinRentPres.SaldosFiscalesADiciembre31Parciales": {
+      readonly: true
+    },
+    "Renglon74.TotalCompensacionesSaldosFiscalesADiciembre31": {
+      readonly: true
+    },
+    "Renglon75.TotalRentaLiquidaSaldosFiscalesADiciembre31": {
+      readonly: true
+    },
+    "Renglon79.TotalesSaldosFiscalesADiciembre31": {
+      readonly: true
+    },
+    "Renglon85.Esc1.SaldosFiscalesADiciembre31Parciales": {
+      readonly: true
+    },
+    "Renglon85.Esc2.SaldosFiscalesADiciembre31Parciales": {
+      readonly: true
+    },
+    "Renglon85.Esc3.SaldosFiscalesADiciembre31Parciales": {
+      readonly: true
+    },
+    "Renglon85.Esc4.SaldosFiscalesADiciembre31Parciales": {
+      readonly: true
+    },
+    "Renglon86.TotalImpuestoSobreLaRentaLiquidaSaldosFiscalesADiciembre31": {
+      readonly: true
+    },
+    "Renglon87.TotalDeDividendosYParticipacionesGravadasALaTarifaSaldosFiscalesADiciembre31": {
+      readonly: true
+    },
+    "Renglon89.Total89SaldosFiscalesADiciembre31": {
+      readonly: true
+    },
+    "Renglon90.Total90SaldosFiscalesADiciembre31": {
+      readonly: true
+    },
+    "Renglon91.Total91SaldosFiscalesADiciembre31": {
+      readonly: true
+    },
+    "Renglon92.Total92SaldosFiscalesADiciembre31": {
+      readonly: true
+    },
+    "Renglon93.DescuentosDonacionesEntidades.ValorQueInicialmenteSePodriaTomarComoDescuento.SaldosFiscalesADiciembre31Parciales": {
+      readonly: true
+    },
+    "Renglon93.DescuentosDonacionesEntidades.LimiteAlCualSeDebeSometerEsteDescuento.SaldosFiscalesADiciembre31Parciales": {
+      readonly: true
+    },
+    "Renglon93.DescuentosDonacionesEntidades.ValorFinalQuePuedeTomarsePorEsteDescuento.SaldosFiscalesADiciembre31Parciales": {
+      readonly: true
+    },
+    "Renglon93.TotalDescuentosTributariosSaldosFiscalesADiciembre31": {
+      readonly: true
+    },
+    "Renglon94.TotalImpuestoNetoRentaSaldosFiscalesADiciembre31": {
+      readonly: true
+    },
+    "Renglon95ImpuestoDeGananciasOcasionales.SobreLoteriasYSimilares.SaldosFiscalesADiciembre31Parciales": {
+      readonly: true
+    },
+    "Renglon95ImpuestoDeGananciasOcasionales.SobreLasDemasGananciasOcasionales.SaldosFiscalesADiciembre31Parciales": {
+      readonly: true
+    },
+    "Renglon95ImpuestoDeGananciasOcasionales.TotalImpuestoDeGananciasOcasionalesSaldosFiscalesADiciembre31": {
+      readonly: true
+    },
+    "Renglon97.TotalSaldosFiscalesADiciembre31": {
+      readonly: true
+    },
+    "Renglon104.TotalOtrasRetencionesSaldosContablesADiciembre31": {
+      readonly: true
+    },
+    "Renglon104.TotalOtrasRetencionesSaldosFiscalesADiciembre31": {
+      readonly: true
+    },
+    "Renglon104.PorVentas.TotalPorVentasSaldosContablesADiciembre31": {
+      readonly: true
+    },
+    "Renglon104.PorVentas.TotalPorVentasSaldosFiscalesADiciembre31": {
+      readonly: true
+    },
+    "Renglon104.PorServicios.TotalPorServiciosSaldosContablesADiciembre31": {
+      readonly: true
+    },
+    "Renglon104.PorServicios.TotalPorServiciosSaldosFiscalesADiciembre31": {
+      readonly: true
+    },
+    "Renglon104.PorHonorariosYComisiones.TotalPorHonorariosYComisionesSaldosContablesADiciembre31": {
+      readonly: true
+    },
+    "Renglon104.PorHonorariosYComisiones.TotalPorHonorariosYComisionesSaldosFiscalesADiciembre31": {
+      readonly: true
+    },
+    "Renglon104.PorRendimientoFinanciero.TotalPorRendimientoFinancieroSaldosContablesADiciembre31": {
+      readonly: true
+    },
+    "Renglon104.PorRendimientoFinanciero.TotalPorRendimientoFinancieroSaldosFiscalesADiciembre31": {
+      readonly: true
+    },
+    "Renglon104.PorDividendosYParticipaciones.TotalPorDividendosYParticipacionesSaldosContablesADiciembre31": {
+      readonly: true
+    },
+    "Renglon104.PorDividendosYParticipaciones.TotalPorDividendosYParticipacionesSaldosFiscalesADiciembre31": {
+      readonly: true
+    },
+    "Renglon104.PorOtrosConceptosInteresesLoteriasYRifas.TotalPorOtrosConceptosInteresesLoteriasYRifasSaldosContablesADiciembre31": {
+      readonly: true
+    },
+    "Renglon104.PorOtrosConceptosInteresesLoteriasYRifas.TotalPorOtrosConceptosInteresesLoteriasYRifasSaldosFiscalesADiciembre31": {
+      readonly: true
+    },
+    "Renglon105.TotalSaldosFiscalesADiciembre31": {
+      readonly: true
+    },
+    "Renglon110.TotalSaldosFiscalesADiciembre31": {
+      readonly: true
+    },
+    "Renglon111Sanciones.TotalesSaldosFiscalesADiciembre31": {
+      readonly: true
+    },
+    "Renglon112.TotalSaldosFiscalesADiciembre31": {
+      readonly: true
+    },
+    "Renglon113.TotalSaldosFiscalesADiciembre31": {
+      readonly: true
+    },
+  },
 };
 
 export const calculateSaldosFiscalesParciales = (data: any) => {
+  if (Array.isArray(data)) {
+    data.forEach((item) => {
+      item.SaldosFiscalesADiciembre31Parciales =
+        (item?.SaldosContablesADiciembre31Parciales || 0) +
+        (item?.AjustesParaLlegarASaldosFiscales1 || 0) -
+        (item?.AjustesParaLlegarASaldosFiscales3 || 0);
+    });
+    return;
+  }
 
-    if (Array.isArray(data)) {
-      data.forEach((item) => {
-        item.SaldosFiscalesADiciembre31Parciales =
-      (item?.SaldosContablesADiciembre31Parciales || 0) +
-      (item?.AjustesParaLlegarASaldosFiscales1 || 0) -
-      (item?.AjustesParaLlegarASaldosFiscales3 || 0);
-      });
-      return;
-    }
+  if (data?.SaldosFiscalesADiciembre31Parciales == null) {
+    return;
+  }
 
-    if(data?.SaldosFiscalesADiciembre31Parciales == null) {
-      return;
-    }
+  if (
+    data?.SaldosContablesADiciembre31Parciales == null &&
+    data?.AjustesParaLlegarASaldosFiscales1 == null &&
+    data?.AjustesParaLlegarASaldosFiscales3 == null
+  ) {
+    return;
+  }
 
-    if (data?.SaldosContablesADiciembre31Parciales == null && data?.AjustesParaLlegarASaldosFiscales1 == null && data?.AjustesParaLlegarASaldosFiscales3 == null ) {
-      return;
-    }
-
-    data.SaldosFiscalesADiciembre31Parciales =
-      (data?.SaldosContablesADiciembre31Parciales || 0) +
-      (data?.AjustesParaLlegarASaldosFiscales1 || 0) -
-      (data?.AjustesParaLlegarASaldosFiscales3 || 0);
-  };
+  data.SaldosFiscalesADiciembre31Parciales =
+    (data?.SaldosContablesADiciembre31Parciales || 0) +
+    (data?.AjustesParaLlegarASaldosFiscales1 || 0) -
+    (data?.AjustesParaLlegarASaldosFiscales3 || 0);
+};
 
 const regexTotalContables = /^Total\S*SaldosContablesADiciembre31/;
 const regexTotalFiscales = /^Total\S*SaldosFiscalesADiciembre31/;
 
-const totalSaldosExceptions = ["Renglon46", "Renglon88", "Renglon93", "Renglon104", "Renglon106", "Renglon101MenosAnticipoRentaLiquidadiGravableAnterior", "Renglon102MenosSaldoAFavorRentaSinSolicitudDeDevolucionNiCompensacion", "Renglon50DividendosOParticipacionesDistribuidosPorEntidadesResidentesEnColombia", "Renglon55", "Renglon68", "Renglon69", "Renglon96", "Renglon98", "Renglon99", "Renglon100", "Renglon103Autocorretenciones", "Renglon107", "Renglon108", "Renglon109", "Renglon114", "Renglon115"];
+const totalSaldosExceptions = [
+  "Renglon46",
+  "Renglon88",
+  "Renglon93",
+  "Renglon104",
+  "Renglon106",
+  "Renglon101MenosAnticipoRentaLiquidadiGravableAnterior",
+  "Renglon102MenosSaldoAFavorRentaSinSolicitudDeDevolucionNiCompensacion",
+  "Renglon50DividendosOParticipacionesDistribuidosPorEntidadesResidentesEnColombia",
+  "Renglon55",
+  "Renglon68",
+  "Renglon69",
+  "Renglon96",
+  "Renglon98",
+  "Renglon99",
+  "Renglon100",
+  "Renglon103Autocorretenciones",
+  "Renglon107",
+  "Renglon108",
+  "Renglon109",
+  "Renglon114",
+  "Renglon115",
+];
 
 //Calcula el total de saldos contables y fiscales para un nivel específico
 export const calculateTotalSaldos = (data: any, currentLevel: string) => {
@@ -434,29 +743,28 @@ const calculateTotalPasivos = (data: any) => {
   }
 
   data["3130CapitalDePersonasNaturales"].SaldosContablesADiciembre31Parciales =
-    (data?.TotalPatrimonioLiquidoPositivoSaldosContablesADiciembre31 ||
-    0) -
-      ((data?.["3605ResultadoDelEjercicio"]?.UtilidadDespuesDeImpuestos
+    (data?.TotalPatrimonioLiquidoPositivoSaldosContablesADiciembre31 || 0) -
+    ((data?.["3605ResultadoDelEjercicio"]?.UtilidadDespuesDeImpuestos
+      ?.SaldosContablesADiciembre31Parciales || 0) +
+      (data?.["3605ResultadoDelEjercicio"]?.PerdidaDespuesDeImpuestos
         ?.SaldosContablesADiciembre31Parciales || 0) +
-        (data?.["3605ResultadoDelEjercicio"]?.PerdidaDespuesDeImpuestos
-          ?.SaldosContablesADiciembre31Parciales || 0) +
-        (data?.["3705UtilidadesDePeriodosAnteriores"]
-          ?.SaldosContablesADiciembre31Parciales || 0) +
-        (data?.["3710PerdidasDeEjerciciosAnteriores"]
-          ?.SaldosContablesADiciembre31Parciales || 0) +
-        (data?.[
-          "3715GananciasPerdidasAcumuladasORetenidasPorLaAdopcionPorPrimera"
-        ]?.GananciasAcumuladas?.SaldosContablesADiciembre31Parciales || 0) +
-        (data?.[
-          "3715GananciasPerdidasAcumuladasORetenidasPorLaAdopcionPorPrimera"
-        ]?.PerdidasAcumuladas?.SaldosContablesADiciembre31Parciales || 0) +
-        (data?.["3720OtroResultadoIntegralAcumulado"]?.GananciasAcumuladasORI
-          ?.SaldosContablesADiciembre31Parciales || 0) +
-        (data?.["3720OtroResultadoIntegralAcumulado"]?.PerdidasAcumuladasORI
-          ?.SaldosContablesADiciembre31Parciales || 0) +
-        (data?.["3805Superavit"]?.SaldosContablesADiciembre31Parciales || 0) +
-        (data?.["3805Superavit"]?.PorMetodoDeParticipacion
-          ?.SaldosContablesADiciembre31Parciales || 0));
+      (data?.["3705UtilidadesDePeriodosAnteriores"]
+        ?.SaldosContablesADiciembre31Parciales || 0) +
+      (data?.["3710PerdidasDeEjerciciosAnteriores"]
+        ?.SaldosContablesADiciembre31Parciales || 0) +
+      (data?.[
+        "3715GananciasPerdidasAcumuladasORetenidasPorLaAdopcionPorPrimera"
+      ]?.GananciasAcumuladas?.SaldosContablesADiciembre31Parciales || 0) +
+      (data?.[
+        "3715GananciasPerdidasAcumuladasORetenidasPorLaAdopcionPorPrimera"
+      ]?.PerdidasAcumuladas?.SaldosContablesADiciembre31Parciales || 0) +
+      (data?.["3720OtroResultadoIntegralAcumulado"]?.GananciasAcumuladasORI
+        ?.SaldosContablesADiciembre31Parciales || 0) +
+      (data?.["3720OtroResultadoIntegralAcumulado"]?.PerdidasAcumuladasORI
+        ?.SaldosContablesADiciembre31Parciales || 0) +
+      (data?.["3805Superavit"]?.SaldosContablesADiciembre31Parciales || 0) +
+      (data?.["3805Superavit"]?.PorMetodoDeParticipacion
+        ?.SaldosContablesADiciembre31Parciales || 0));
 };
 
 //Renglon 44 - Total Patrimonio Bruto
@@ -670,15 +978,28 @@ const calculateReferences63 = (data: any) => {
   data.Renglon63[
     "5105BeneficiosAEmpleadosDeCortoPlayzo"
   ].AportesACajasDeCompensacion.AjustesParaLlegarASaldosFiscales1 =
-    data?.Renglon35?.["510572CajaComp"].AjustesParaLlegarASaldosFiscales1 ||
-    0;
+    data?.Renglon35?.["510572CajaComp"].AjustesParaLlegarASaldosFiscales1 || 0;
 
-  calculateSaldosFiscalesParciales(data?.Renglon63["5105BeneficiosAEmpleadosDeCortoPlayzo"]?.AportesAEPS);
-  calculateSaldosFiscalesParciales(data?.Renglon63["5105BeneficiosAEmpleadosDeCortoPlayzo"]?.AportesAARL);
-  calculateSaldosFiscalesParciales(data?.Renglon63["5105BeneficiosAEmpleadosDeCortoPlayzo"]?.AportesAFondosDePensiones);
-  calculateSaldosFiscalesParciales(data?.Renglon63["5105BeneficiosAEmpleadosDeCortoPlayzo"]?.AportesAlSENA);
-  calculateSaldosFiscalesParciales(data?.Renglon63["5105BeneficiosAEmpleadosDeCortoPlayzo"]?.AportesAlICBF);
-  calculateSaldosFiscalesParciales(data?.Renglon63["5105BeneficiosAEmpleadosDeCortoPlayzo"]?.AportesACajasDeCompensacion);
+  calculateSaldosFiscalesParciales(
+    data?.Renglon63["5105BeneficiosAEmpleadosDeCortoPlayzo"]?.AportesAEPS
+  );
+  calculateSaldosFiscalesParciales(
+    data?.Renglon63["5105BeneficiosAEmpleadosDeCortoPlayzo"]?.AportesAARL
+  );
+  calculateSaldosFiscalesParciales(
+    data?.Renglon63["5105BeneficiosAEmpleadosDeCortoPlayzo"]
+      ?.AportesAFondosDePensiones
+  );
+  calculateSaldosFiscalesParciales(
+    data?.Renglon63["5105BeneficiosAEmpleadosDeCortoPlayzo"]?.AportesAlSENA
+  );
+  calculateSaldosFiscalesParciales(
+    data?.Renglon63["5105BeneficiosAEmpleadosDeCortoPlayzo"]?.AportesAlICBF
+  );
+  calculateSaldosFiscalesParciales(
+    data?.Renglon63["5105BeneficiosAEmpleadosDeCortoPlayzo"]
+      ?.AportesACajasDeCompensacion
+  );
 };
 
 //Renglon 64 - Referencias
@@ -745,20 +1066,33 @@ const calculateReferences64 = (data: any) => {
   data.Renglon64[
     "5205BeneficiosALosEmpleadosCortoPlayzo"
   ].AportesACajasDeCompensacion.AjustesParaLlegarASaldosFiscales1 =
-    data?.Renglon35?.["520572CajaComp"].AjustesParaLlegarASaldosFiscales1 ||
-    0;
+    data?.Renglon35?.["520572CajaComp"].AjustesParaLlegarASaldosFiscales1 || 0;
 
-  calculateSaldosFiscalesParciales(data?.Renglon64["5205BeneficiosALosEmpleadosCortoPlayzo"]?.AportesAEPS);
+  calculateSaldosFiscalesParciales(
+    data?.Renglon64["5205BeneficiosALosEmpleadosCortoPlayzo"]?.AportesAEPS
+  );
 
-  calculateSaldosFiscalesParciales(data?.Renglon64["5205BeneficiosALosEmpleadosCortoPlayzo"]?.AportesAARL);
+  calculateSaldosFiscalesParciales(
+    data?.Renglon64["5205BeneficiosALosEmpleadosCortoPlayzo"]?.AportesAARL
+  );
 
-  calculateSaldosFiscalesParciales(data?.Renglon64["5205BeneficiosALosEmpleadosCortoPlayzo"]?.AportesAFondosDePensiones);
+  calculateSaldosFiscalesParciales(
+    data?.Renglon64["5205BeneficiosALosEmpleadosCortoPlayzo"]
+      ?.AportesAFondosDePensiones
+  );
 
-  calculateSaldosFiscalesParciales(data?.Renglon64["5205BeneficiosALosEmpleadosCortoPlayzo"]?.AportesAlSENA);
+  calculateSaldosFiscalesParciales(
+    data?.Renglon64["5205BeneficiosALosEmpleadosCortoPlayzo"]?.AportesAlSENA
+  );
 
-  calculateSaldosFiscalesParciales(data?.Renglon64["5205BeneficiosALosEmpleadosCortoPlayzo"]?.AportesAlICBF);
+  calculateSaldosFiscalesParciales(
+    data?.Renglon64["5205BeneficiosALosEmpleadosCortoPlayzo"]?.AportesAlICBF
+  );
 
-  calculateSaldosFiscalesParciales(data?.Renglon64["5205BeneficiosALosEmpleadosCortoPlayzo"]?.AportesACajasDeCompensacion);
+  calculateSaldosFiscalesParciales(
+    data?.Renglon64["5205BeneficiosALosEmpleadosCortoPlayzo"]
+      ?.AportesACajasDeCompensacion
+  );
 };
 
 //Renglon 67 - Total Costos y Gastos Deducibles
@@ -876,10 +1210,9 @@ const perdidaLiquidaSinCasillas = (data: any) => {
 
 //Renglon 74 - Total Compensaciones
 const calculateTotalCompensaciones = (data: any) => {
-
   data.Renglon74.CompensacionesDeExcesosDeRentaPresuntiva.SubRentPres.SaldosFiscalesADiciembre31Parciales =
-    (data?.Renglon74?.CompensacionesDeExcesosDeRentaPresuntiva?.ExcRentPres
-      ?.SaldosFiscalesADiciembre31Parciales || 0);
+    data?.Renglon74?.CompensacionesDeExcesosDeRentaPresuntiva?.ExcRentPres
+      ?.SaldosFiscalesADiciembre31Parciales || 0;
 
   const valueFiscal =
     (data?.Renglon74?.CompenPerFisc?.SaldosFiscalesADiciembre31Parciales || 0) +
@@ -997,8 +1330,8 @@ const calculateRenglon85 = (data: any) => {
           : 0
         : 0
       : 0;
-  
-    calculateTotalSaldos(data, "Renglon85");
+
+  calculateTotalSaldos(data, "Renglon85");
 };
 
 //Renglon 86 - Total Impuesto Sobre la Renta Liquida Saldos Fiscales a Diciembre 31
@@ -1041,14 +1374,22 @@ const calculateRenglon90 = (data: any) => {
 const calculateRenglon91 = (data: any) => {
   data.Renglon91.Total91SaldosFiscalesADiciembre31 =
     Math.round(
-      (data?.Renglon52?.TotalDividendosYParticipacionesGravadasPorPersonasNaturalesSaldosFiscalesADiciembre3152 || 0) * 0.33 * 1000
+      (data?.Renglon52
+        ?.TotalDividendosYParticipacionesGravadasPorPersonasNaturalesSaldosFiscalesADiciembre3152 ||
+        0) *
+        0.33 *
+        1000
     ) / 1000;
 };
 
 //Renglon 92 - Total Impuesto Sobre la Rentas Liquidas Gravables
 const calculateRenglon92 = (data: any) => {
-  data.Renglon92.Total92SaldosFiscalesADiciembre31 = (data?.Renglon86?.TotalImpuestoSobreLaRentaLiquidaSaldosFiscalesADiciembre31 || 0) +
-    (data?.Renglon87?.TotalDeDividendosYParticipacionesGravadasALaTarifaSaldosFiscalesADiciembre31 || 0) +
+  data.Renglon92.Total92SaldosFiscalesADiciembre31 =
+    (data?.Renglon86
+      ?.TotalImpuestoSobreLaRentaLiquidaSaldosFiscalesADiciembre31 || 0) +
+    (data?.Renglon87
+      ?.TotalDeDividendosYParticipacionesGravadasALaTarifaSaldosFiscalesADiciembre31 ||
+      0) +
     (data?.Renglon88?.Total88SaldosFiscalesADiciembre31 || 0) +
     (data?.Renglon89?.Total89SaldosFiscalesADiciembre31 || 0) +
     (data?.Renglon90?.Total90SaldosFiscalesADiciembre31 || 0) +
@@ -1058,58 +1399,105 @@ const calculateRenglon92 = (data: any) => {
 //Renglon 93 - Todo
 const calculateRenglon93 = (data: any) => {
   data.Renglon93.DescuentosDonacionesEntidades.ValorQueInicialmenteSePodriaTomarComoDescuento.SaldosFiscalesADiciembre31Parciales =
-    (data?.Renglon93?.DescuentosDonacionesEntidades?.DonacionHechaAFundacionPor?.SaldosFiscalesADiciembre31Parciales || 0) *
-    ((data?.Renglon93?.DescuentosDonacionesEntidades?.PorcentajeAplicable?.SaldosFiscalesADiciembre31Parciales || 0)/100);
+    (data?.Renglon93?.DescuentosDonacionesEntidades?.DonacionHechaAFundacionPor
+      ?.SaldosFiscalesADiciembre31Parciales || 0) *
+    ((data?.Renglon93?.DescuentosDonacionesEntidades?.PorcentajeAplicable
+      ?.SaldosFiscalesADiciembre31Parciales || 0) /
+      100);
 
-  data.Renglon93.DescuentosDonacionesEntidades.LimiteAlCualSeDebeSometerEsteDescuento.SaldosFiscalesADiciembre31Parciales = Math.round((data?.Renglon92?.Total92SaldosFiscalesADiciembre31 || 0) * 0.25 * 1000) / 1000;
+  data.Renglon93.DescuentosDonacionesEntidades.LimiteAlCualSeDebeSometerEsteDescuento.SaldosFiscalesADiciembre31Parciales =
+    Math.round(
+      (data?.Renglon92?.Total92SaldosFiscalesADiciembre31 || 0) * 0.25 * 1000
+    ) / 1000;
 
-  data.Renglon93.DescuentosDonacionesEntidades.ValorFinalQuePuedeTomarsePorEsteDescuento.SaldosFiscalesADiciembre31Parciales = (data?.Renglon93?.DescuentosDonacionesEntidades.ValorQueInicialmenteSePodriaTomarComoDescuento?.SaldosFiscalesADiciembre31Parciales || 0) >
-    (data?.Renglon93?.DescuentosDonacionesEntidades.LimiteAlCualSeDebeSometerEsteDescuento?.SaldosFiscalesADiciembre31Parciales || 0)
-    ? (data?.Renglon93?.DescuentosDonacionesEntidades.LimiteAlCualSeDebeSometerEsteDescuento?.SaldosFiscalesADiciembre31Parciales || 0)
-    : (data?.Renglon93?.DescuentosDonacionesEntidades.ValorQueInicialmenteSePodriaTomarComoDescuento?.SaldosFiscalesADiciembre31Parciales || 0);
+  data.Renglon93.DescuentosDonacionesEntidades.ValorFinalQuePuedeTomarsePorEsteDescuento.SaldosFiscalesADiciembre31Parciales =
+    (data?.Renglon93?.DescuentosDonacionesEntidades
+      .ValorQueInicialmenteSePodriaTomarComoDescuento
+      ?.SaldosFiscalesADiciembre31Parciales || 0) >
+    (data?.Renglon93?.DescuentosDonacionesEntidades
+      .LimiteAlCualSeDebeSometerEsteDescuento
+      ?.SaldosFiscalesADiciembre31Parciales || 0)
+      ? data?.Renglon93?.DescuentosDonacionesEntidades
+          .LimiteAlCualSeDebeSometerEsteDescuento
+          ?.SaldosFiscalesADiciembre31Parciales || 0
+      : data?.Renglon93?.DescuentosDonacionesEntidades
+          .ValorQueInicialmenteSePodriaTomarComoDescuento
+          ?.SaldosFiscalesADiciembre31Parciales || 0;
 
-    const valueFiscal = (data?.Renglon93?.DescuentosDonacionesEntidades?.ValorFinalQuePuedeTomarsePorEsteDescuento?.SaldosFiscalesADiciembre31Parciales || 0) + ((data?.Renglon93?.DescuentosOtros?.PorIndustriaYComercioYAvisosYTablerosPagadosDuranteElAño?.SaldosFiscalesADiciembre31Parciales || 0) + (data?.Renglon93?.DescuentosOtros?.PorIVACompra?.SaldosFiscalesADiciembre31Parciales || 0) + (data?.Renglon93?.DescuentosOtros?.RetTrasladable?.SaldosFiscalesADiciembre31Parciales || 0) + (data?.Renglon93?.DescuentosOtros?.OtrosDescApliq?.SaldosFiscalesADiciembre31Parciales || 0));
+  const valueFiscal =
+    (data?.Renglon93?.DescuentosDonacionesEntidades
+      ?.ValorFinalQuePuedeTomarsePorEsteDescuento
+      ?.SaldosFiscalesADiciembre31Parciales || 0) +
+    ((data?.Renglon93?.DescuentosOtros
+      ?.PorIndustriaYComercioYAvisosYTablerosPagadosDuranteElAño
+      ?.SaldosFiscalesADiciembre31Parciales || 0) +
+      (data?.Renglon93?.DescuentosOtros?.PorIVACompra
+        ?.SaldosFiscalesADiciembre31Parciales || 0) +
+      (data?.Renglon93?.DescuentosOtros?.RetTrasladable
+        ?.SaldosFiscalesADiciembre31Parciales || 0) +
+      (data?.Renglon93?.DescuentosOtros?.OtrosDescApliq
+        ?.SaldosFiscalesADiciembre31Parciales || 0));
 
-  data.Renglon93.TotalDescuentosTributariosSaldosFiscalesADiciembre31 = valueFiscal > (data?.Renglon92?.Total92SaldosFiscalesADiciembre31 || 0) ? (data?.Renglon92?.Total92SaldosFiscalesADiciembre31 || 0) : valueFiscal;
+  data.Renglon93.TotalDescuentosTributariosSaldosFiscalesADiciembre31 =
+    valueFiscal > (data?.Renglon92?.Total92SaldosFiscalesADiciembre31 || 0)
+      ? data?.Renglon92?.Total92SaldosFiscalesADiciembre31 || 0
+      : valueFiscal;
 };
 
 //Renglon 94 impuesto neto renta
 const calculateRenglon94 = (data: any) => {
-
   const valueFiscal =
     (data?.Renglon92?.Total92SaldosFiscalesADiciembre31 || 0) -
-    (data?.Renglon93?.TotalDescuentosTributariosSaldosFiscalesADiciembre31 || 0);
+    (data?.Renglon93?.TotalDescuentosTributariosSaldosFiscalesADiciembre31 ||
+      0);
 
-  data.Renglon94.TotalImpuestoNetoRentaSaldosFiscalesADiciembre31 = valueFiscal > 0 ? valueFiscal : 0;
+  data.Renglon94.TotalImpuestoNetoRentaSaldosFiscalesADiciembre31 =
+    valueFiscal > 0 ? valueFiscal : 0;
 };
 
 //Renglon 95 - Impuesto de Ganancias Ocasionales
 const calculateRenglon95 = (data: any) => {
-  data.Renglon95ImpuestoDeGananciasOcasionales.SobreLoteriasYSimilares.SaldosFiscalesADiciembre31Parciales = Math.round((data?.Renglon80?.["429543PremiosRifasYLoterias"]?.PremiosRifasYLoterias?.SaldosFiscalesADiciembre31Parciales || 0) * 0.2 * 1000) / 1000;
+  data.Renglon95ImpuestoDeGananciasOcasionales.SobreLoteriasYSimilares.SaldosFiscalesADiciembre31Parciales =
+    Math.round(
+      (data?.Renglon80?.["429543PremiosRifasYLoterias"]?.PremiosRifasYLoterias
+        ?.SaldosFiscalesADiciembre31Parciales || 0) *
+        0.2 *
+        1000
+    ) / 1000;
 
-  const valueFiscal = (data?.Renglon85?.TotalGananciasOcasionalesGravablesSaldosFiscalesADiciembre31 || 0) - (data?.Renglon80?.["429543PremiosRifasYLoterias"]?.PremiosRifasYLoterias?.SaldosFiscalesADiciembre31Parciales || 0);
+  const valueFiscal =
+    (data?.Renglon85
+      ?.TotalGananciasOcasionalesGravablesSaldosFiscalesADiciembre31 || 0) -
+    (data?.Renglon80?.["429543PremiosRifasYLoterias"]?.PremiosRifasYLoterias
+      ?.SaldosFiscalesADiciembre31Parciales || 0);
 
-  data.Renglon95ImpuestoDeGananciasOcasionales.SobreLasDemasGananciasOcasionales.SaldosFiscalesADiciembre31Parciales = valueFiscal > 0 ? Math.round(valueFiscal * 0.1 * 1000) / 1000 : 0;
+  data.Renglon95ImpuestoDeGananciasOcasionales.SobreLasDemasGananciasOcasionales.SaldosFiscalesADiciembre31Parciales =
+    valueFiscal > 0 ? Math.round(valueFiscal * 0.1 * 1000) / 1000 : 0;
 
   data.Renglon95ImpuestoDeGananciasOcasionales.TotalImpuestoDeGananciasOcasionalesSaldosFiscalesADiciembre31 =
     (data?.Renglon95ImpuestoDeGananciasOcasionales?.SobreLoteriasYSimilares
       ?.SaldosFiscalesADiciembre31Parciales || 0) +
-    (data?.Renglon95ImpuestoDeGananciasOcasionales?.SobreLasDemasGananciasOcasionales
+    (data?.Renglon95ImpuestoDeGananciasOcasionales
+      ?.SobreLasDemasGananciasOcasionales
       ?.SaldosFiscalesADiciembre31Parciales || 0);
-}
+};
 
 //Renglon 97 - Total Impuesto de Renta a Cargo
 const calculateRenglon97 = (data: any) => {
   data.Renglon97.TotalSaldosFiscalesADiciembre31 =
     (data?.Renglon94?.TotalImpuestoNetoRentaSaldosFiscalesADiciembre31 || 0) +
-    (data?.Renglon95ImpuestoDeGananciasOcasionales?.TotalImpuestoDeGananciasOcasionalesSaldosFiscalesADiciembre31 || 0) +
+    (data?.Renglon95ImpuestoDeGananciasOcasionales
+      ?.TotalImpuestoDeGananciasOcasionalesSaldosFiscalesADiciembre31 || 0) +
     (data?.Renglon96?.SaldosFiscalesADiciembre31Parciales || 0);
 };
 
 //Reglon 104 - todo
 const calculateRenglon104 = (data: any) => {
-  
-  const calculateValor = (section: any, labelContable: string, labelFiscla: string) => {
+  const calculateValor = (
+    section: any,
+    labelContable: string,
+    labelFiscla: string
+  ) => {
     let valueContable = 0;
     let valueFiscal = 0;
 
@@ -1117,54 +1505,151 @@ const calculateRenglon104 = (data: any) => {
       valueContable += empresa?.SaldosContablesADiciembre31Parciales || 0;
       valueFiscal += empresa?.SaldosFiscalesADiciembre31Parciales || 0;
     });
-    
+
     section[labelContable] = valueContable;
     section[labelFiscla] = valueFiscal;
   };
 
-  calculateValor(data?.Renglon104?.PorVentas, "TotalPorVentasSaldosContablesADiciembre31", "TotalPorVentasSaldosFiscalesADiciembre31");
-  calculateValor(data?.Renglon104?.PorServicios, "TotalPorServiciosSaldosContablesADiciembre31", "TotalPorServiciosSaldosFiscalesADiciembre31");
-  calculateValor(data?.Renglon104?.PorHonorariosYComisiones, "TotalPorHonorariosYComisionesSaldosContablesADiciembre31", "TotalPorHonorariosYComisionesSaldosFiscalesADiciembre31");
-  calculateValor(data?.Renglon104?.PorRendimientoFinanciero, "TotalPorRendimientoFinancieroSaldosContablesADiciembre31", "TotalPorRendimientoFinancieroSaldosFiscalesADiciembre31");
-  calculateValor(data?.Renglon104?.PorDividendosYParticipaciones, "TotalPorDividendosYParticipacionesSaldosContablesADiciembre31", "TotalPorDividendosYParticipacionesSaldosFiscalesADiciembre31");
-  calculateValor(data?.Renglon104?.PorOtrosConceptosInteresesLoteriasYRifas, "TotalPorOtrosConceptosInteresesLoteriasYRifasSaldosContablesADiciembre31", "TotalPorOtrosConceptosInteresesLoteriasYRifasSaldosFiscalesADiciembre31");
+  calculateValor(
+    data?.Renglon104?.PorVentas,
+    "TotalPorVentasSaldosContablesADiciembre31",
+    "TotalPorVentasSaldosFiscalesADiciembre31"
+  );
+  calculateValor(
+    data?.Renglon104?.PorServicios,
+    "TotalPorServiciosSaldosContablesADiciembre31",
+    "TotalPorServiciosSaldosFiscalesADiciembre31"
+  );
+  calculateValor(
+    data?.Renglon104?.PorHonorariosYComisiones,
+    "TotalPorHonorariosYComisionesSaldosContablesADiciembre31",
+    "TotalPorHonorariosYComisionesSaldosFiscalesADiciembre31"
+  );
+  calculateValor(
+    data?.Renglon104?.PorRendimientoFinanciero,
+    "TotalPorRendimientoFinancieroSaldosContablesADiciembre31",
+    "TotalPorRendimientoFinancieroSaldosFiscalesADiciembre31"
+  );
+  calculateValor(
+    data?.Renglon104?.PorDividendosYParticipaciones,
+    "TotalPorDividendosYParticipacionesSaldosContablesADiciembre31",
+    "TotalPorDividendosYParticipacionesSaldosFiscalesADiciembre31"
+  );
+  calculateValor(
+    data?.Renglon104?.PorOtrosConceptosInteresesLoteriasYRifas,
+    "TotalPorOtrosConceptosInteresesLoteriasYRifasSaldosContablesADiciembre31",
+    "TotalPorOtrosConceptosInteresesLoteriasYRifasSaldosFiscalesADiciembre31"
+  );
 
-  data.Renglon104.TotalOtrasRetencionesSaldosContablesADiciembre31 = (data?.Renglon104?.PorVentas?.TotalPorVentasSaldosContablesADiciembre31 || 0) + (data?.Renglon104?.PorServicios?.TotalPorServiciosSaldosContablesADiciembre31 || 0) + (data?.Renglon104?.PorHonorariosYComisiones?.TotalPorHonorariosYComisionesSaldosContablesADiciembre31 || 0) + (data?.Renglon104?.PorRendimientoFinanciero?.TotalPorRendimientoFinancieroSaldosContablesADiciembre31 || 0) + (data?.Renglon104?.PorDividendosYParticipaciones?.TotalPorDividendosYParticipacionesSaldosContablesADiciembre31 || 0) + (data?.Renglon104?.PorOtrosConceptosInteresesLoteriasYRifas?.TotalPorOtrosConceptosInteresesLoteriasYRifasSaldosContablesADiciembre31 || 0);
+  data.Renglon104.TotalOtrasRetencionesSaldosContablesADiciembre31 =
+    (data?.Renglon104?.PorVentas?.TotalPorVentasSaldosContablesADiciembre31 ||
+      0) +
+    (data?.Renglon104?.PorServicios
+      ?.TotalPorServiciosSaldosContablesADiciembre31 || 0) +
+    (data?.Renglon104?.PorHonorariosYComisiones
+      ?.TotalPorHonorariosYComisionesSaldosContablesADiciembre31 || 0) +
+    (data?.Renglon104?.PorRendimientoFinanciero
+      ?.TotalPorRendimientoFinancieroSaldosContablesADiciembre31 || 0) +
+    (data?.Renglon104?.PorDividendosYParticipaciones
+      ?.TotalPorDividendosYParticipacionesSaldosContablesADiciembre31 || 0) +
+    (data?.Renglon104?.PorOtrosConceptosInteresesLoteriasYRifas
+      ?.TotalPorOtrosConceptosInteresesLoteriasYRifasSaldosContablesADiciembre31 ||
+      0);
 
-  data.Renglon104.TotalOtrasRetencionesSaldosFiscalesADiciembre31 = (data?.Renglon104?.PorVentas?.TotalPorVentasSaldosFiscalesADiciembre31 || 0) + (data?.Renglon104?.PorServicios?.TotalPorServiciosSaldosFiscalesADiciembre31 || 0) + (data?.Renglon104?.PorHonorariosYComisiones?.TotalPorHonorariosYComisionesSaldosFiscalesADiciembre31 || 0) + (data?.Renglon104?.PorRendimientoFinanciero?.TotalPorRendimientoFinancieroSaldosFiscalesADiciembre31 || 0) + (data?.Renglon104?.PorDividendosYParticipaciones?.TotalPorDividendosYParticipacionesSaldosFiscalesADiciembre31 || 0) + (data?.Renglon104?.PorOtrosConceptosInteresesLoteriasYRifas?.TotalPorOtrosConceptosInteresesLoteriasYRifasSaldosFiscalesADiciembre31 || 0);
-
+  data.Renglon104.TotalOtrasRetencionesSaldosFiscalesADiciembre31 =
+    (data?.Renglon104?.PorVentas?.TotalPorVentasSaldosFiscalesADiciembre31 ||
+      0) +
+    (data?.Renglon104?.PorServicios
+      ?.TotalPorServiciosSaldosFiscalesADiciembre31 || 0) +
+    (data?.Renglon104?.PorHonorariosYComisiones
+      ?.TotalPorHonorariosYComisionesSaldosFiscalesADiciembre31 || 0) +
+    (data?.Renglon104?.PorRendimientoFinanciero
+      ?.TotalPorRendimientoFinancieroSaldosFiscalesADiciembre31 || 0) +
+    (data?.Renglon104?.PorDividendosYParticipaciones
+      ?.TotalPorDividendosYParticipacionesSaldosFiscalesADiciembre31 || 0) +
+    (data?.Renglon104?.PorOtrosConceptosInteresesLoteriasYRifas
+      ?.TotalPorOtrosConceptosInteresesLoteriasYRifasSaldosFiscalesADiciembre31 ||
+      0);
 };
 
 //Renglon 105 - Total Retenciones
 const calculateRenglon105 = (data: any) => {
-  data.Renglon105.TotalSaldosFiscalesADiciembre31 = (data?.Renglon103Autocorretenciones?.TotalesSaldosFiscalesADiciembre31 || 0) + (data?.Renglon104?.TotalOtrasRetencionesSaldosFiscalesADiciembre31 || 0);
-}
+  data.Renglon105.TotalSaldosFiscalesADiciembre31 =
+    (data?.Renglon103Autocorretenciones?.TotalesSaldosFiscalesADiciembre31 ||
+      0) +
+    (data?.Renglon104?.TotalOtrasRetencionesSaldosFiscalesADiciembre31 || 0);
+};
 
 //Renglon 110 - Saldo a pagar por impuesto
 const calculateRenglon110 = (data: any) => {
-  const valueFiscal = (data?.Renglon97?.TotalSaldosFiscalesADiciembre31 || 0) + (data?.Renglon106?.TotalSaldosFiscalesADiciembre31 || 0) + (data?.Renglon108?.TotalSaldosFiscalesADiciembre31 || 0) + (data?.Renglon109?.TotalSaldosFiscalesADiciembre31 || 0) - (data?.Renglon98?.TotalSaldosFiscalesADiciembre31 || 0) - (data?.Renglon99?.TotalSaldosFiscalesADiciembre31 || 0) - (data?.Renglon100?.TotalSaldosFiscalesADiciembre31 || 0) - (data?.Renglon101MenosAnticipoRentaLiquidadiGravableAnterior?.TotalesSaldosFiscalesADiciembre31 || 0) - (data?.Renglon102MenosSaldoAFavorRentaSinSolicitudDeDevolucionNiCompensacion?.TotalesSaldosFiscalesADiciembre31 || 0) - (data?.Renglon105?.TotalSaldosFiscalesADiciembre31 || 0) - (data?.Renglon107?.TotalSaldosFiscalesADiciembre31 || 0);
+  const valueFiscal =
+    (data?.Renglon97?.TotalSaldosFiscalesADiciembre31 || 0) +
+    (data?.Renglon106?.TotalSaldosFiscalesADiciembre31 || 0) +
+    (data?.Renglon108?.TotalSaldosFiscalesADiciembre31 || 0) +
+    (data?.Renglon109?.TotalSaldosFiscalesADiciembre31 || 0) -
+    (data?.Renglon98?.TotalSaldosFiscalesADiciembre31 || 0) -
+    (data?.Renglon99?.TotalSaldosFiscalesADiciembre31 || 0) -
+    (data?.Renglon100?.TotalSaldosFiscalesADiciembre31 || 0) -
+    (data?.Renglon101MenosAnticipoRentaLiquidadiGravableAnterior
+      ?.TotalesSaldosFiscalesADiciembre31 || 0) -
+    (data?.Renglon102MenosSaldoAFavorRentaSinSolicitudDeDevolucionNiCompensacion
+      ?.TotalesSaldosFiscalesADiciembre31 || 0) -
+    (data?.Renglon105?.TotalSaldosFiscalesADiciembre31 || 0) -
+    (data?.Renglon107?.TotalSaldosFiscalesADiciembre31 || 0);
 
-  data.Renglon110.TotalSaldosFiscalesADiciembre31 = valueFiscal > 0 ? valueFiscal : 0;
+  data.Renglon110.TotalSaldosFiscalesADiciembre31 =
+    valueFiscal > 0 ? valueFiscal : 0;
 };
 
 // Renglon 111 - Sanciones
 const calculateRenglon111 = (data: any) => {
-  data.Renglon111Sanciones.TotalesSaldosFiscalesADiciembre31 = data?.Renglon111Sanciones?.PorExtemporaneidad || 0;
-}
+  data.Renglon111Sanciones.TotalesSaldosFiscalesADiciembre31 =
+    data?.Renglon111Sanciones?.PorExtemporaneidad || 0;
+};
 
 //Renglon 112 - Total Saldo a pagar
 const calculateRenglon112 = (data: any) => {
-  const valueFiscal = (data?.Renglon97?.TotalSaldosFiscalesADiciembre31 || 0) + (data?.Renglon106?.TotalSaldosFiscalesADiciembre31 || 0) + (data?.Renglon108?.TotalSaldosFiscalesADiciembre31 || 0) + (data?.Renglon109?.TotalSaldosFiscalesADiciembre31 || 0) + (data?.Renglon111Sanciones?.TotalesSaldosFiscalesADiciembre31 || 0) - (data?.Renglon98?.TotalSaldosFiscalesADiciembre31 || 0) - (data?.Renglon99?.TotalSaldosFiscalesADiciembre31 || 0) - (data?.Renglon100?.TotalSaldosFiscalesADiciembre31 || 0) - (data?.Renglon101MenosAnticipoRentaLiquidadiGravableAnterior?.TotalesSaldosFiscalesADiciembre31 || 0) - (data?.Renglon102MenosSaldoAFavorRentaSinSolicitudDeDevolucionNiCompensacion?.TotalesSaldosFiscalesADiciembre31 || 0) - (data?.Renglon105?.TotalSaldosFiscalesADiciembre31 || 0) - (data?.Renglon107?.TotalSaldosFiscalesADiciembre31 || 0);
+  const valueFiscal =
+    (data?.Renglon97?.TotalSaldosFiscalesADiciembre31 || 0) +
+    (data?.Renglon106?.TotalSaldosFiscalesADiciembre31 || 0) +
+    (data?.Renglon108?.TotalSaldosFiscalesADiciembre31 || 0) +
+    (data?.Renglon109?.TotalSaldosFiscalesADiciembre31 || 0) +
+    (data?.Renglon111Sanciones?.TotalesSaldosFiscalesADiciembre31 || 0) -
+    (data?.Renglon98?.TotalSaldosFiscalesADiciembre31 || 0) -
+    (data?.Renglon99?.TotalSaldosFiscalesADiciembre31 || 0) -
+    (data?.Renglon100?.TotalSaldosFiscalesADiciembre31 || 0) -
+    (data?.Renglon101MenosAnticipoRentaLiquidadiGravableAnterior
+      ?.TotalesSaldosFiscalesADiciembre31 || 0) -
+    (data?.Renglon102MenosSaldoAFavorRentaSinSolicitudDeDevolucionNiCompensacion
+      ?.TotalesSaldosFiscalesADiciembre31 || 0) -
+    (data?.Renglon105?.TotalSaldosFiscalesADiciembre31 || 0) -
+    (data?.Renglon107?.TotalSaldosFiscalesADiciembre31 || 0);
 
-  data.Renglon112.TotalSaldosFiscalesADiciembre31 = valueFiscal > 0 ? valueFiscal : 0;
+  data.Renglon112.TotalSaldosFiscalesADiciembre31 =
+    valueFiscal > 0 ? valueFiscal : 0;
 };
 
 //Renglon 113 - Total Saldos Fiscales a Diciembre 31
 const calculateRenglon113 = (data: any) => {
-  const valueFiscal = (data?.Renglon98?.TotalSaldosFiscalesADiciembre31 || 0) + (data?.Renglon99?.TotalSaldosFiscalesADiciembre31 || 0) + (data?.Renglon100?.TotalSaldosFiscalesADiciembre31 || 0) + (data?.Renglon101MenosAnticipoRentaLiquidadiGravableAnterior?.TotalesSaldosFiscalesADiciembre31 || 0) + (data?.Renglon102MenosSaldoAFavorRentaSinSolicitudDeDevolucionNiCompensacion?.TotalesSaldosFiscalesADiciembre31 || 0) + (data?.Renglon105?.TotalSaldosFiscalesADiciembre31 || 0) + (data?.Renglon107?.TotalSaldosFiscalesADiciembre31 || 0) - (data?.Renglon97?.TotalSaldosFiscalesADiciembre31 || 0) - (data?.Renglon106?.TotalSaldosFiscalesADiciembre31 || 0) - (data?.Renglon108?.TotalSaldosFiscalesADiciembre31 || 0) - (data?.Renglon109?.TotalSaldosFiscalesADiciembre31 || 0) - (data?.Renglon111Sanciones?.TotalesSaldosFiscalesADiciembre31 || 0);
+  const valueFiscal =
+    (data?.Renglon98?.TotalSaldosFiscalesADiciembre31 || 0) +
+    (data?.Renglon99?.TotalSaldosFiscalesADiciembre31 || 0) +
+    (data?.Renglon100?.TotalSaldosFiscalesADiciembre31 || 0) +
+    (data?.Renglon101MenosAnticipoRentaLiquidadiGravableAnterior
+      ?.TotalesSaldosFiscalesADiciembre31 || 0) +
+    (data?.Renglon102MenosSaldoAFavorRentaSinSolicitudDeDevolucionNiCompensacion
+      ?.TotalesSaldosFiscalesADiciembre31 || 0) +
+    (data?.Renglon105?.TotalSaldosFiscalesADiciembre31 || 0) +
+    (data?.Renglon107?.TotalSaldosFiscalesADiciembre31 || 0) -
+    (data?.Renglon97?.TotalSaldosFiscalesADiciembre31 || 0) -
+    (data?.Renglon106?.TotalSaldosFiscalesADiciembre31 || 0) -
+    (data?.Renglon108?.TotalSaldosFiscalesADiciembre31 || 0) -
+    (data?.Renglon109?.TotalSaldosFiscalesADiciembre31 || 0) -
+    (data?.Renglon111Sanciones?.TotalesSaldosFiscalesADiciembre31 || 0);
 
-  data.Renglon113.TotalSaldosFiscalesADiciembre31 = valueFiscal > 0 ? valueFiscal : 0;
-}
+  data.Renglon113.TotalSaldosFiscalesADiciembre31 =
+    valueFiscal > 0 ? valueFiscal : 0;
+};
 
 // FUNCIÓN PRINCIPAL PARA CALCULAR TODOS LOS DATOS NO TOTALES
 export const calculateNonTotalData = (data: any) => {
@@ -1210,13 +1695,12 @@ export const calculateTotalData = (data: any) => {
   calculateTotalSaldos(data.Renglon45, "Renglon45");
 
   // Luego calculamos totales que dependen de los anteriores
-  calculateTotalPatrimonioBruto(data);  // Depende de Renglones 36-43
-  calculateTotalPatrimonioLiquidoPositivo(data);  // Depende de Renglon44 y 45
+  calculateTotalPatrimonioBruto(data); // Depende de Renglones 36-43
+  calculateTotalPatrimonioLiquidoPositivo(data); // Depende de Renglon44 y 45
 
-  calculateTotalPasivos(data.Renglon46);  
+  calculateTotalPasivos(data.Renglon46);
 
-  calculateTotalIngresosBrutos(data);  // Depende de Renglones 47-57
-  calculateTotalIngresosNetos(data);  // Depende de Renglon58, 59, 60
-  calculateTotalCostosGastosDeducibles(data);  // Depende de Renglones 62-66
+  calculateTotalIngresosBrutos(data); // Depende de Renglones 47-57
+  calculateTotalIngresosNetos(data); // Depende de Renglon58, 59, 60
+  calculateTotalCostosGastosDeducibles(data); // Depende de Renglones 62-66
 };
-

@@ -5606,7 +5606,7 @@ export const RentaLiquidaInput = {
     ImpuestoDeGananciaOcasional: {
       ValorFiscal: 0,
     },
-    Total: {
+    TotalGananciasOcasionalesGravables: {
       ValorFiscal: 0,
     },
   },
@@ -5669,6 +5669,7 @@ export const RentaLiquidaInput = {
         ValorFiscal: 0,
       },
     },
+    ValorFiscal: 0,
   },
   TotalRetencionesAnioGravableQueDeclara: {
     ValorFiscal: 0,
@@ -5713,7 +5714,7 @@ export const RentaLiquidaInput = {
           Ganancia: 0,
           Perdida: 0,
           EfectoConversion: 0,
-        },
+      },
       InstrumentosDeCoberturaCubreninversionesEnInstrumentosDePatrimonio: {
         Ganancia: 0,
         Perdida: 0,
@@ -5724,6 +5725,11 @@ export const RentaLiquidaInput = {
         Perdida: 0,
         EfectoConversion: 0,
       },
+      Total: {
+        Ganancia: 0,
+        Perdida: 0,
+        EfectoConversion: 0,
+      }
     },
     SeReclasificanAlResultado: {
       DiferenciasDeCambioPorConversion: {
@@ -5756,6 +5762,11 @@ export const RentaLiquidaInput = {
         Perdida: 0,
         EfectoConversion: 0,
       },
+    Total: {
+        Ganancia: 0,
+        Perdida: 0,
+        EfectoConversion: 0,
+      }
     },
     OTROResultadoIntegralAntesDeImpuestos: {
       Ganancia: 0,
