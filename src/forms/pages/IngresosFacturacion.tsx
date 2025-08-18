@@ -34,6 +34,8 @@ function IngresosFacturacionForm() {
         calculateValorTotalFacturacion(merged?.PrestacionDeServicios);
         calculateValorTotalIngresoContable(merged?.PrestacionDeServicios);
 
+        calculateTotals(["VentaDeBienes"], merged, "Total");
+
         setData(merged);
       })
       .catch((error) => {
