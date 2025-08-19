@@ -37,7 +37,6 @@ function MiddlewareStudent() {
   }, [initCheck, studentProfile]);
 
   useEffect(() => {
-    console.log(student)
     if (!currentRoom) {
       navigate("/");
     }
@@ -105,7 +104,7 @@ function MiddlewareStudent() {
           </h2>
           <p className="text-center mt-3">A continuación, escribe tu cedula.</p>
           <form
-            className="flex flex-col w-full sm:w-2xl items-center gap-2"
+            className="flex flex-col w-full items-center gap-2"
             onSubmit={handleSubmit(onSubmit)}
           >
             {studentError && (
@@ -151,7 +150,7 @@ function MiddlewareStudent() {
             registrarte en la sala.
           </p>
           <form
-            className="flex flex-col w-full sm:w-2xl items-center gap-2"
+            className="flex flex-col w-full items-center gap-2"
             onSubmit={handleSubmit(onSubmit)}
           >
             {studentError && (

@@ -1,4 +1,5 @@
-import React, { useCallback, useMemo, useState } from "react";
+import React, { useCallback, useMemo, useState, memo } from "react";
+import { IoIosArrowDroprightCircle, IoIosArrowDropdownCircle } from "react-icons/io";
 
 type JSONValue = string | number | boolean | null | JSONObject | JSONArray;
 
@@ -7,7 +8,6 @@ interface JSONObject {
 }
 type JSONArray = JSONValue[];
 
-// Agregamos 'currency' como nuevo tipo de widget
 type WidgetType = "text" | "number" | "checkbox" | "textarea" | "select" | "currency";
 
 type FieldConfig = {
@@ -21,9 +21,8 @@ type FieldConfig = {
   options?: Array<{ label: string; value: string | number }>;
   hidden?: boolean;
   readonly?: boolean;
-  // Nuevas opciones para currency
-  currency?: string; // 'COP', 'USD', etc.
-  locale?: string;   // 'es-CO', 'en-US', etc.
+  currency?: string;
+  locale?: string;
 };
 
 type JSONFormConfig = {
@@ -37,6 +36,10 @@ type JSONFormProps = {
   config?: JSONFormConfig;
   defaultOpen?: boolean;
   canEdit?: boolean;
+  // Nuevas props para optimización
+  maxInitialItems?: number;
+  virtualizeThreshold?: number;
+  lazyLoadChildren?: boolean;
 };
 
 function isObject(v: JSONValue): v is JSONObject {
@@ -66,42 +69,121 @@ function pathToString(path: (string | number)[]) {
 }
 
 function inferWidget(v: JSONValue): WidgetType {
-  if (typeof v === "number") return "currency"; // Cambiamos "number" por "currency"
+  if (typeof v === "number") return "currency";
   if (typeof v === "boolean") return "checkbox";
   if (typeof v === "string") return v.length > 80 ? "textarea" : "text";
   return "text";
 }
 
-// Función helper para formatear moneda (incluye negativos)
 function formatCurrency(value: number, currency = 'COP', locale = 'es-CO'): string {
   return new Intl.NumberFormat(locale, {
     style: 'currency',
     currency: currency,
     minimumFractionDigits: 0,
     maximumFractionDigits: 0,
-    signDisplay: 'auto', // Esto asegura que se muestre el signo negativo
+    signDisplay: 'auto',
   }).format(value);
 }
 
-// Función helper para extraer números de string formateado (incluye negativos)
 function parseCurrencyInput(input: string): number {
-  // Limpiar todo excepto números y el primer signo negativo
   const cleanInput = input.replace(/[^\d-]/g, '');
-  
-  // Si solo hay un signo negativo, retornar 0
   if (cleanInput === '-' || cleanInput === '') return 0;
-  
-  // Convertir a número
   const number = parseInt(cleanInput) || 0;
   return number;
 }
 
-// Función para verificar si el usuario está escribiendo un negativo
 function isTypingNegative(input: string): boolean {
   return input.trim() === '-' || input.includes('-') && input.replace(/[^\d]/g, '').length === 0;
 }
 
-/* ---------------- PRIMITIVE INPUT ---------------- */
+// Hook para búsqueda/filtrado
+function useSearch(items: string[], searchTerm: string) {
+  return useMemo(() => {
+    if (!searchTerm.trim()) return items;
+    const term = searchTerm.toLowerCase();
+    return items.filter(key => 
+      humanizeKey(key).toLowerCase().includes(term)
+    );
+  }, [items, searchTerm]);
+}
+
+// Hook para paginación
+function usePagination<T>(items: T[], pageSize: number) {
+  const [currentPage, setCurrentPage] = useState(0);
+  
+  const totalPages = Math.ceil(items.length / pageSize);
+  const paginatedItems = useMemo(() => {
+    const start = currentPage * pageSize;
+    return items.slice(start, start + pageSize);
+  }, [items, currentPage, pageSize]);
+
+  const goToPage = useCallback((page: number) => {
+    setCurrentPage(Math.max(0, Math.min(page, totalPages - 1)));
+  }, [totalPages]);
+
+  return {
+    currentPage,
+    totalPages,
+    paginatedItems,
+    goToPage,
+    hasNext: currentPage < totalPages - 1,
+    hasPrev: currentPage > 0
+  };
+}
+
+// Componente de paginación
+const Pagination: React.FC<{
+  currentPage: number;
+  totalPages: number;
+  onPageChange: (page: number) => void;
+  hasNext: boolean;
+  hasPrev: boolean;
+}> = memo(({ currentPage, totalPages, onPageChange, hasNext, hasPrev }) => {
+  if (totalPages <= 1) return null;
+
+  return (
+    <div className="flex items-center justify-between py-2 px-3 bg-gray-50 rounded-lg mt-2">
+      <div className="text-sm text-gray-600">
+        Página {currentPage + 1} de {totalPages}
+      </div>
+      <div className="flex gap-2">
+        <button
+          onClick={() => onPageChange(currentPage - 1)}
+          disabled={!hasPrev}
+          className="px-2 py-1 text-xs bg-white border rounded disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-100"
+        >
+          Anterior
+        </button>
+        <button
+          onClick={() => onPageChange(currentPage + 1)}
+          disabled={!hasNext}
+          className="px-2 py-1 text-xs bg-white border rounded disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-100"
+        >
+          Siguiente
+        </button>
+      </div>
+    </div>
+  );
+});
+
+// Componente de búsqueda
+const SearchBox: React.FC<{
+  value: string;
+  onChange: (value: string) => void;
+  placeholder?: string;
+}> = memo(({ value, onChange, placeholder = "Buscar campos..." }) => (
+  <div className="mb-3">
+    <input
+      type="text"
+      value={value}
+      onChange={(e) => onChange(e.target.value)}
+      placeholder={placeholder}
+      className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:border-blue-500 focus:ring focus:ring-blue-200"
+    />
+  </div>
+));
+
+/* ---------------- PRIMITIVE INPUT (Memoizado) ---------------- */
 const PrimitiveInput: React.FC<{
   value: JSONValue;
   onChange: (v: JSONValue, path?: string) => void;
@@ -109,7 +191,7 @@ const PrimitiveInput: React.FC<{
   label?: string;
   cfg?: FieldConfig;
   canEdit?: boolean;
-}> = ({ value, onChange, path, label, cfg, canEdit }) => {
+}> = memo(({ value, onChange, path, label, cfg, canEdit }) => {
   const effectiveLabel = label ?? humanizeKey(String(path[path.length - 1]));
   const widget = cfg?.widget ?? inferWidget(value);
   if (cfg?.hidden) return null;
@@ -137,11 +219,9 @@ const PrimitiveInput: React.FC<{
       const currency = cfg?.currency || 'COP';
       const locale = cfg?.locale || 'es-CO';
       
-      // Estado local para saber si el input está enfocado
       const [isFocused, setIsFocused] = React.useState(false);
       const [editingValue, setEditingValue] = React.useState('');
 
-      // Determinar qué valor mostrar
       const displayValue = isFocused 
         ? editingValue 
         : formatCurrency(numValue, currency, locale);
@@ -159,24 +239,20 @@ const PrimitiveInput: React.FC<{
               const input = e.target.value;
               setEditingValue(input);
               
-              // Si está escribiendo solo el signo negativo, no actualizar el valor real
               if (isTypingNegative(input)) {
                 return;
               }
               
-              // Parsear y actualizar el valor
               const numericValue = parseCurrencyInput(input);
               onChange(numericValue, pathToString(path.slice(0, -1)));
             }}
-            onFocus={(e) => {
+            onFocus={(_e) => {
               setIsFocused(true);
-              // Al hacer foco, mostrar solo el número para fácil edición
               const currentValue = numValue === 0 ? '' : numValue.toString();
               setEditingValue(currentValue);
             }}
-            onBlur={(e) => {
+            onBlur={(_e) => {
               setIsFocused(false);
-              // Al perder el foco, asegurar que el valor final esté actualizado
               const numericValue = parseCurrencyInput(editingValue);
               onChange(numericValue, pathToString(path.slice(0, -1)));
             }}
@@ -193,8 +269,7 @@ const PrimitiveInput: React.FC<{
     case "text":
     case "textarea": {
       const Component = widget === "textarea" ? "textarea" : "input";
-      const strValue =
-        value === null || value === undefined ? "" : String(value);
+      const strValue = value === null || value === undefined ? "" : String(value);
 
       return (
         <div className="mb-4">
@@ -248,9 +323,9 @@ const PrimitiveInput: React.FC<{
       );
     }
   }
-};
+});
 
-/* ---------------- OBJECT FIELDSET ---------------- */
+/* ---------------- OBJECT FIELDSET OPTIMIZADO ---------------- */
 const ObjectFieldset: React.FC<{
   obj: JSONObject;
   path: (string | number)[];
@@ -258,58 +333,118 @@ const ObjectFieldset: React.FC<{
   config?: JSONFormConfig;
   defaultOpen?: boolean;
   canEdit?: boolean;
-}> = ({ obj, path, onChange, config, defaultOpen, canEdit }) => {
+  maxInitialItems?: number;
+  lazyLoadChildren?: boolean;
+}> = memo(({ obj, path, onChange, config, defaultOpen, canEdit, maxInitialItems = 50, lazyLoadChildren = false }) => {
   const keys = useMemo(() => Object.keys(obj), [obj]);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [expandedSections, setExpandedSections] = useState<Set<string>>(new Set());
+  
+  // Filtrar keys por búsqueda
+  const filteredKeys = useSearch(keys, searchTerm);
+  
+  // Paginación solo si hay muchos items
+  const shouldPaginate = filteredKeys.length > maxInitialItems;
+  const pagination = usePagination(filteredKeys, maxInitialItems);
+  const displayKeys = shouldPaginate ? pagination.paginatedItems : filteredKeys;
+
+  const toggleSection = useCallback((key: string) => {
+    setExpandedSections(prev => {
+      const next = new Set(prev);
+      if (next.has(key)) {
+        next.delete(key);
+      } else {
+        next.add(key);
+      }
+      return next;
+    });
+  }, []);
 
   return (
     <div className="bg-white border rounded-xl p-4 shadow-sm mb-4">
-      {keys.map((k) => {
+      {/* Mostrar búsqueda solo si hay muchos campos */}
+      {keys.length > 10 && (
+        <SearchBox
+          value={searchTerm}
+          onChange={setSearchTerm}
+          placeholder={`Buscar en ${keys.length} campos...`}
+        />
+      )}
+
+      {/* Stats */}
+      {(shouldPaginate || searchTerm) && (
+        <div className="text-xs text-gray-500 mb-3">
+          Mostrando {displayKeys.length} de {filteredKeys.length} campos
+          {searchTerm && ` (filtrados de ${keys.length} total)`}
+        </div>
+      )}
+
+      {displayKeys.map((k) => {
         const val = obj[k];
         const childPath = [...path, k];
-        const labelCfg =
-          config?.byPath?.[pathToString(childPath)] ?? config?.byKey?.[k];
+        const labelCfg = config?.byPath?.[pathToString(childPath)] ?? config?.byKey?.[k];
+        const isExpanded = expandedSections.has(k);
 
         if (isObject(val)) {
           return (
-            <details key={k} open={defaultOpen} className="mb-4">
-              <summary className="cursor-pointer text-black bg-gray-100 p-2 rounded font-semibold hover:bg-gray-200">
-                {labelCfg?.label ?? humanizeKey(k)}
-              </summary>
-              <div className="mt-3 pl-4 border-l-2 border-gray-200">
-                <ObjectFieldset
-                  obj={val}
-                  path={childPath}
-                  onChange={(newChild, path) =>
-                    onChange({ ...obj, [k]: newChild }, path)
-                  }
-                  config={config}
-                  defaultOpen={defaultOpen}
-                  canEdit={canEdit}
-                />
-              </div>
-            </details>
+            <div key={k} className="mb-4">
+              <button
+                onClick={() => toggleSection(k)}
+                className="w-full text-left cursor-pointer text-black bg-gray-100 p-2 rounded font-semibold hover:bg-gray-200 flex items-center justify-between"
+              >
+                <span>{labelCfg?.label ?? humanizeKey(k)}</span>
+                <span className="text-gray-500 text-2xl">
+                  {isExpanded ? <IoIosArrowDropdownCircle /> : <IoIosArrowDroprightCircle />}
+                </span>
+              </button>
+              {isExpanded && (
+                <div className="mt-3 pl-4 border-l-2 border-gray-200">
+                  <ObjectFieldset
+                    obj={val}
+                    path={childPath}
+                    onChange={(newChild, path) =>
+                      onChange({ ...obj, [k]: newChild }, path)
+                    }
+                    config={config}
+                    defaultOpen={defaultOpen}
+                    canEdit={canEdit}
+                    maxInitialItems={maxInitialItems}
+                    lazyLoadChildren={lazyLoadChildren}
+                  />
+                </div>
+              )}
+            </div>
           );
         }
 
         if (isArray(val)) {
           return (
-            <details key={k} open={defaultOpen} className="mb-4">
-              <summary className="cursor-pointer text-black bg-gray-100 p-2 rounded font-semibold hover:bg-gray-200">
-                {labelCfg?.label ?? humanizeKey(k)} (lista)
-              </summary>
-              <div className="mt-3 pl-4 border-l-2 border-gray-200">
-                <ArrayFieldset
-                  arr={val}
-                  path={childPath}
-                  onChange={(newArr, path) =>
-                    onChange({ ...obj, [k]: newArr }, path)
-                  }
-                  config={config}
-                  defaultOpen={defaultOpen}
-                  canEdit={canEdit}
-                />
-              </div>
-            </details>
+            <div key={k} className="mb-4">
+              <button
+                onClick={() => toggleSection(k)}
+                className="w-full text-left cursor-pointer text-black bg-gray-100 p-2 rounded font-semibold hover:bg-gray-200 flex items-center justify-between"
+              >
+                <span>{labelCfg?.label ?? humanizeKey(k)} (lista)</span>
+                <span className="text-gray-500 text-sm">
+                  {val.length} items {isExpanded ? '▼' : '▶'}
+                </span>
+              </button>
+              {isExpanded && (
+                <div className="mt-3 pl-4 border-l-2 border-gray-200">
+                  <ArrayFieldset
+                    arr={val}
+                    path={childPath}
+                    onChange={(newArr, path) =>
+                      onChange({ ...obj, [k]: newArr }, path)
+                    }
+                    config={config}
+                    defaultOpen={defaultOpen}
+                    canEdit={canEdit}
+                    maxInitialItems={maxInitialItems}
+                  />
+                </div>
+              )}
+            </div>
           );
         }
 
@@ -325,11 +460,22 @@ const ObjectFieldset: React.FC<{
           />
         );
       })}
+
+      {/* Paginación */}
+      {shouldPaginate && (
+        <Pagination
+          currentPage={pagination.currentPage}
+          totalPages={pagination.totalPages}
+          onPageChange={pagination.goToPage}
+          hasNext={pagination.hasNext}
+          hasPrev={pagination.hasPrev}
+        />
+      )}
     </div>
   );
-};
+});
 
-/* ---------------- ARRAY FIELDSET ---------------- */
+/* ---------------- ARRAY FIELDSET OPTIMIZADO ---------------- */
 const ArrayFieldset: React.FC<{
   arr: JSONArray;
   path: (string | number)[];
@@ -337,52 +483,82 @@ const ArrayFieldset: React.FC<{
   config?: JSONFormConfig;
   defaultOpen?: boolean;
   canEdit?: boolean;
-}> = ({ arr, path, onChange, config, defaultOpen, canEdit }) => {
+  maxInitialItems?: number;
+}> = memo(({ arr, path, onChange, config, defaultOpen, canEdit, maxInitialItems = 20 }) => {
+  const [searchTerm, setSearchTerm] = useState("");
+  
+  // Para arrays, la búsqueda es más simple (por índice o contenido de strings)
+  const filteredIndices = useMemo(() => {
+    if (!searchTerm.trim()) return arr.map((_, i) => i);
+    const term = searchTerm.toLowerCase();
+    return arr.map((item, i) => ({ item, index: i }))
+      .filter(({ item, index }) => {
+        if (typeof item === 'string') return item.toLowerCase().includes(term);
+        if (typeof item === 'number') return item.toString().includes(term);
+        return index.toString().includes(term);
+      })
+      .map(({ index }) => index);
+  }, [arr, searchTerm]);
+
+  const shouldPaginate = filteredIndices.length > maxInitialItems;
+  const pagination = usePagination(filteredIndices, maxInitialItems);
+  const displayIndices = shouldPaginate ? pagination.paginatedItems : filteredIndices;
 
   const addItem = useCallback(() => {
-  if (arr.length === 0) return; // Evitar si no hay elementos para duplicar
-
-  const lastItem = arr[arr.length - 1];
-
-  // Clonar el último ítem (profundamente si es un objeto/array)
-  const cloneItem =
-    isObject(lastItem) || isArray(lastItem)
-      ? structuredClone(lastItem)
+    if (arr.length === 0) return;
+    const lastItem = arr[arr.length - 1];
+    const cloneItem = isObject(lastItem) || isArray(lastItem) 
+      ? structuredClone(lastItem) 
       : lastItem;
 
-  if (isObject(cloneItem)) {
-    for (const key in cloneItem) {
-      if (typeof cloneItem[key] === "number") {
-        cloneItem[key] = 0; // Reiniciar números a 0
-      } else if (typeof cloneItem[key] === "string") {
-        cloneItem[key] = ""; // Reiniciar strings a vacío
-      } else if (typeof cloneItem[key] === "boolean") {
-        cloneItem[key] = false; // Reiniciar booleanos a false
+    if (isObject(cloneItem)) {
+      for (const key in cloneItem) {
+        if (typeof cloneItem[key] === "number") {
+          cloneItem[key] = 0;
+        } else if (typeof cloneItem[key] === "string") {
+          cloneItem[key] = "";
+        } else if (typeof cloneItem[key] === "boolean") {
+          cloneItem[key] = false;
+        }
       }
     }
-  }
+    onChange([...arr, cloneItem]);
+  }, [arr, onChange]);
 
-  onChange([...arr, cloneItem]);
-}, [arr, onChange]);
-
-
-  const removeAt = (idx: number) => {
-    if(idx === 0) return;
-
+  const removeAt = useCallback((idx: number) => {
+    if (idx === 0) return;
     const newArr = arr.filter((_, i) => i !== idx);
     onChange(newArr, pathToString(path));
-  };
+  }, [arr, onChange, path]);
 
   return (
     <div>
-      {arr.map((item, idx) => {
+      {/* Búsqueda para arrays grandes */}
+      {arr.length > 10 && (
+        <SearchBox
+          value={searchTerm}
+          onChange={setSearchTerm}
+          placeholder={`Buscar en ${arr.length} items...`}
+        />
+      )}
+
+      {/* Stats */}
+      {(shouldPaginate || searchTerm) && (
+        <div className="text-xs text-gray-500 mb-3">
+          Mostrando {displayIndices.length} de {filteredIndices.length} items
+          {searchTerm && ` (filtrados de ${arr.length} total)`}
+        </div>
+      )}
+
+      {displayIndices.map((idx) => {
+        const item = arr[idx];
         const itemPath = [...path, idx];
 
         if (isObject(item)) {
           return (
             <details key={idx} open={defaultOpen} className="mb-3">
               <summary className="cursor-pointer font-medium text-blue-600">
-                Item {idx + 1}
+                Item {idx + 1} ({Object.keys(item).length} campos)
               </summary>
               <div className="mt-2 pl-4 border-l-2 border-blue-100">
                 <ObjectFieldset
@@ -395,15 +571,18 @@ const ArrayFieldset: React.FC<{
                   }}
                   config={config}
                   canEdit={canEdit}
-                  defaultOpen={defaultOpen}
+                  defaultOpen={false} // Arrays anidados cerrados por defecto
+                  maxInitialItems={maxInitialItems}
                 />
-                <button
-                  type="button"
-                  onClick={() => removeAt(idx)}
-                  className="text-xs mt-1 text-red-500 hover:underline"
-                >
-                  Eliminar item
-                </button>
+                {idx > 0 && (
+                  <button
+                    type="button"
+                    onClick={() => removeAt(idx)}
+                    className="text-xs mt-1 text-red-500 hover:underline"
+                  >
+                    Eliminar item
+                  </button>
+                )}
               </div>
             </details>
           );
@@ -422,16 +601,30 @@ const ArrayFieldset: React.FC<{
               canEdit={canEdit}
               label={`Item ${idx + 1}`}
             />
-            <button
-              type="button"
-              onClick={() => removeAt(idx)}
-              className="text-xs text-red-500 hover:underline"
-            >
-              ✕
-            </button>
+            {idx > 0 && (
+              <button
+                type="button"
+                onClick={() => removeAt(idx)}
+                className="text-xs text-red-500 hover:underline"
+              >
+                ✕
+              </button>
+            )}
           </div>
         );
       })}
+
+      {/* Paginación */}
+      {shouldPaginate && (
+        <Pagination
+          currentPage={pagination.currentPage}
+          totalPages={pagination.totalPages}
+          onPageChange={pagination.goToPage}
+          hasNext={pagination.hasNext}
+          hasPrev={pagination.hasPrev}
+        />
+      )}
+
       <button
         type="button"
         onClick={addItem}
@@ -441,15 +634,18 @@ const ArrayFieldset: React.FC<{
       </button>
     </div>
   );
-};
+});
 
-/* ---------------- ROOT FORM ---------------- */
+/* ---------------- ROOT FORM OPTIMIZADO ---------------- */
 export const FormRender: React.FC<JSONFormProps> = ({
   value,
   onChange = () => {},
   config,
-  defaultOpen = true,
+  defaultOpen = false, // Cambiado a false por defecto para mejor performance
   canEdit = true,
+  maxInitialItems = 50,
+  virtualizeThreshold = 100,
+  lazyLoadChildren = true,
 }) => {
   if (isObject(value)) {
     return (
@@ -461,6 +657,8 @@ export const FormRender: React.FC<JSONFormProps> = ({
           canEdit={canEdit}
           config={config}
           defaultOpen={defaultOpen}
+          maxInitialItems={maxInitialItems}
+          lazyLoadChildren={lazyLoadChildren}
         />
       </div>
     );
@@ -476,6 +674,7 @@ export const FormRender: React.FC<JSONFormProps> = ({
           canEdit={canEdit}
           config={config}
           defaultOpen={defaultOpen}
+          maxInitialItems={maxInitialItems}
         />
       </div>
     );

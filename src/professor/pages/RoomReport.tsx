@@ -28,17 +28,31 @@ import { ResumenESFInput } from "../../forms/models/ResumenEsfJson";
 
 import { mergeDeepPreservingOrder } from "../../forms/utils/mergeDeep";
 
+import { config as configForm110 } from "../../forms/utils/form110";
+import { config as configActivosFijos } from "../../forms/utils/ActivosFijos";
+import { config as configCaratula } from "../../forms/utils/caratula";
+import { config as configRentaLiquida } from "../../forms/utils/RentaLiquida";
+import { config as configESFPatrimonio } from "../../forms/utils/esfPatrimonio";
+import { config as configDetalleRenglones } from "../../forms/utils/DetalleReng";
+import { config as configImpuestoDiferido } from "../../forms/utils/impuestoDiferido";
+import { config as configIngresosFacturacion } from "../../forms/utils/IngresosFacturacion";
+
 function RoomReport() {
   const { roomID } = useParams();
   const [form, setForm] = useState("");
   const [selectedStudent, setSelectedStudent] = useState<string | null>(null);
   const [data, setData] = useState({});
+  const [config, setConfig] = useState({});
 
   const toNav = (formTo: string, stuID:  string | undefined) => {
     setForm(formTo);
+
     if (formTo === "stuSelect") {
       setSelectedStudent(stuID || null);
+      setData({});
+      setConfig({});
     }
+
     switch (formTo) {
       case "form110":
         setData({});
@@ -46,6 +60,7 @@ function RoomReport() {
           .then((res) => {
             const mergedData = mergeDeepPreservingOrder(Form110Input, res.data.r110Content);
             setData(mergedData);
+            setConfig(configForm110);
           })
           .catch((error) => {
             console.log(error);
@@ -57,6 +72,7 @@ function RoomReport() {
           .then((res) => {
             const mergedData = mergeDeepPreservingOrder(DetalleRenglonesInput, res.data.detContent);
             setData(mergedData);
+            setConfig(configDetalleRenglones);
           })
           .catch((error) => {
             console.log(error);
@@ -68,6 +84,7 @@ function RoomReport() {
           .then((res) => {
             const mergedData = mergeDeepPreservingOrder(CaratulaInput, res.data.carContent);
             setData(mergedData);
+            setConfig(configCaratula);
           })
           .catch((error) => {
             console.log(error);
@@ -79,6 +96,7 @@ function RoomReport() {
           .then((res) => {
             const mergedData = mergeDeepPreservingOrder(ESFPatrimonioInput, res.data.esfContent);
             setData(mergedData);
+            setConfig(configESFPatrimonio);
           })
           .catch((error) => {
             console.log(error);
@@ -90,6 +108,7 @@ function RoomReport() {
           .then((res) => {
             const mergedData = mergeDeepPreservingOrder(RentaLiquidaInput, res.data.rentContent);
             setData(mergedData);
+            setConfig(configRentaLiquida);
           })
           .catch((error) => {
             console.log(error);
@@ -101,6 +120,7 @@ function RoomReport() {
           .then((res) => {
             const mergedData = mergeDeepPreservingOrder(ImpuestoDiferidoInput, res.data.impContent);
             setData(mergedData);
+            setConfig(configImpuestoDiferido);
           })
           .catch((error) => {
             console.log(error);
@@ -112,6 +132,7 @@ function RoomReport() {
           .then((res) => {
             const mergedData = mergeDeepPreservingOrder(IngresosFacturacionInput, res.data.ingContent);
             setData(mergedData);
+            setConfig(configIngresosFacturacion);
           })
           .catch((error) => {
             console.log(error);
@@ -123,6 +144,7 @@ function RoomReport() {
           .then((res) => {
             const mergedData = mergeDeepPreservingOrder(ActivosFijosInput, res.data.actContent);
             setData(mergedData);
+            setConfig(configActivosFijos);
           })
           .catch((error) => {
             console.log(error);
@@ -134,13 +156,13 @@ function RoomReport() {
           .then((res) => {
             const mergedData = mergeDeepPreservingOrder(ResumenESFInput, res.data.resContent);
             setData(mergedData);
+            setConfig({});
           })
           .catch((error) => {
             console.log(error);
           });
         break;
     }
-    console.log(formTo, stuID);
   };
 
   return (
@@ -197,8 +219,9 @@ function RoomReport() {
           <main className="w-full pt-9 md:p-10 max-h-screen overflow-auto">
           <FormRender
             value={data}
-            canEdit={true}
+            canEdit={false}
             defaultOpen={false}
+            config={config}
           />
         </main>
         )}
