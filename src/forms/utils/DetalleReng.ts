@@ -345,258 +345,342 @@ export const config = {
           "Porcentaje aplicable a los descuentos por donaciones (escribir el procentaje sin el símbolo % y en entre 0 y 100)",
       },
     // Paths calculados automáticamente - Solo lectura
-    "Renglon45.2404ImpuestoPorPagarDeRentaYComplementarios.SaldosContablesADiciembre31Parciales": {
-      readonly: true
-    },
+    "Renglon45.2404ImpuestoPorPagarDeRentaYComplementarios.SaldosContablesADiciembre31Parciales":
+      {
+        readonly: true,
+      },
     "Renglon46.TotalPatrimonioLiquidoPositivoSaldosContablesADiciembre31": {
-      readonly: true
+      readonly: true,
     },
     "Renglon46.TotalPatrimonioLiquidoPositivoSaldosFiscalesADiciembre31": {
-      readonly: true
+      readonly: true,
     },
     "3130CapitalDePersonasNaturales.SaldosContablesADiciembre31Parciales": {
-      readonly: true
+      readonly: true,
     },
     "Renglon44TotalPatrimonioBruto.TotalSaldosContablesADiciembre31": {
-      readonly: true
+      readonly: true,
     },
     "Renglon44TotalPatrimonioBruto.TotalSaldosFiscalesADiciembre31": {
-      readonly: true
+      readonly: true,
     },
     "Renglon58.TotalIngresosBrutosSaldosContablesADiciembre31": {
-      readonly: true
+      readonly: true,
     },
     "Renglon58.TotalIngresosBrutosSaldosFiscalesADiciembre31": {
-      readonly: true
+      readonly: true,
     },
     "Renglon61.TotalIngresosNetosSaldosContablesADiciembre31": {
-      readonly: true
+      readonly: true,
     },
     "Renglon61.TotalIngresosNetosSaldosFiscalesADiciembre31": {
-      readonly: true
+      readonly: true,
     },
-    "61CostosDeLasMercanciasFabricadasYVendidas.AsistenciaTecnica.MasCostoDeFabricacionDelPeriodo.SaldosContablesADiciembre31Parciales": {
-      readonly: true
-    },
-    "Renglon63.5105BeneficiosAEmpleadosDeCortoPlayzo.AportesAEPS.SaldosContablesADiciembre31Parciales": {
-      readonly: true
-    },
-    "Renglon63.5105BeneficiosAEmpleadosDeCortoPlayzo.AportesAARL.SaldosContablesADiciembre31Parciales": {
-      readonly: true
-    },
-    "Renglon63.5105BeneficiosAEmpleadosDeCortoPlayzo.AportesAFondosDePensiones.SaldosContablesADiciembre31Parciales": {
-      readonly: true
-    },
-    "Renglon63.5105BeneficiosAEmpleadosDeCortoPlayzo.AportesAlSENA.SaldosContablesADiciembre31Parciales": {
-      readonly: true
-    },
-    "Renglon63.5105BeneficiosAEmpleadosDeCortoPlayzo.AportesAlICBF.SaldosContablesADiciembre31Parciales": {
-      readonly: true
-    },
-    "Renglon63.5105BeneficiosAEmpleadosDeCortoPlayzo.AportesACajasDeCompensacion.SaldosContablesADiciembre31Parciales": {
-      readonly: true
-    },
-    "Renglon63.5105BeneficiosAEmpleadosDeCortoPlayzo.AportesAEPS.AjustesParaLlegarASaldosFiscales1": {
-      readonly: true
-    },
-    "Renglon63.5105BeneficiosAEmpleadosDeCortoPlayzo.AportesAARL.AjustesParaLlegarASaldosFiscales1": {
-      readonly: true
-    },
-    "Renglon63.5105BeneficiosAEmpleadosDeCortoPlayzo.AportesAFondosDePensiones.AjustesParaLlegarASaldosFiscales1": {
-      readonly: true
-    },
-    "Renglon63.5105BeneficiosAEmpleadosDeCortoPlayzo.AportesAlSENA.AjustesParaLlegarASaldosFiscales1": {
-      readonly: true
-    },
-    "Renglon63.5105BeneficiosAEmpleadosDeCortoPlayzo.AportesAlICBF.AjustesParaLlegarASaldosFiscales1": {
-      readonly: true
-    },
-    "Renglon63.5105BeneficiosAEmpleadosDeCortoPlayzo.AportesACajasDeCompensacion.AjustesParaLlegarASaldosFiscales1": {
-      readonly: true
-    },
-    "Renglon64.5205BeneficiosALosEmpleadosCortoPlayzo.AportesAEPS.SaldosContablesADiciembre31Parciales": {
-      readonly: true
-    },
-    "Renglon64.5205BeneficiosALosEmpleadosCortoPlayzo.AportesAARL.SaldosContablesADiciembre31Parciales": {
-      readonly: true
-    },
-    "Renglon64.5205BeneficiosALosEmpleadosCortoPlayzo.AportesAFondosDePensiones.SaldosContablesADiciembre31Parciales": {
-      readonly: true
-    },
-    "Renglon64.5205BeneficiosALosEmpleadosCortoPlayzo.AportesAlSENA.SaldosContablesADiciembre31Parciales": {
-      readonly: true
-    },
-    "Renglon64.5205BeneficiosALosEmpleadosCortoPlayzo.AportesAlICBF.SaldosContablesADiciembre31Parciales": {
-      readonly: true
-    },
-    "Renglon64.5205BeneficiosALosEmpleadosCortoPlayzo.AportesACajasDeCompensacion.SaldosContablesADiciembre31Parciales": {
-      readonly: true
-    },
-    "Renglon64.5205BeneficiosALosEmpleadosCortoPlayzo.AportesAEPS.AjustesParaLlegarASaldosFiscales1": {
-      readonly: true
-    },
-    "Renglon64.5205BeneficiosALosEmpleadosCortoPlayzo.AportesAARL.AjustesParaLlegarASaldosFiscales1": {
-      readonly: true
-    },
-    "Renglon64.5205BeneficiosALosEmpleadosCortoPlayzo.AportesAFondosDePensiones.AjustesParaLlegarASaldosFiscales1": {
-      readonly: true
-    },
-    "Renglon64.5205BeneficiosALosEmpleadosCortoPlayzo.AportesAlSENA.AjustesParaLlegarASaldosFiscales1": {
-      readonly: true
-    },
-    "Renglon64.5205BeneficiosALosEmpleadosCortoPlayzo.AportesAlICBF.AjustesParaLlegarASaldosFiscales1": {
-      readonly: true
-    },
-    "Renglon64.5205BeneficiosALosEmpleadosCortoPlayzo.AportesACajasDeCompensacion.AjustesParaLlegarASaldosFiscales1": {
-      readonly: true
-    },
+    "61CostosDeLasMercanciasFabricadasYVendidas.AsistenciaTecnica.MasCostoDeFabricacionDelPeriodo.SaldosContablesADiciembre31Parciales":
+      {
+        readonly: true,
+      },
+    "Renglon63.5105BeneficiosAEmpleadosDeCortoPlayzo.AportesAEPS.SaldosContablesADiciembre31Parciales":
+      {
+        readonly: true,
+      },
+    "Renglon63.5105BeneficiosAEmpleadosDeCortoPlayzo.AportesAARL.SaldosContablesADiciembre31Parciales":
+      {
+        readonly: true,
+      },
+    "Renglon63.5105BeneficiosAEmpleadosDeCortoPlayzo.AportesAFondosDePensiones.SaldosContablesADiciembre31Parciales":
+      {
+        readonly: true,
+      },
+    "Renglon63.5105BeneficiosAEmpleadosDeCortoPlayzo.AportesAlSENA.SaldosContablesADiciembre31Parciales":
+      {
+        readonly: true,
+      },
+    "Renglon63.5105BeneficiosAEmpleadosDeCortoPlayzo.AportesAlICBF.SaldosContablesADiciembre31Parciales":
+      {
+        readonly: true,
+      },
+    "Renglon63.5105BeneficiosAEmpleadosDeCortoPlayzo.AportesACajasDeCompensacion.SaldosContablesADiciembre31Parciales":
+      {
+        readonly: true,
+      },
+    "Renglon63.5105BeneficiosAEmpleadosDeCortoPlayzo.AportesAEPS.AjustesParaLlegarASaldosFiscales1":
+      {
+        readonly: true,
+      },
+    "Renglon63.5105BeneficiosAEmpleadosDeCortoPlayzo.AportesAARL.AjustesParaLlegarASaldosFiscales1":
+      {
+        readonly: true,
+      },
+    "Renglon63.5105BeneficiosAEmpleadosDeCortoPlayzo.AportesAFondosDePensiones.AjustesParaLlegarASaldosFiscales1":
+      {
+        readonly: true,
+      },
+    "Renglon63.5105BeneficiosAEmpleadosDeCortoPlayzo.AportesAlSENA.AjustesParaLlegarASaldosFiscales1":
+      {
+        readonly: true,
+      },
+    "Renglon63.5105BeneficiosAEmpleadosDeCortoPlayzo.AportesAlICBF.AjustesParaLlegarASaldosFiscales1":
+      {
+        readonly: true,
+      },
+    "Renglon63.5105BeneficiosAEmpleadosDeCortoPlayzo.AportesACajasDeCompensacion.AjustesParaLlegarASaldosFiscales1":
+      {
+        readonly: true,
+      },
+    "Renglon64.5205BeneficiosALosEmpleadosCortoPlayzo.AportesAEPS.SaldosContablesADiciembre31Parciales":
+      {
+        readonly: true,
+      },
+    "Renglon64.5205BeneficiosALosEmpleadosCortoPlayzo.AportesAARL.SaldosContablesADiciembre31Parciales":
+      {
+        readonly: true,
+      },
+    "Renglon64.5205BeneficiosALosEmpleadosCortoPlayzo.AportesAFondosDePensiones.SaldosContablesADiciembre31Parciales":
+      {
+        readonly: true,
+      },
+    "Renglon64.5205BeneficiosALosEmpleadosCortoPlayzo.AportesAlSENA.SaldosContablesADiciembre31Parciales":
+      {
+        readonly: true,
+      },
+    "Renglon64.5205BeneficiosALosEmpleadosCortoPlayzo.AportesAlICBF.SaldosContablesADiciembre31Parciales":
+      {
+        readonly: true,
+      },
+    "Renglon64.5205BeneficiosALosEmpleadosCortoPlayzo.AportesACajasDeCompensacion.SaldosContablesADiciembre31Parciales":
+      {
+        readonly: true,
+      },
+    "Renglon64.5205BeneficiosALosEmpleadosCortoPlayzo.AportesAEPS.AjustesParaLlegarASaldosFiscales1":
+      {
+        readonly: true,
+      },
+    "Renglon64.5205BeneficiosALosEmpleadosCortoPlayzo.AportesAARL.AjustesParaLlegarASaldosFiscales1":
+      {
+        readonly: true,
+      },
+    "Renglon64.5205BeneficiosALosEmpleadosCortoPlayzo.AportesAFondosDePensiones.AjustesParaLlegarASaldosFiscales1":
+      {
+        readonly: true,
+      },
+    "Renglon64.5205BeneficiosALosEmpleadosCortoPlayzo.AportesAlSENA.AjustesParaLlegarASaldosFiscales1":
+      {
+        readonly: true,
+      },
+    "Renglon64.5205BeneficiosALosEmpleadosCortoPlayzo.AportesAlICBF.AjustesParaLlegarASaldosFiscales1":
+      {
+        readonly: true,
+      },
+    "Renglon64.5205BeneficiosALosEmpleadosCortoPlayzo.AportesACajasDeCompensacion.AjustesParaLlegarASaldosFiscales1":
+      {
+        readonly: true,
+      },
     "Renglon67.TotalCostosYGastosDeduciblesSaldosContablesADiciembre31": {
-      readonly: true
+      readonly: true,
     },
     "Renglon67.TotalCostosYGastosDeduciblesSaldosFiscalesADiciembre31": {
-      readonly: true
+      readonly: true,
     },
-    "Renglon72.TotalRentaLiquidaOrdinariaDelEjercicioSaldosContablesADiciembre31": {
-      readonly: true
-    },
-    "Renglon72.TotalRentaLiquidaOrdinariaDelEjercicioSaldosFiscalesADiciembre31": {
-      readonly: true
-    },
+    "Renglon72.TotalRentaLiquidaOrdinariaDelEjercicioSaldosContablesADiciembre31":
+      {
+        readonly: true,
+      },
+    "Renglon72.TotalRentaLiquidaOrdinariaDelEjercicioSaldosFiscalesADiciembre31":
+      {
+        readonly: true,
+      },
     "Renglon73.TotalPerdidaLiquidaDelEjercicioSaldosContablesADiciembre31": {
-      readonly: true
+      readonly: true,
     },
     "Renglon73.TotalPerdidaLiquidaDelEjercicioSaldosFiscalesADiciembre31": {
-      readonly: true
+      readonly: true,
     },
-    "Renglon74.CompensacionesDeExcesosDeRentaPresuntiva.SubRentPres.SaldosFiscalesADiciembre31Parciales": {
-      readonly: true
-    },
-    "Renglon74.CompensacionesDeExcesosDeRentaPresuntiva.ValFinRentPres.SaldosFiscalesADiciembre31Parciales": {
-      readonly: true
-    },
+    "Renglon74.CompensacionesDeExcesosDeRentaPresuntiva.SubRentPres.SaldosFiscalesADiciembre31Parciales":
+      {
+        readonly: true,
+      },
+    "Renglon74.CompensacionesDeExcesosDeRentaPresuntiva.ValFinRentPres.SaldosFiscalesADiciembre31Parciales":
+      {
+        readonly: true,
+      },
     "Renglon74.TotalCompensacionesSaldosFiscalesADiciembre31": {
-      readonly: true
+      readonly: true,
     },
     "Renglon75.TotalRentaLiquidaSaldosFiscalesADiciembre31": {
-      readonly: true
+      readonly: true,
     },
     "Renglon79.TotalesSaldosFiscalesADiciembre31": {
-      readonly: true
+      readonly: true,
     },
     "Renglon85.Esc1.SaldosFiscalesADiciembre31Parciales": {
-      readonly: true
+      readonly: true,
     },
     "Renglon85.Esc2.SaldosFiscalesADiciembre31Parciales": {
-      readonly: true
+      readonly: true,
     },
     "Renglon85.Esc3.SaldosFiscalesADiciembre31Parciales": {
-      readonly: true
+      readonly: true,
     },
     "Renglon85.Esc4.SaldosFiscalesADiciembre31Parciales": {
-      readonly: true
+      readonly: true,
     },
     "Renglon86.TotalImpuestoSobreLaRentaLiquidaSaldosFiscalesADiciembre31": {
-      readonly: true
+      readonly: true,
     },
-    "Renglon87.TotalDeDividendosYParticipacionesGravadasALaTarifaSaldosFiscalesADiciembre31": {
-      readonly: true
-    },
+    "Renglon87.TotalDeDividendosYParticipacionesGravadasALaTarifaSaldosFiscalesADiciembre31":
+      {
+        readonly: true,
+      },
     "Renglon89.Total89SaldosFiscalesADiciembre31": {
-      readonly: true
+      readonly: true,
     },
     "Renglon90.Total90SaldosFiscalesADiciembre31": {
-      readonly: true
+      readonly: true,
     },
     "Renglon91.Total91SaldosFiscalesADiciembre31": {
-      readonly: true
+      readonly: true,
     },
     "Renglon92.Total92SaldosFiscalesADiciembre31": {
-      readonly: true
+      readonly: true,
     },
-    "Renglon93.DescuentosDonacionesEntidades.ValorQueInicialmenteSePodriaTomarComoDescuento.SaldosFiscalesADiciembre31Parciales": {
-      readonly: true
-    },
-    "Renglon93.DescuentosDonacionesEntidades.LimiteAlCualSeDebeSometerEsteDescuento.SaldosFiscalesADiciembre31Parciales": {
-      readonly: true
-    },
-    "Renglon93.DescuentosDonacionesEntidades.ValorFinalQuePuedeTomarsePorEsteDescuento.SaldosFiscalesADiciembre31Parciales": {
-      readonly: true
-    },
+    "Renglon93.DescuentosDonacionesEntidades.ValorQueInicialmenteSePodriaTomarComoDescuento.SaldosFiscalesADiciembre31Parciales":
+      {
+        readonly: true,
+      },
+    "Renglon93.DescuentosDonacionesEntidades.LimiteAlCualSeDebeSometerEsteDescuento.SaldosFiscalesADiciembre31Parciales":
+      {
+        readonly: true,
+      },
+    "Renglon93.DescuentosDonacionesEntidades.ValorFinalQuePuedeTomarsePorEsteDescuento.SaldosFiscalesADiciembre31Parciales":
+      {
+        readonly: true,
+      },
     "Renglon93.TotalDescuentosTributariosSaldosFiscalesADiciembre31": {
-      readonly: true
+      readonly: true,
     },
     "Renglon94.TotalImpuestoNetoRentaSaldosFiscalesADiciembre31": {
-      readonly: true
+      readonly: true,
     },
-    "Renglon95ImpuestoDeGananciasOcasionales.SobreLoteriasYSimilares.SaldosFiscalesADiciembre31Parciales": {
-      readonly: true
-    },
-    "Renglon95ImpuestoDeGananciasOcasionales.SobreLasDemasGananciasOcasionales.SaldosFiscalesADiciembre31Parciales": {
-      readonly: true
-    },
-    "Renglon95ImpuestoDeGananciasOcasionales.TotalImpuestoDeGananciasOcasionalesSaldosFiscalesADiciembre31": {
-      readonly: true
-    },
+    "Renglon95ImpuestoDeGananciasOcasionales.SobreLoteriasYSimilares.SaldosFiscalesADiciembre31Parciales":
+      {
+        readonly: true,
+      },
+    "Renglon95ImpuestoDeGananciasOcasionales.SobreLasDemasGananciasOcasionales.SaldosFiscalesADiciembre31Parciales":
+      {
+        readonly: true,
+      },
+    "Renglon95ImpuestoDeGananciasOcasionales.TotalImpuestoDeGananciasOcasionalesSaldosFiscalesADiciembre31":
+      {
+        readonly: true,
+      },
     "Renglon97.TotalSaldosFiscalesADiciembre31": {
-      readonly: true
+      readonly: true,
     },
     "Renglon104.TotalOtrasRetencionesSaldosContablesADiciembre31": {
-      readonly: true
+      readonly: true,
     },
     "Renglon104.TotalOtrasRetencionesSaldosFiscalesADiciembre31": {
-      readonly: true
+      readonly: true,
     },
     "Renglon104.PorVentas.TotalPorVentasSaldosContablesADiciembre31": {
-      readonly: true
+      readonly: true,
     },
     "Renglon104.PorVentas.TotalPorVentasSaldosFiscalesADiciembre31": {
-      readonly: true
+      readonly: true,
     },
     "Renglon104.PorServicios.TotalPorServiciosSaldosContablesADiciembre31": {
-      readonly: true
+      readonly: true,
     },
     "Renglon104.PorServicios.TotalPorServiciosSaldosFiscalesADiciembre31": {
-      readonly: true
+      readonly: true,
     },
-    "Renglon104.PorHonorariosYComisiones.TotalPorHonorariosYComisionesSaldosContablesADiciembre31": {
-      readonly: true
-    },
-    "Renglon104.PorHonorariosYComisiones.TotalPorHonorariosYComisionesSaldosFiscalesADiciembre31": {
-      readonly: true
-    },
-    "Renglon104.PorRendimientoFinanciero.TotalPorRendimientoFinancieroSaldosContablesADiciembre31": {
-      readonly: true
-    },
-    "Renglon104.PorRendimientoFinanciero.TotalPorRendimientoFinancieroSaldosFiscalesADiciembre31": {
-      readonly: true
-    },
-    "Renglon104.PorDividendosYParticipaciones.TotalPorDividendosYParticipacionesSaldosContablesADiciembre31": {
-      readonly: true
-    },
-    "Renglon104.PorDividendosYParticipaciones.TotalPorDividendosYParticipacionesSaldosFiscalesADiciembre31": {
-      readonly: true
-    },
-    "Renglon104.PorOtrosConceptosInteresesLoteriasYRifas.TotalPorOtrosConceptosInteresesLoteriasYRifasSaldosContablesADiciembre31": {
-      readonly: true
-    },
-    "Renglon104.PorOtrosConceptosInteresesLoteriasYRifas.TotalPorOtrosConceptosInteresesLoteriasYRifasSaldosFiscalesADiciembre31": {
-      readonly: true
-    },
+    "Renglon104.PorHonorariosYComisiones.TotalPorHonorariosYComisionesSaldosContablesADiciembre31":
+      {
+        readonly: true,
+      },
+    "Renglon104.PorHonorariosYComisiones.TotalPorHonorariosYComisionesSaldosFiscalesADiciembre31":
+      {
+        readonly: true,
+      },
+    "Renglon104.PorRendimientoFinanciero.TotalPorRendimientoFinancieroSaldosContablesADiciembre31":
+      {
+        readonly: true,
+      },
+    "Renglon104.PorRendimientoFinanciero.TotalPorRendimientoFinancieroSaldosFiscalesADiciembre31":
+      {
+        readonly: true,
+      },
+    "Renglon104.PorDividendosYParticipaciones.TotalPorDividendosYParticipacionesSaldosContablesADiciembre31":
+      {
+        readonly: true,
+      },
+    "Renglon104.PorDividendosYParticipaciones.TotalPorDividendosYParticipacionesSaldosFiscalesADiciembre31":
+      {
+        readonly: true,
+      },
+    "Renglon104.PorOtrosConceptosInteresesLoteriasYRifas.TotalPorOtrosConceptosInteresesLoteriasYRifasSaldosContablesADiciembre31":
+      {
+        readonly: true,
+      },
+    "Renglon104.PorOtrosConceptosInteresesLoteriasYRifas.TotalPorOtrosConceptosInteresesLoteriasYRifasSaldosFiscalesADiciembre31":
+      {
+        readonly: true,
+      },
     "Renglon105.TotalSaldosFiscalesADiciembre31": {
-      readonly: true
+      readonly: true,
     },
     "Renglon110.TotalSaldosFiscalesADiciembre31": {
-      readonly: true
+      readonly: true,
     },
     "Renglon111Sanciones.TotalesSaldosFiscalesADiciembre31": {
-      readonly: true
+      readonly: true,
     },
     "Renglon112.TotalSaldosFiscalesADiciembre31": {
-      readonly: true
+      readonly: true,
     },
     "Renglon113.TotalSaldosFiscalesADiciembre31": {
-      readonly: true
+      readonly: true,
     },
+    "Renglon40.1510MarcasPatentesYLicencias.REFSaldCont": { readonly: true },
+    "Renglon40.1510MarcasPatentesYLicencias.REFSaldFisc": { readonly: true },
+
+    "Renglon42.1779PropiedadesDeInversionTerrenos.ValorDelCosto.SaldosContablesADiciembre31Parciales":
+      { readonly: true },
+    "Renglon42.1779PropiedadesDeInversionTerrenos.Revaluaciones.SaldosContablesADiciembre31Parciales":
+      { readonly: true },
+
+    "Renglon42.1780PropiedadesDeInversionEdificaciones.ValorDelCosto.SaldosContablesADiciembre31Parciales":
+      { readonly: true },
+    "Renglon42.1780PropiedadesDeInversionEdificaciones.Revaluaciones.SaldosContablesADiciembre31Parciales":
+      { readonly: true },
+
+    "Renglon42.1788PropDeInversiDepreciacionAcumulada.DelCosto.SaldosContablesADiciembre31Parciales":
+      { readonly: true },
+    "Renglon42.1788PropDeInversiDepreciacionAcumulada.DeLasRevaluaciones.SaldosContablesADiciembre31Parciales":
+      { readonly: true },
+
+    "Renglon42.1789PropieDeInversDeterioAcumulado.REFSaldCont": {
+      readonly: true,
+    },
+
+    "Renglon42.1790ActivosNoCorrientesMantenidosParaLaVenta.ValorDelCosto.REFSaldCont":
+      { readonly: true },
+    "Renglon42.1790ActivosNoCorrientesMantenidosParaLaVenta.MenosDepreciacionesAcumuladas.REFSaldCont":
+      { readonly: true },
+    "Renglon42.1790ActivosNoCorrientesMantenidosParaLaVenta.MenosDeteroros.SaldosContablesADiciembre31Parciales":
+      { readonly: true },
+    "Renglon42.1790ActivosNoCorrientesMantenidosParaLaVenta.ValorDelCosto.REFSaldFisc":
+      { readonly: true },
+    "Renglon42.1790ActivosNoCorrientesMantenidosParaLaVenta.MenosDepreciacionesAcumuladas.REFSaldFisc":
+      { readonly: true },
+
+    "Renglon43.1860ActivoPorImpuestoDiferido.REFSaldCont": { readonly: true },
+
+    "Renglon45.2816PasivoPorIngresoDiferido.SaldosContablesADiciembre31Parciales":
+      { readonly: true },
+    "Renglon45.2826PasivoPorImpuestoDiferido.SaldosContablesADiciembre31Parciales":
+      { readonly: true },
   },
 };
 
