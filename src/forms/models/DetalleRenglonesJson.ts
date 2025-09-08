@@ -1115,10 +1115,10 @@ export const DetalleRenglonesInput = {
     },
     "1789PropieDeInversDeterioAcumulado": {
       SaldosContablesADiciembre31Parciales: 0,
-        AjustesParaLlegarASaldosFiscales1: 0,
-        AjustesParaLlegarASaldosFiscales2: "",
-        AjustesParaLlegarASaldosFiscales3: 0,
-        SaldosFiscalesADiciembre31Parciales: 0,
+      AjustesParaLlegarASaldosFiscales1: 0,
+      AjustesParaLlegarASaldosFiscales2: "",
+      AjustesParaLlegarASaldosFiscales3: 0,
+      SaldosFiscalesADiciembre31Parciales: 0,
     },
     "1790ActivosNoCorrientesMantenidosParaLaVenta": {
       ValorDelCosto: {
@@ -2381,7 +2381,7 @@ export const DetalleRenglonesInput = {
       },
     },
     TotalMenosDevolucionesDescuentosRebajasSaldosContablesADiciembre31: 0,
-      TotalMenosDevolucionesDescuentosRebajasSaldosFiscalesADiciembre31: 0,
+    TotalMenosDevolucionesDescuentosRebajasSaldosFiscalesADiciembre31: 0,
   },
   Renglon60: {
     DiviNoGrav: {
@@ -2434,8 +2434,16 @@ export const DetalleRenglonesInput = {
         AjustesParaLlegarASaldosFiscales2: "",
         AjustesParaLlegarASaldosFiscales3: 0,
         SaldosFiscalesADiciembre31Parciales: 0,
+        SaldosFiscalesADiciembre31Totales: 0,
       },
       InventarioInicialDeMateriaPrimas: {
+        InventarioInicialDeMateriaPrimas: {
+          SaldosContablesADiciembre31Parciales: 0,
+          AjustesParaLlegarASaldosFiscales1: 0,
+          AjustesParaLlegarASaldosFiscales2: "",
+          AjustesParaLlegarASaldosFiscales3: 0,
+          SaldosFiscalesADiciembre31Parciales: 0,
+        },
         MasComprasLocales: {
           SaldosContablesADiciembre31Parciales: 0,
           AjustesParaLlegarASaldosFiscales1: 0,
@@ -2537,6 +2545,7 @@ export const DetalleRenglonesInput = {
             SaldosFiscalesADiciembre31Parciales: 0,
           },
         },
+        //TODO: quitar
         DepreciacionDeActivosBiologicos: {
           DelCosto: {
             SaldosContablesADiciembre31Parciales: 0,
@@ -4038,10 +4047,12 @@ export const DetalleRenglonesInput = {
   Renglon68: {
     SaldosContablesADiciembre31Parciales: 0,
     SaldosFiscalesADiciembre31Parciales: 0,
+    SaldosFiscalesADiciembre31Totales: 0,//se implento por falta de dato fix
   },
   Renglon69: {
     SaldosContablesADiciembre31Parciales: 0,
     SaldosFiscalesADiciembre31Parciales: 0,
+    SaldosFiscalesADiciembre31Totales: 0,//se implento por falta de dato fix
   },
   Renglon70: {
     IndmnCompAseg: {
@@ -4153,6 +4164,7 @@ export const DetalleRenglonesInput = {
       PrecioDeVentaActivosFijosPoseidosMasDeDosAnios: {
         SaldosContablesADiciembre31Parciales: 0,
         AjustesParaLlegarASaldosFiscales1: 0,
+        AjustesParaLlegarASaldosFiscales3: 0,//fix
         SaldosFiscalesADiciembre31Parciales: 0,
       },
       IngresosPorHerenciasLegadosYDonaciones: {
@@ -4273,17 +4285,17 @@ export const DetalleRenglonesInput = {
     },
     DescuentosDonacionesEntidades: {
       DonacionHechaAFundacionPor: { SaldosFiscalesADiciembre31Parciales: 0 },
-        PorcentajeAplicable: { SaldosFiscalesADiciembre31Parciales: 0 },
-        ValorQueInicialmenteSePodriaTomarComoDescuento: {
-          SaldosFiscalesADiciembre31Parciales: 0,
-        },
-        LimiteAlCualSeDebeSometerEsteDescuento: {
-          SaldosFiscalesADiciembre31Parciales: 0,
-        },
-        ValorFinalQuePuedeTomarsePorEsteDescuento: {
-          SaldosFiscalesADiciembre31Parciales: 0,
-        },
+      PorcentajeAplicable: { SaldosFiscalesADiciembre31Parciales: 0 },
+      ValorQueInicialmenteSePodriaTomarComoDescuento: {
+        SaldosFiscalesADiciembre31Parciales: 0,
       },
+      LimiteAlCualSeDebeSometerEsteDescuento: {
+        SaldosFiscalesADiciembre31Parciales: 0,
+      },
+      ValorFinalQuePuedeTomarsePorEsteDescuento: {
+        SaldosFiscalesADiciembre31Parciales: 0,
+      },
+    },
     DescuentosOtros: {
       PorIndustriaYComercioYAvisosYTablerosPagadosDuranteElAño: {
         SaldosFiscalesADiciembre31Parciales: 0,
@@ -4306,6 +4318,7 @@ export const DetalleRenglonesInput = {
   },
   Renglon96: {
     SaldosFiscalesADiciembre31Parciales: 0,
+    SaldosFiscalesADiciembre31Totales: 0,//fix
   },
   Renglon97: {
     TotalSaldosFiscalesADiciembre31: 0,

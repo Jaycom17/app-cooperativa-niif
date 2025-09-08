@@ -4,13 +4,14 @@ import { IoLogInOutline } from "react-icons/io5";
 import { type LoginModel, LoginSchema } from "../../models/Login";
 import InputForm from "../../../components/atoms/InputForm";
 import PasswordInput from "../../../components/atoms/PasswordInput";
+import { useAuthStore } from "../../../stores/AuthStore";
 
 interface UsersLogFormProps {
   onSubmit: (data: LoginModel) => void;
 }
 
 function UsersLogForm({ onSubmit }: UsersLogFormProps) {
-  const loginError = false; // TODO: Replace with actual error state from context or props
+  const {loginError} = useAuthStore(); // TODO: Replace with actual error state from context or props
 
   const {
     register,
