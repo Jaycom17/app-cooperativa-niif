@@ -2545,23 +2545,6 @@ export const DetalleRenglonesInput = {
             SaldosFiscalesADiciembre31Parciales: 0,
           },
         },
-        //TODO: quitar
-        DepreciacionDeActivosBiologicos: {
-          DelCosto: {
-            SaldosContablesADiciembre31Parciales: 0,
-            AjustesParaLlegarASaldosFiscales1: 0,
-            AjustesParaLlegarASaldosFiscales2: "",
-            AjustesParaLlegarASaldosFiscales3: 0,
-            SaldosFiscalesADiciembre31Parciales: 0,
-          },
-          DelAjusteAcumuladoPorRevaluacionesOReExpresiones: {
-            SaldosContablesADiciembre31Parciales: 0,
-            AjustesParaLlegarASaldosFiscales1: 0,
-            AjustesParaLlegarASaldosFiscales2: "",
-            AjustesParaLlegarASaldosFiscales3: 0,
-            SaldosFiscalesADiciembre31Parciales: 0,
-          },
-        },
         AmortizacionDeActivosIntangibles: {
           DelCosto: {
             SaldosContablesADiciembre31Parciales: 0,

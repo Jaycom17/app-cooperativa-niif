@@ -336,6 +336,180 @@ export const config = {
     IntDIANSegSoc: {
       label: "Intereses de mora DIAN y entidades seguridad social",
     },
+    "1399DeterioroSobreClientesYOtrasCuentasQueSiTuvieronEnEsteAnioOEnLosAnterioresUnaContrapartidaEnElIngresoYSinIncluirLasCuentasPorCobrarQueSeamConVinculadosEconomicos": {
+      label: "1399 Deterioro sobre clientes y otras cuentas que sí tuvieron en este año o en los anteriores una contrapartida en el ingreso y sin incluir las cuentas por cobrar que sean con vinculados económicos (solo esta provisión, si se ajusta a los máximos permitidos por la norma fiscal, es aceptada fiscalmente; ver art. 145 del ET)"
+    },
+    "1399DeterioroSobreLasDemasCtasPorCobrar":{
+      label: "1399 Deterioro sobre las demás cuentas por cobrar (esta sería la que no es aceptada fiscalmente)"
+    },
+    "1415ObrasDeConstriccionEnCurso": {
+      label: "1415O Obras De Construcción En Curso"
+    },
+    "1788PropDeInversiDepreciacionAcumulada": {
+      label: "1788 Propiedad De Inversión - Depreciación Acumulada"
+    },
+    "1789PropieDeInversDeterioAcumulado": {
+      label: "1789 Propiedad De Inversión - Deterioro Acumulado"
+    },
+    PrimasDeSegunos: {
+      label: "Primas De Seguros"
+    },
+    "2355DeudasConSociedadesDondeSeSocioOAccionista": {
+      label: "2355 Deudas Con Sociedades Donde Se Es Socio O Accionista"
+    },
+    "2515InteresdeCesantias":{
+      label: "2515 Interes de Cesantias"
+    },
+    BeneficiosDeCortoPlayaz:{
+      label: "Beneficios De Corto Plazo"
+    },
+    BeneficiosDeLargoPlaazo: {
+      label: "Beneficios De Largo Plazo"
+    },
+    "425050ReintegrodeOtrosCostosYGastos": {
+      label: "425050 Reintegro De Otros Costos Y Gastos"
+    },
+    DeprActBio: {
+      label: "Depreciación De Activos Biológicos"
+    },
+    AportesAARL: {
+      label: "Aportes A ARL"
+    },
+    AportesAEPS: {
+      label: "Aportes A EPS"
+    },
+    OtrosDeteriors: {
+      label: "Otros Deterioros"
+    },
+    ReestNeg: {
+      label: "Reestructuraciones de Negocios"
+    },
+    DeduccionPorInversionEnEspectaculosPublicos: {
+      label: "   Deducción por inversión en espectáculos públicos (art. 4 Ley 1493 dic. 2011 y Decreto 1258 jun/12)"
+    },
+    DeduccionPorInversionEnActivosFijosProductoresDeRenta: {
+      label: "   Deducción por inversión en activos fijos productores de renta (art. 158-3 del ET; esto solo lo pueden utilizar quienes hayan alcanzado a incluir ese beneficio en sus contratos de estabilidad jurídica tributaria, Ley 963 de 2005)"
+    },
+    Renglon61: {
+      label: "Renglón 61: Total ingresos netos"
+    },
+    Renglon58: {
+      label: "Renglón 58: Total ingresos brutos"
+    },
+    Renglon55: {
+      label: "Renglón 55: Dividendos y/o participaciones gravadas, años 2017 y siguientes, recibidos por establecimientos permanentes y por sociedades extranjeras , excepto las que se reportan en el renglón 56 (ver artículo 245 del ET)"
+    },
+    Renglon56: {
+      label: "Renglón 56: Dividendos y participaciones gravados, años 2017 y siguientes, recibidos de parte de una sociedad que llevó a cabo megainversiones, y que fueron recibidos por sociedades nacionales, o por sociedades extranjeras, o por personas naturales no residentes (tributan al 27 %)"
+    },
+    Renglon46: {
+      label: "Renglón 46: Total patrimonio líquido positivo"
+    },
+    Renglon67: {
+      label: "Renglón 67: Total costos y gastos deducibles"
+    },
+    Renglon68: {
+      label: "Renglón 68: Inversiones efectuadas en el año (ESAL RTE)"
+    },
+    Renglon69: {
+      label: "Renglón 69: Inversiones liquidadas de periodos gravables anteriores (ESAL RTE)"
+    },
+    Renglon71: {
+      label: "Renglón 71: Renta líquida pasiva-Entidades controladas del Exterior sin residencia fiscal en Colombia (ECE) (ver arts. 882 a 893 del ET y el concepto Unificado DIAN 9193 de abril 10 de 2018)"
+    },
+    Renglon72: {
+      label: "Renglón 72: Renta líquida ordinaria del ejercicio "
+    },
+    Renglon73: {
+      label: "Renglón 73: Pérdida líquida del ejercicio"
+    },
+    Renglon75: {
+      label: "Renglón 75: Renta líquida"
+    },
+    Renglon76: {
+      label: "Renglón 76: Renta presuntiva"
+    },
+    Renglon79: {
+      label: "Renglón 79: Renta líquida gravada"
+    },
+    AprtSoc: {
+      label: "Lo recibido por encima del aporte social en los procesos de  liquidación de sociedades o transformación de sociedades donde era socio o accionista y siendo claro que se trata de sociedades que se liquidaron luego de haber existido por más de dos años (art. 301 del ET)"
+    },
+    Renglon86: {
+      label: "Renglón 86: Impuesto sobre la renta líquida gravable sin casillas 52 a 56 (base renglón 79; ver art. 247 del ET; 35%)"
+    },
+    Renglon87: {
+      label: "Renglón 87: De dividendos y/o participaciones gravadas a la tarifa del 10 % (base casilla 54) (ver art. 245 y 246-1 del ET)"
+    },
+    Renglon88: {
+      label: "Renglón 88: De dividendos y/o participaciones gravadas a la tarifa del artículo 240 del ET (base casilla 55):"
+    },
+    Renglon89: {
+      label: "Renglón 89: De dividendos y/o participaciones gravadas a la tarifa del 27 % (base casilla 56)"
+    },
+    Renglon90: {
+      label: "Renglón 90: De dividendos y/o participaciones gravadas a la tarifa  del art. 240 (31%+10% del 69%; ver art. 245 del ET) (base casilla 53)"
+    },
+    Renglon91: {
+      label: "Renglón 91: Impuesto de dividendos y/o participaciones gravadas a la tarifa del 33% (base casilla 52) . "
+    },
+    Renglon92: {
+      label: "Renglón 92: Total impuesto sobre las rentas líquidas gravables (suma 86 a 91)."
+    },
+    Renglon94: {
+      label: "Renglón 94: Total impuesto a cargo (renglón 92 - renglón 93)"
+    },
+    Renglon96: {
+      label: "Renglón 96: Descuentos por impuestos pagados en el exterior por ganancias ocasionales"
+    },
+    Renglon97: {
+      label: "Renglón 97: Total impuesto a cargo (94+95-96)"
+    },
+    Renglon98: {
+      label: "Renglón 98: Valor inversión obras por impuestos hasta del 50% del valor de la casilla 88 (Modalidad de pago 1)"
+    },
+    Renglon99: {
+      label: "Renglón 99: Descuento efectivo inversión obras por impuestos (modalidad de pago 2)"
+    },
+    Renglon100: {
+      label: "Renglón 100: Crédito fiscal artículo 256-1 ET - (La norma del artículo 256-1 del ET fue creada con el artículo 168 de la Ley 1955 de mayo de 2019 y reglamentada con el Decreto 1011 de julio 14 de 2020"
+    },
+    Renglon101MenosAnticipoRentaLiquidadiGravableAnterior: {
+      label: "Renglón 101: Menos: Anticipo renta líquida gravable año gravable anterior"
+    },
+    Renglon105: {
+      label: "Renglón 105: Total retenciones año gravable a declarar  (103+104)"
+    },
+    Renglon106: {
+      label: "Renglón 106: Más: Anticipo renta para el año gravable siguiente (ver anexo)"
+    },
+    Renglon107: {
+      label: "Renglón 107: Menos: Anticipo sobretasa instituciones financieras año gravable anterior"
+    },
+    Renglon108: {
+      label: "Renglón 108: Más: Sobretasa instituciones financieras"
+    },
+    Renglon109: {
+      label: "Renglón 109: Más: Anticipo sobretasa instituciones financieras año gravable siguiente"
+    },
+    Renglon110: {
+      label: "Renglón 110: Saldo a pagar por impuesto  (si 97 + 106 + 108 + 109 - 98 - 99 - 100 - 101 - 102 -105 - 107 mayor a cero ; si el resultado es negativo escriba 0)"
+    },
+    Renglon111: {
+      label: "Renglón 111: Menos: Sanciones e intereses por mora en la presentación de esta declaración y/o por no pagar oportunamente el impuesto"
+    },
+    Renglon112: {
+      label: "Renglón 112: Total saldo a pagar (si 97 + 106 + 108 +109 + 111 - 98 - 99 - 100 - 101 - 102 - 105 - 107 mayor a cero; si el resultado es negativo escriba 0)"
+    },
+    Renglon113: {
+      label: "Renglón 113: o Total saldo a favor  (si 98 + 99 +100 + 101+ 102 +105 + 107 - 97 - 106 - 108 - 109 - 111; si el resultado es negativo escriba 0) "
+    },
+    Renglon114: {
+      label: "Renglón 114: Valor total impuesto exigible por obras por impuestos modalidad de pago 1"
+    },
+    Renglon115: {
+      label: "Renglón 115: Valor total proyecto obras por impuestos modalidad de pago 2"
+    },
   },
   byPath: {
     "Renglon93.DescuentosDonacionesEntidades.PorcentajeAplicable.SaldosFiscalesADiciembre31Parciales":

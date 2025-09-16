@@ -11,7 +11,7 @@ interface UsersLogFormProps {
 }
 
 function UsersLogForm({ onSubmit }: UsersLogFormProps) {
-  const {loginError} = useAuthStore(); // TODO: Replace with actual error state from context or props
+  const {loginError} = useAuthStore();
 
   const {
     register,

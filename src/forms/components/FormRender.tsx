@@ -51,13 +51,52 @@ function isArray(v: JSONValue): v is JSONArray {
 
 function humanizeKey(key: string): string {
   return key
-    .replace(/([a-z0-9])([A-ZÁÉÍÓÚÑ])/g, "$1 $2")
+    // Separar números de letras (Renglon49 -> Renglon 49)
+    .replace(/([a-záéíóúñA-ZÁÉÍÓÚÑ])(\d)/g, "$1 $2")
+    .replace(/(\d)([a-záéíóúñA-ZÁÉÍÓÚÑ])/g, "$1 $2")
+    
+    // Separar camelCase y PascalCase
+    .replace(/([a-záéíóúñ0-9])([A-ZÁÉÍÓÚÑ])/g, "$1 $2")
+    
+    // Reemplazar guiones bajos y guiones por espacios
     .replace(/[_\-]+/g, " ")
+    
+    // Separar secuencias de mayúsculas seguidas de minúsculas (XMLParser -> XML Parser)
     .replace(/([A-ZÁÉÍÓÚÑ]+)([A-ZÁÉÍÓÚÑ][a-záéíóúñ]+)/g, "$1 $2")
-    .replace(/\bValor Contable\b/gi, "Valor contable")
-    .replace(/\bValor Fiscal\b/gi, "Valor fiscal")
-    .replace(/\bVariacion\b/gi, "Variación")
-    .replace(/\bAnio\b/gi, "Año")
+    
+    // Reglas de tildes usando patrones comunes
+    .replace(/\banio\b/gi, "Año")
+    .replace(/\banios\b/gi, "Años")
+    .replace(/\btelefono\b/gi, "Teléfono")
+    .replace(/\bcodigo\b/gi, "Código")
+    .replace(/\bnumero\b/gi, "Número")
+    .replace(/\bcedula\b/gi, "Cédula")
+    .replace(/\brenglon\b/gi, "Renglón")
+    .replace(/\bcompanias\b/gi, "Compañias")
+    .replace(/\bcompania\b/gi, "Compañia")
+    .replace(/\beconomico\b/gi, "Económico")
+    .replace(/\beconomicos\b/gi, "Económicos")
+    .replace(/\bmetodo\b/gi, "Método")
+    .replace(/\bmetodos\b/gi, "Métodos")
+    .replace(/\bseguno\b/gi, "Seguro")
+    .replace(/\bsegunos\b/gi, "Seguros")
+    .replace(/\bplayzo\b/gi, "Plazo")
+    .replace(/\bbiologicos\b/gi, "Biológicos")
+    .replace(/\bbiologico\b/gi, "Biológico")
+    .replace(/\bYO\b/gi, "Y O")
+
+    // Reglas de terminaciones comunes
+    .replace(/(\w+)cion\b/gi, (match, p1) => p1 + "ción")
+    .replace(/(\w+)sion\b/gi, (match, p1) => p1 + "sión")
+    .replace(/(\w+)tico\b/gi, (match, p1) => p1 + "tico") // para automático, sistemático, etc.
+    .replace(/(\w+)fico\b/gi, (match, p1) => p1 + "fico") // para específico, geográfico, etc.
+    
+    // Siglas y términos especiales
+    .replace(/\biva\b/gi, "IVA")
+    
+    
+    // Limpiar espacios extras
+    .replace(/\s+/g, ' ')
     .trim();
 }
 
