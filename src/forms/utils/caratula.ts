@@ -3,7 +3,7 @@ export const config = {
     TarifGen: {
       label: "Tarifa general art.240 ET",
     },
-    Año: { 
+    "Año": { 
       widget: "number" as const 
     },
     NumeroDeIdentificacionTributariaNIT: { 

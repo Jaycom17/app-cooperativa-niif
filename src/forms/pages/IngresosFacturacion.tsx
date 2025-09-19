@@ -73,7 +73,7 @@ function IngresosFacturacionForm() {
   return (
     <StudentLayout>
       <main className="w-full pt-7 md:p-8 max-h-screen overflow-auto">
-        <div className="mb-2 text-right text-sm text-gray-600 flex justify-end items-center gap-2 pr-3 md:pr-0">
+        <div className="text-sm text-gray-600 flex justify-end items-center gap-2 pr-3 md:pr-0 absolute top-0 right-0 mt-3 mr-3 md:mr-10">
           {saveStatus === "saving" && (
             <>
               <FiLoader className="animate-spin" />
@@ -93,13 +93,15 @@ function IngresosFacturacionForm() {
             </>
           )}
         </div>
-        <FormRender
+        <div className="min-w-[500px]">
+          <FormRender
           value={data}
           onChange={handleChange}
           canEdit={true}
-          defaultOpen={false}
           config={config}
+          defaultOpen={false}
         />
+        </div>
       </main>
     </StudentLayout>
   );

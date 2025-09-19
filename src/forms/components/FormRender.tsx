@@ -86,10 +86,9 @@ function humanizeKey(key: string): string {
     .replace(/\bYO\b/gi, "Y O")
 
     // Reglas de terminaciones comunes
-    .replace(/(\w+)cion\b/gi, (match, p1) => p1 + "ción")
-    .replace(/(\w+)sion\b/gi, (match, p1) => p1 + "sión")
-    .replace(/(\w+)tico\b/gi, (match, p1) => p1 + "tico") // para automático, sistemático, etc.
-    .replace(/(\w+)fico\b/gi, (match, p1) => p1 + "fico") // para específico, geográfico, etc.
+    .replace(/(\w+)cion\b/gi, (_match, p1) => p1 + "ción")
+    .replace(/(\w+)sion\b/gi, (_match, p1) => p1 + "sión")
+    .replace(/(\w+)tico\b/gi, (_match, p1) => p1 + "tico")
     
     // Siglas y términos especiales
     .replace(/\biva\b/gi, "IVA")
