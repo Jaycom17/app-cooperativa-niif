@@ -9,10 +9,11 @@ import { ESFPatrimonioInput } from "../models/EsfPatrimonioJson";
 import { mergeDeepPreservingOrder } from "../utils/mergeDeep";
 
 import {
-  calculateTotalsSources,calculateTotals
-} from "../utils/totalOperations";
-
-import { config,calculateTotalActivosBiologicos, calculateTotalActivosIntangibles, calculateTotalCuentasComercialesPorCobrar, calculateTotalInversionesIntrumentosFinancierosDerivadosVN, calculateTotalPatrimonio, calculatedValorFiscal } from "../utils/esfPatrimonio";
+  config,
+  calculateAll,
+  calculatedValorFiscal,
+  calculateFirstValorFiscal
+} from "../utils/esfPatrimonio";
 
 const ESFpatrimonio = () => {
   const [data, setData] = useState(ESFPatrimonioInput);
@@ -29,6 +30,10 @@ const ESFpatrimonio = () => {
           ESFPatrimonioInput,
           response.data.esfContent
         );
+        calculateFirstValorFiscal(merged, merged);
+
+        calculateAll(merged, []);
+
         setData(merged);
       })
       .catch((error) => {
@@ -43,63 +48,7 @@ const ESFpatrimonio = () => {
 
     calculatedValorFiscal(element);
 
-    calculateTotals(arrayPath, newData, "Total", /^(AmortizacionAcumulada|DeterioroAcumulado|DepreciacionAcumulada|AccionesCuotasPartesInteresSocialPropiasCartera|PerdidaODeficitDelEjercicioEnOperacionesContinuadas|PerdidaODeficitDelEjercicioEnOperacionesDiscontinuadas|PerdidasODeficitAcumulados|PerdidasAcumuladasPorAjustesPorCorreccionesDeErrores|PerdidasPorAjustesPorCambiosEnPoliticasContables|PerdidasPrimeraVez|AjusteNegativoPorEfectoConversion|PerdidasAcumuladasORI)/);
-
-    calculateTotalInversionesIntrumentosFinancierosDerivadosVN(newData);
-    calculateTotalCuentasComercialesPorCobrar(newData);
-    calculateTotalActivosIntangibles(newData);
-    calculateTotalActivosBiologicos(newData);
-
-    calculateTotalsSources(
-      newData?.Activos,
-      [
-        newData?.Activos?.ActivosEquivalentesEfectivo?.Total,
-        newData?.Activos?.InversionesInstrumentosFinancierosDerivadosVN?.Total,
-        newData?.Activos?.CuentasComercialesCobrarOtrasPorCobrar?.Total,
-        newData?.Activos?.Inventarios?.Total,
-        newData?.Activos?.GastosPagadosPorAnticipado?.Total,
-        newData?.Activos?.ActivosImpuestosCorrientes?.Total,
-        newData?.Activos?.ActivosImpuestosDiferidos?.Total,
-        newData?.Activos?.PropiedadesPlantaEquipo?.Total,
-        newData?.Activos?.ActivosIntangibles?.Total,
-        newData?.Activos?.PropiedadesInversion?.Total,
-        newData?.Activos?.ActivosNoCorrientes?.Total,
-        newData?.Activos?.ActivosBiologicos?.Total,
-        newData?.Activos?.OtrosActivos?.Total,
-      ],
-      "Total"
-    );
-
-    calculateTotalsSources(
-      newData?.Pasivos,
-      [
-        newData?.Pasivos?.ObligacionesFinancierasCuentasPorPagar?.Total,
-        newData?.Pasivos?.ArrendamientosPorPagar?.Total,
-        newData?.Pasivos?.OtrosPasivosFinancieros?.Total,
-        newData?.Pasivos?.ImpuestosGravamenesTasasPorPagar?.Total,
-        newData?.Pasivos?.PasivosImpuestosDiferidos?.Total,
-        newData?.Pasivos?.PasivosBeneficiosEmpleados?.Total,
-        newData?.Pasivos?.Provisiones?.Total,
-        newData?.Pasivos?.PasivosIngresosDiferidos?.Total,
-        newData?.Pasivos?.OtrosPasivos?.Total,
-      ],
-      "Total"
-    );
-
-    calculateTotalPatrimonio(newData);
-
-    calculateTotalsSources(
-      newData?.PatrimonioContable,
-      [
-        newData?.PatrimonioContable?.CapitalSocialReservas?.Total,
-        newData?.PatrimonioContable?.ResultadoEjercicio?.Total,
-        newData?.PatrimonioContable?.ResultadosAcumulados?.Total,
-        newData?.PatrimonioContable
-          ?.GananciasPerdidasAcumuladasRetenidasAdopcionPrimera?.Total,
-        newData?.PatrimonioContable?.OtroResultadoIntegralAcumulado?.Total,
-      ],
-      "Total"
-    );
+    calculateAll(newData, arrayPath);
 
     setData(newData);
     setSaveStatus("saving");
@@ -141,12 +90,12 @@ const ESFpatrimonio = () => {
         </div>
         <div className="min-w-[500px]">
           <FormRender
-          value={data}
-          onChange={handleChange}
-          canEdit={true}
-          config={config}
-          defaultOpen={false}
-        />
+            value={data}
+            onChange={handleChange}
+            canEdit={true}
+            config={config}
+            defaultOpen={false}
+          />
         </div>
       </main>
     </StudentLayout>
