@@ -3,13 +3,13 @@ import { useState, useEffect, useRef } from "react";
 import { RentaLiquidaService } from "../services/rentaLiquida.service";
 import { FormRender } from "../components/FormRender";
 import { FiLoader, FiCheckCircle, FiEdit3 } from "react-icons/fi";
-import { config, calculateGananciaOPerdida, calculateGananciasOcasionalesGravables, calculateInformativoOtroResultadoIntegralORII, calculateLiquidasPasivasECE, calculateOtras, calculateRentaLiquidaUnicamenteDividendos, calculateRentaPresuntiva, calculateRentasLiquidasGravables, calculateTotalIngresos, calculateTotalIngresosNetosAvIn, calculateTotalRetencionesAnioGravableQueDeclara, calculateValorFiscalSolicitado, calculatedValorFiscal } from "../utils/RentaLiquida";
+import { config, calculateOtras, calculateValorFiscalSolicitado, calculatedValorFiscal, calculateAllPartOne, calculateAllPartTwo, calculateFirstValorFiscal } from "../utils/RentaLiquida";
 
 import { RentaLiquidaInput } from "../models/RentaLiquidaJson";
 
 import { mergeDeepPreservingOrder } from "../utils/mergeDeep";
 
-import { calculateTotals, calculateTotalsSources } from "../utils/totalOperations";
+import { calculateTotals } from "../utils/totalOperations";
 
 function RentaLiquidaForm() {
   const [data, setData] = useState(RentaLiquidaInput);
@@ -23,6 +23,7 @@ function RentaLiquidaForm() {
     RentaLiquidaService.getRentaLiquidaForStudent()
       .then((res) => {
         const merged = mergeDeepPreservingOrder(RentaLiquidaInput, res.data.renContent);
+        calculateFirstValorFiscal(merged, merged);
         setData(merged);
       })
       .catch((error) => {
@@ -43,80 +44,14 @@ function RentaLiquidaForm() {
     calculateOtras(element);
 
     calculateTotals(arrayPath.slice(0, -1), newData, "Total", /^(InventarioFinal)/);
-    calculateTotalIngresosNetosAvIn(newData);
-    calculateTotalIngresos(newData);
-    calculateTotalsSources(newData?.Costos, 
-      [
-        newData?.Costos?.MateriasPrimasReventaDeBienesTerminadosYServicios?.Total,
-        newData?.Costos?.ManoObra?.Total,
-        newData?.Costos?.DepresionacionesAmortizacionesYDeterioros?.Total,
-        newData?.Costos?.OtrosCostos?.Total,
-        newData?.Costos?.MenosCostoAjustePreciosDeTrasferencia,
-      ],
-      "TotalCostos"
-    );
-
-    calculateTotalsSources(newData?.Gastos?.DeAdministracion, 
-      [
-        newData?.Gastos?.DeAdministracion?.ManoDeObra?.Total,
-        newData?.Gastos?.DeAdministracion?.OtrosGastosDeAdministracion?.Total,
-        newData?.Gastos?.DeAdministracion?.DepreciacionesAmortizacionesDeterioros?.Total,
-      ],
-      "Total"
-    );
-
-    calculateTotalsSources(newData?.Gastos?.GastosDeDistribucionYVentas, 
-      [
-        newData?.Gastos?.GastosDeDistribucionYVentas?.ManoDeObra?.Total,
-        newData?.Gastos?.GastosDeDistribucionYVentas?.OtrosGastosDeDistribucionYVentas?.Total,
-        newData?.Gastos?.GastosDeDistribucionYVentas?.DepreciacionesAmortizacionesYDeterioros?.Total,
-      ],
-      "Total"
-    );
-
-    calculateTotalsSources(newData?.Gastos, 
-      [
-        newData?.Gastos?.DeAdministracion?.Total,
-        newData?.Gastos?.GastosDeDistribucionYVentas?.Total,
-        newData?.Gastos?.GastosFinancieros?.Total,
-        newData?.Gastos?.PerdidasPorInversionesEnSubsidiariasAsociadasYONegociosConjuntos?.Total,
-        newData?.Gastos?.PerdidasPorMedicionesAValorRazonable?.Total,
-        newData?.Gastos?.PerdidaEnLaVentaOEnajenacionDeActivosFijos?.Total,
-        newData?.Gastos?.GastosPorProvisionesPasivosDeMontoOFechaInciertos?.Total,
-        newData?.Gastos?.OtrosGastos?.Total,
-        newData?.Gastos?.PerdidasNetasEnOperacionesDiscontinuas
-      ],
-      "TotalGastos"
-    );
-
-    calculateGananciaOPerdida(newData);
+    
+    calculateAllPartOne(newData);
 
     calculateTotals(arrayPath.slice(0, -1), newData, "TotalDiferenciasTemporalesDeducibles");
     calculateTotals(arrayPath.slice(0, -1), newData, "TotalDiferenciasTemporalesImponibles");
     calculateTotals(arrayPath.slice(0, -1), newData, "TotalOtrasDiferenciasTemporales");
 
-    calculateTotalsSources(newData?.InformativoClasificacionDiferencias?.AjustesAlResultadoContablePorDiferenciasTemporalesQueAfectenAlResultado, 
-      [
-        newData?.InformativoClasificacionDiferencias?.AjustesAlResultadoContablePorDiferenciasTemporalesQueAfectenAlResultado?.DiferenciasTemporalesDeducibles?.TotalDiferenciasTemporalesDeducibles,
-        newData?.InformativoClasificacionDiferencias?.AjustesAlResultadoContablePorDiferenciasTemporalesQueAfectenAlResultado?.DiferenciasTemporalesImponibles?.TotalDiferenciasTemporalesImponibles,
-        newData?.InformativoClasificacionDiferencias?.AjustesAlResultadoContablePorDiferenciasTemporalesQueAfectenAlResultado?.OtrasDiferenciasTemporales?.TotalOtrasDiferenciasTemporales,
-      ],
-      "Total"
-    );
-
-    calculateLiquidasPasivasECE(newData);
-
-    calculateRentaLiquidaUnicamenteDividendos(newData);
-
-    calculateRentaPresuntiva(newData);
-
-    calculateRentasLiquidasGravables(newData);
-
-    calculateGananciasOcasionalesGravables(newData);
-
-    calculateTotalRetencionesAnioGravableQueDeclara(newData);
-
-    calculateInformativoOtroResultadoIntegralORII(newData);
+    calculateAllPartTwo(newData);
 
     calculateTotals(arrayPath.slice(0, -1), newData, "TotalAutorretenciones");
     calculateTotals(arrayPath.slice(0, -1), newData, "TotalOtrasRetenciones");
