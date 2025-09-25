@@ -30,6 +30,10 @@ const DetalleRenglones = () => {
           DetalleRenglonesInput,
           response.data.detContent
         );
+
+        calculateSaldosFiscalesParciales(merged?.Renglon42?.["1779PropiedadesDeInversionTerrenos"]?.ValorDelCosto);
+
+        
         setData(merged);
       })
       .catch((error) => {
@@ -39,6 +43,8 @@ const DetalleRenglones = () => {
 
   const handleChange = (newData: any, changedPath?: string) => {
     const arrayPath = changedPath?.split(".");
+
+    console.log(arrayPath)
 
     if (arrayPath) {
       const element = arrayPath.reduce((acc, key) => acc?.[key], newData);

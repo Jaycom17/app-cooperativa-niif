@@ -23,7 +23,11 @@ function RentaLiquidaForm() {
     RentaLiquidaService.getRentaLiquidaForStudent()
       .then((res) => {
         const merged = mergeDeepPreservingOrder(RentaLiquidaInput, res.data.renContent);
+
         calculateFirstValorFiscal(merged, merged);
+
+        RentaLiquidaService.updateRentaLiquidaForStudent(merged);
+
         setData(merged);
       })
       .catch((error) => {
@@ -58,6 +62,7 @@ function RentaLiquidaForm() {
     calculateTotals(arrayPath.slice(0, -1), newData, "ValorNetoGastoPorImpuesto", /^(IngresoImpuestoDiferido)/);
 
     setData(newData);
+    
     setSaveStatus("saving");
 
     if (timeoutRef.current) {

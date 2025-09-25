@@ -36,6 +36,8 @@ function IngresosFacturacionForm() {
 
         calculateTotals(["VentaDeBienes"], merged, "Total");
 
+        IngresosFacturacionService.updateIngresosFacturacionForStudent(merged);
+
         setData(merged);
       })
       .catch((error) => {

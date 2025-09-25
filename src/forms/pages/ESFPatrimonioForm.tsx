@@ -34,6 +34,8 @@ const ESFpatrimonio = () => {
 
         calculateAll(merged, []);
 
+        EsfPatrimonioService.updateAEsfPatrimonioFormStudent(merged);
+
         setData(merged);
       })
       .catch((error) => {
