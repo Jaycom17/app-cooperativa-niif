@@ -1,7 +1,7 @@
 export const config = {
   byKey:{
     TotalPPEPIANCMVYINTANGIBLES: {
-      label: "TOTAL PPE, PI, ANCMV y INTANGIBLES"
+      label: "TOTAL PPE, PI, ANCMV e INTANGIBLES"
     },
     TotalPPEPIANCMV: {
       label: "Total PPE, PI y ANCMV"
