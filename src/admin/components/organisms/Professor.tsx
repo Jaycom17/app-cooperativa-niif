@@ -21,7 +21,7 @@ const Professor = ({ professor, onRefresh }: ProfessorProps) => {
     );
     if (confirmDelete) {
       ProfessorService.deleteProfessor(profId)
-        .then((_res) => {
+        .then(() => {
           alert("Se ha eliminado el profesor correctamente");
           onRefresh();
         })

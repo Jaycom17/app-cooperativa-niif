@@ -2,7 +2,6 @@ import StudentLayout from "../../components/templates/StudentLayout";
 import { useEffect, useRef, useState } from "react";
 import { ActivosFijosService } from "../services/activosFijos.service";
 import { FormRender } from "../components/FormRender";
-import { FiCheckCircle, FiEdit3, FiLoader } from "react-icons/fi";
 
 import { ActivosFijosInput } from "../models/ActivosFijosJson";
 
@@ -20,6 +19,7 @@ import {
   calculateTotalNetoAlFinalDelPeriodoInformativo,
   config
 } from "../utils/ActivosFijos";
+import Loading from "../components/atoms/Loading";
 
 const ActivosFijosForm = () => {
   const [data, setData] = useState(ActivosFijosInput);
@@ -48,7 +48,7 @@ const ActivosFijosForm = () => {
 
     const element = arrayPath.reduce((acc, key) => acc?.[key], newData);
 
-    if (element.hasOwnProperty("DatosContables")) {
+    if (Object.prototype.hasOwnProperty.call(element, "DatosContables")) {
       calculateImporteNetoFinalPeriodoCosto(element.DatosContables);
     }else {
       calculateImporteNetoFinalPeriodoCosto(element);
@@ -99,26 +99,9 @@ const ActivosFijosForm = () => {
   return (
     <StudentLayout>
       <main className="w-full pt-7 md:p-8 max-h-screen overflow-auto">
-        <div className="text-sm text-gray-600 flex justify-end items-center gap-2 pr-3 md:pr-0 absolute top-0 right-0 mt-3 mr-3 md:mr-10">
-          {saveStatus === "saving" && (
-            <>
-              <FiLoader className="animate-spin" />
-              <span>Guardando...</span>
-            </>
-          )}
-          {saveStatus === "saved" && (
-            <>
-              <FiCheckCircle />
-              <span>Guardado</span>
-            </>
-          )}
-          {saveStatus === "idle" && (
-            <>
-              <FiEdit3 />
-              <span>Cambios no guardados</span>
-            </>
-          )}
-        </div>
+        
+        <Loading saveStatus={saveStatus} />
+
         <div className="min-w-[500px]">
           <FormRender
           value={data}

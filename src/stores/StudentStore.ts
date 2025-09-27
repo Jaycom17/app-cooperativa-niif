@@ -112,7 +112,7 @@ export const useStudentStore = create<StudentState>((set) => ({
       localStorage.removeItem("room");
       set({ student: null, loading: false, studentError: null });
       return true;
-    } catch (error: any) {
+    } catch{
       set({ student: null });
 
       return false;

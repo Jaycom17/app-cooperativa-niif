@@ -49,7 +49,7 @@ function UpdateInfoAdminPage() {
     };
 
     AdminService.updateAdmin(userData, id)
-      .then((_res) => {
+      .then(() => {
         alert("Se han actualizado los datos del usuario");
         setValue("usuName", userData.usuName);
         setValue("usuEmail", userData.usuEmail);

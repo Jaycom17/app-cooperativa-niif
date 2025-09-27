@@ -1,4 +1,3 @@
-// ObjectFieldset.tsx
 import React, { memo, useState, useCallback, useMemo } from 'react';
 import { IoIosArrowDroprightCircle, IoIosArrowDropdownCircle } from "react-icons/io";
 import type { JSONObject, JSONFormConfig } from '../models/FormRender';

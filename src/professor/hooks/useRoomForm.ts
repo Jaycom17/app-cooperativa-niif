@@ -38,13 +38,16 @@ export function useRoomForm({
 
     setValue("roomName", room.roomName);
     setValue("roomPassword", room.roomPassword);
-
   }, [room, setValue]);
 
   const onSubmit = async (values: RoomFormSchema) => {
     try {
       if (isUpdate) {
-        await RoomService.update(room?.roomID!, {
+        if (!room) {
+          setRoomErrors("No se encontró la sala para actualizar");
+          return;
+        }
+        await RoomService.update(room.roomID, {
           roomName: values.roomName,
           roomPassword: values.roomPassword,
         });
@@ -60,7 +63,10 @@ export function useRoomForm({
         navigate("/professor");
       }
     } catch (error: any) {
-      setRoomErrors(error.response.data.error.message || "Error al crear o actualizar la sala");
+      setRoomErrors(
+        error.response?.data?.error?.message ||
+          "Error al crear o actualizar la sala"
+      );
       setTimeout(() => {
         setRoomErrors("");
       }, 5000);

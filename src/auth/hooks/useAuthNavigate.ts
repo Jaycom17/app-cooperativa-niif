@@ -21,5 +21,5 @@ export function useAuthNavigate() {
     };
 
     initializeAuth();
-  }, [user, navigate]);
+  }, [user, navigate, checkLogin]);
 }

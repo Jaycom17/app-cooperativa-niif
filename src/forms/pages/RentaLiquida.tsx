@@ -2,7 +2,6 @@ import StudentLayout from "../../components/templates/StudentLayout";
 import { useState, useEffect, useRef } from "react";
 import { RentaLiquidaService } from "../services/rentaLiquida.service";
 import { FormRender } from "../components/FormRender";
-import { FiLoader, FiCheckCircle, FiEdit3 } from "react-icons/fi";
 import { config, calculateOtras, calculateValorFiscalSolicitado, calculatedValorFiscal, calculateAllPartOne, calculateAllPartTwo, calculateFirstValorFiscal } from "../utils/RentaLiquida";
 
 import { RentaLiquidaInput } from "../models/RentaLiquidaJson";
@@ -10,6 +9,7 @@ import { RentaLiquidaInput } from "../models/RentaLiquidaJson";
 import { mergeDeepPreservingOrder } from "../utils/mergeDeep";
 
 import { calculateTotals } from "../utils/totalOperations";
+import Loading from "../components/atoms/Loading";
 
 function RentaLiquidaForm() {
   const [data, setData] = useState(RentaLiquidaInput);
@@ -80,26 +80,9 @@ function RentaLiquidaForm() {
   return (
     <StudentLayout>
       <main className="w-full pt-7 md:p-8 max-h-screen overflow-auto">
-        <div className="text-sm text-gray-600 flex justify-end items-center gap-2 pr-3 md:pr-0 absolute top-0 right-0 mt-3 mr-3 md:mr-10">
-          {saveStatus === "saving" && (
-            <>
-              <FiLoader className="animate-spin" />
-              <span>Guardando...</span>
-            </>
-          )}
-          {saveStatus === "saved" && (
-            <>
-              <FiCheckCircle />
-              <span>Guardado</span>
-            </>
-          )}
-          {saveStatus === "idle" && (
-            <>
-              <FiEdit3 />
-              <span>Cambios no guardados</span>
-            </>
-          )}
-        </div>
+        
+        <Loading saveStatus={saveStatus} />
+        
         <div className="min-w-[500px]">
           <FormRender
           value={data}

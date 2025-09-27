@@ -13,7 +13,7 @@ export const calculateTotals = (
       while (currentPath.length > 0) {
         globalElement = currentPath.reduce((acc, key) => acc?.[key], data);
 
-        if (globalElement && globalElement.hasOwnProperty(totalLabel)) {
+        if (globalElement && Object.prototype.hasOwnProperty.call(globalElement, totalLabel)) {
           break;
         }
 
@@ -21,7 +21,7 @@ export const calculateTotals = (
       }
     }
 
-    if (!globalElement || !globalElement.hasOwnProperty(totalLabel)) {
+    if (!globalElement || !Object.prototype.hasOwnProperty.call(globalElement, totalLabel)) {
       return;
     }
 
@@ -88,7 +88,7 @@ export const calculateTotalsSources = (
     return;
   }
 
-  if (!data.hasOwnProperty(totalLabel)) {
+  if (!Object.prototype.hasOwnProperty.call(data, totalLabel)) {
     return;
   }
 

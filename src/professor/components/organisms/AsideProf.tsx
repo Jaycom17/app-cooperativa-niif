@@ -9,6 +9,17 @@ import { GrFormClose } from "react-icons/gr";
 import { MdMenu } from "react-icons/md";
 import { FaSearch } from "react-icons/fa";
 
+// Definir interfaces para el tipado
+interface Student {
+  stuID: string;
+  stuCedula: string;
+}
+
+interface Form {
+  to: string;
+  label: string;
+}
+
 /**
  * Componente lateral para navegación y visualización de estudiantes y formularios.
  *
@@ -26,23 +37,23 @@ interface AsideProfProps {
 }
 
 const AsideProf = ({ toNav }: AsideProfProps) => {
-  const { roomID } = useParams();
-  const [students, setStudents] = useState([]);
-  const [selectedStudent, setSelectedStudent] = useState(null);
-  const [studentsCopy, setStudentsCopy] = useState([]);
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const asideRef = useRef(null);
-  const [contOpen, setContOpen] = useState(false);
+  const { roomID } = useParams<{ roomID: string }>();
+  const [students, setStudents] = useState<Student[]>([]);
+  const [selectedStudent, setSelectedStudent] = useState<Student | null>(null);
+  const [studentsCopy, setStudentsCopy] = useState<Student[]>([]);
+  const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
+  const asideRef = useRef<HTMLElement>(null);
+  const [contOpen, setContOpen] = useState<boolean>(false);
 
   /**
    * Función para cerrar el menú desplegable al hacer clic fuera de él.
    * 
    * @function
-   * @param {Event} event - El evento de clic del mouse.
+   * @param {MouseEvent} event - El evento de clic del mouse.
    */
   useEffect(() => {
-    function handleClickOutside(event) {
-      if (asideRef.current && !asideRef.current.contains(event.target)) {
+    function handleClickOutside(event: MouseEvent) {
+      if (asideRef.current && !asideRef.current.contains(event.target as Node)) {
         setIsMenuOpen(false);
       }
     }
@@ -58,8 +69,8 @@ const AsideProf = ({ toNav }: AsideProfProps) => {
   useEffect(() => {
     const fetchStudents = async () => {
       try {
-        const  data = await getStudentsByRoom(roomID!);
-        const sortedData = data.sort((a, b) =>
+        const data = await getStudentsByRoom(roomID!);
+        const sortedData = data.sort((a: Student, b: Student) =>
           a.stuCedula.localeCompare(b.stuCedula)
         );
         setStudents(sortedData);
@@ -82,11 +93,11 @@ const AsideProf = ({ toNav }: AsideProfProps) => {
    * Maneja la búsqueda de estudiantes en la lista.
    * 
    * @function
-   * @param {Event} e - El evento de cambio del input.
+   * @param {React.ChangeEvent<HTMLInputElement>} e - El evento de cambio del input.
    */
-  const searchStudent = (e) => {
+  const searchStudent = (e: React.ChangeEvent<HTMLInputElement>) => {
     const searchValue = e.target.value;
-    const filteredStudents = studentsCopy.filter((student) =>
+    const filteredStudents = studentsCopy.filter((student: Student) =>
       student.stuCedula.toLowerCase().includes(searchValue.toLowerCase())
     );
     setStudents(filteredStudents);
@@ -96,9 +107,9 @@ const AsideProf = ({ toNav }: AsideProfProps) => {
    * Maneja la selección de un estudiante de la lista.
    * 
    * @function
-   * @param {Object} student - El objeto del estudiante seleccionado.
+   * @param {Student} student - El objeto del estudiante seleccionado.
    */
-  const handleSelectedStud = (student) => {
+  const handleSelectedStud = (student: Student) => {
     setSelectedStudent(student);
     setContOpen(false);
     toNav("stuSelect", student.stuID);
@@ -143,11 +154,11 @@ const AsideProf = ({ toNav }: AsideProfProps) => {
               </h1>
             </div>
             <section className="flex flex-col text-center bg-transparent text-unicoop border-y-2">
-              {forms.map((form, index) => (
+              {forms.map((form: Form, index: number) => (
                 <button
                   key={index}
                   className="flex items-center justify-center w-full h-[40px] md:h-[50px] bg-transparent text-white text-sm md:text-base hover:bg-unicoop-slate-blue duration-200 font-medium"
-                  onClick={() => toNav(form.to, selectedStudent.stuID)}
+                  onClick={() => toNav(form.to, selectedStudent!.stuID)}
                 >
                   {form.label}
                 </button>
@@ -171,7 +182,7 @@ const AsideProf = ({ toNav }: AsideProfProps) => {
             <p className="text-center mt-2 px-4 md:text-lg text-unicoop">Aún no hay estudiantes registrados en esta sala :(</p>
           )}
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-2 p-3">
-            {students.map((student) => (
+            {students.map((student: Student) => (
               <button
                 key={student.stuID}
                 onClick={() => handleSelectedStud(student)}

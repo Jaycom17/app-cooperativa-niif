@@ -1,5 +1,4 @@
-// PrimitiveInput.tsx
-import React, { memo } from 'react';
+import React, { memo, useState } from 'react';
 import type { JSONValue, FieldConfig } from '../models/FormRender';
 import { humanizeKey, pathToString, formatCurrency, parseCurrencyInput, isTypingNegative } from '../utils/formRender';
 
@@ -13,6 +12,10 @@ export const PrimitiveInput: React.FC<{
 }> = memo(({ value, onChange, path, label, cfg, canEdit }) => {
   const effectiveLabel = label ?? humanizeKey(String(path[path.length - 1]));
   const widget = cfg?.widget ?? inferWidget(value);
+
+  const [isFocused, setIsFocused] = useState(false);
+  const [editingValue, setEditingValue] = useState("");
+
   if (cfg?.hidden) return null;
 
   function inferWidget(v: JSONValue) {
@@ -21,6 +24,7 @@ export const PrimitiveInput: React.FC<{
     if (typeof v === "string") return v.length > 80 ? "textarea" : "text";
     return "text";
   }
+  
 
   switch (widget) {
     case "checkbox": {
@@ -44,9 +48,6 @@ export const PrimitiveInput: React.FC<{
       const numValue = typeof value === 'number' ? value : 0;
       const currency = cfg?.currency || 'COP';
       const locale = cfg?.locale || 'es-CO';
-      
-      const [isFocused, setIsFocused] = React.useState(false);
-      const [editingValue, setEditingValue] = React.useState('');
 
       const displayValue = isFocused 
         ? editingValue 
@@ -72,12 +73,12 @@ export const PrimitiveInput: React.FC<{
               const numericValue = parseCurrencyInput(input);
               onChange(numericValue, pathToString(path.slice(0, -1)));
             }}
-            onFocus={(_e) => {
+            onFocus={() => {
               setIsFocused(true);
               const currentValue = numValue === 0 ? '' : numValue.toString();
               setEditingValue(currentValue);
             }}
-            onBlur={(_e) => {
+            onBlur={() => {
               setIsFocused(false);
               const numericValue = parseCurrencyInput(editingValue);
               onChange(numericValue, pathToString(path.slice(0, -1)));

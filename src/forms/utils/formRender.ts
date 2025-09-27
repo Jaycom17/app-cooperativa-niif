@@ -13,9 +13,6 @@ export function humanizeKey(key: string): string {
     // Separar camelCase y PascalCase
     .replace(/([a-záéíóúñ0-9])([A-ZÁÉÍÓÚÑ])/g, "$1 $2")
     
-    // Reemplazar guiones bajos y guiones por espacios
-    .replace(/[_\-]+/g, " ")
-    
     // Separar secuencias de mayúsculas seguidas de minúsculas (XMLParser -> XML Parser)
     .replace(/([A-ZÁÉÍÓÚÑ]+)([A-ZÁÉÍÓÚÑ][a-záéíóúñ]+)/g, "$1 $2")
     

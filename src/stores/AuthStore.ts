@@ -26,7 +26,7 @@ export const useAuthStore = create<AuthState>((set) => ({
     try {
       const response = await LoginService.profile();
       set({ user: response.data, loading: false });
-    } catch (error) {
+    } catch {
       set({ user: null, loading: false });
     }
   },
@@ -35,7 +35,7 @@ export const useAuthStore = create<AuthState>((set) => ({
     try {
       const res = await LoginService.login(data);
       set({ user: res.data, loginError: null, loading: false });
-    } catch (err) {
+    } catch {
       set({ loginError: "Usuario o contraseña incorrectos", loading: false });
 
       setTimeout(() => {

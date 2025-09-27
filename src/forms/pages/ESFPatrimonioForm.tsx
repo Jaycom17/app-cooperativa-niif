@@ -2,7 +2,6 @@ import { useState, useEffect, useRef } from "react";
 import StudentLayout from "../../components/templates/StudentLayout";
 import { EsfPatrimonioService } from "../services/esfPatrimonio.service";
 import { FormRender } from "../components/FormRender";
-import { FiLoader, FiCheckCircle, FiEdit3 } from "react-icons/fi";
 
 import { ESFPatrimonioInput } from "../models/EsfPatrimonioJson";
 
@@ -14,6 +13,7 @@ import {
   calculatedValorFiscal,
   calculateFirstValorFiscal
 } from "../utils/esfPatrimonio";
+import Loading from "../components/atoms/Loading";
 
 const ESFpatrimonio = () => {
   const [data, setData] = useState(ESFPatrimonioInput);
@@ -70,26 +70,9 @@ const ESFpatrimonio = () => {
   return (
     <StudentLayout>
       <main className="w-full pt-7 md:p-8 max-h-screen overflow-auto">
-        <div className="text-sm text-gray-600 flex justify-end items-center gap-2 pr-3 md:pr-0 absolute top-0 right-0 mt-3 mr-3 md:mr-10">
-          {saveStatus === "saving" && (
-            <>
-              <FiLoader className="animate-spin" />
-              <span>Guardando...</span>
-            </>
-          )}
-          {saveStatus === "saved" && (
-            <>
-              <FiCheckCircle />
-              <span>Guardado</span>
-            </>
-          )}
-          {saveStatus === "idle" && (
-            <>
-              <FiEdit3 />
-              <span>Cambios no guardados</span>
-            </>
-          )}
-        </div>
+        
+        <Loading saveStatus={saveStatus} />
+        
         <div className="min-w-[500px]">
           <FormRender
             value={data}

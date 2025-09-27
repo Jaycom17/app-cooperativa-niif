@@ -51,9 +51,9 @@ export const useRoomStore = create<RoomState>((set) => ({
       set({ currentRoom: room, roomError: null, loading: false });
 
       localStorage.setItem("room", JSON.stringify(room));
-    } catch (err: any) {
-      
-      set({ roomError: err.response.data.error.message || "Código de sala incorrecto", loading: false });
+    } catch (err: unknown) {
+      const error = err as { response?: { data?: { error?: { message?: string } } } };
+      set({ roomError: error.response?.data?.error?.message || "Código de sala incorrecto", loading: false });
 
       setTimeout(() => {
         set({ roomError: null });

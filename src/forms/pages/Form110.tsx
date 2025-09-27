@@ -2,12 +2,12 @@ import StudentLayout from "../../components/templates/StudentLayout";
 import { useState, useEffect, useRef } from "react";
 import { Form110Service } from "../services/form110.service";
 import { FormRender } from "../components/FormRender";
-import { FiLoader, FiCheckCircle, FiEdit3 } from "react-icons/fi";
 import { config } from "../utils/form110";
 
 import { Form110Input } from "../models/Form110Json";
 
 import { mergeDeepPreservingOrder } from "../utils/mergeDeep";
+import Loading from "../components/atoms/Loading";
 
 const Form110 = () => {
   const [data, setData] = useState(Form110Input);
@@ -47,26 +47,9 @@ const Form110 = () => {
   return (
     <StudentLayout>
       <main className="w-full pt-7 md:p-8 max-h-screen overflow-auto">
-        <div className="text-sm text-gray-600 flex justify-end items-center gap-2 pr-3 md:pr-0 absolute top-0 right-0 mt-3 mr-3 md:mr-10">
-          {saveStatus === "saving" && (
-            <>
-              <FiLoader className="animate-spin" />
-              <span>Guardando...</span>
-            </>
-          )}
-          {saveStatus === "saved" && (
-            <>
-              <FiCheckCircle />
-              <span>Guardado</span>
-            </>
-          )}
-          {saveStatus === "idle" && (
-            <>
-              <FiEdit3 />
-              <span>Cambios no guardados</span>
-            </>
-          )}
-        </div>
+
+        <Loading saveStatus={saveStatus} />
+
         <div className="min-w-[500px]">
           <FormRender
           value={data}

@@ -47,12 +47,12 @@ const ProfForm = ({ professor, onRefresh, setOpen }: ProfFormProps) => {
     }
 
     if (isUpdate) {
-      ProfessorService.updateProfessor(professor!.usuID, professorData).then((_res) => {
+      ProfessorService.updateProfessor(professor!.usuID, professorData).then(() => {
         alert("Se han actualizado los datos del profesor");
         onRefresh!();
         setOpen!(false);
-      }).catch((error: any) => {
-        setProfErrors( error.response.data.error.message || "Error al actualizar los datos del profesor");
+      }).catch((error: { response?: { data?: { error?: { message?: string } } } }) => {
+        setProfErrors( error.response?.data?.error?.message || "Error al actualizar los datos del profesor");
         setTimeout(() => {
           setProfErrors("");
         }, 5000);
@@ -62,8 +62,8 @@ const ProfForm = ({ professor, onRefresh, setOpen }: ProfFormProps) => {
       ProfessorService.createProfessor(professorData).then(() => {
         alert("Profesor creado exitosamente");
         navigate("/admin");
-      }).catch((error: any) => {
-        setProfErrors( error.response.data.error.message || "Error al crear el profesor");
+      }).catch((error: { response?: { data?: { error?: { message?: string } } } }) => {
+        setProfErrors( error.response?.data?.error?.message || "Error al crear el profesor");
         setTimeout(() => {
           setProfErrors("");
         }, 5000);
