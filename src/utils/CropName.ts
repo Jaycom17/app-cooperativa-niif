@@ -1,5 +1,5 @@
-const cutString = (string: string) => {
-    return string.length >=30 ? `${string.slice(0,27)}...` : string;
+const cutString = (string: string, length: number = 10) => {
+    return string.length >= length ? `${string.slice(0, length)}...` : string;
 };
 
 export default cutString;

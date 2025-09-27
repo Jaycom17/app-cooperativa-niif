@@ -1,5 +1,6 @@
 import { FaRegTrashAlt } from "react-icons/fa";
 import { FaPencilAlt } from "react-icons/fa";
+import { AiOutlineQrcode } from "react-icons/ai";
 import { FaEye } from "react-icons/fa";
 import { useState, useEffect } from "react";
 import FloatingContainer from "../../../components/atoms/FloatingContainer";
@@ -10,6 +11,11 @@ import type { RoomModel } from "../../models/Room";
 import { RoomService } from "../../services/room.service";
 import { formatDate } from "../../../utils/Dates";
 
+import { QRCodeSVG } from "qrcode.react";
+import { PAGE_URL } from "../../../config/env";
+
+import CopyBox from "../../../components/atoms/CopyBox";
+
 interface RoomProps {
   room: RoomModel;
   usuId: string;
@@ -19,6 +25,7 @@ interface RoomProps {
 const Room = ({ room, usuId, onRefresh }: RoomProps) => {
   const [activated, setActivated] = useState(false);
   const [formOpen, setFormOpen] = useState(false);
+  const [qrOpen, setQrOpen] = useState(false);
 
   useEffect(() => {
     setActivated(room.roomStatus.toLowerCase() === "open");
@@ -54,14 +61,28 @@ const Room = ({ room, usuId, onRefresh }: RoomProps) => {
     <section className="flex flex-col items-center w-11/12 sm:1/3 lg:w-[375px] bg-primary rounded-lg text-unicoop">
       <div className="w-full text-center mt-2">
         <h1 className="text-2xl font-bold mx-1" title={room.roomName}>
-          {cutString(room.roomName)}
+          {cutString(room.roomName, 20)}
         </h1>
-        <h2
-          className="text-slate-200 text-center  text-2xl mb-2 font-semibold"
-          title={room.roomPassword}
-        >
-          {cutString("Código: " + room.roomPassword)}
-        </h2>
+        <div className="flex flex-row items-center justify-center gap-2">
+          <CopyBox text={room.roomPassword} />
+          <button
+            onClick={() => setQrOpen(true)}
+            className="group flex items-center p-2 rounded-full bg-transparent hover:bg-buttons-login transition-colors"
+          >
+            <AiOutlineQrcode
+              size={22}
+              className="text-gray-600 transition-colors duration-300 group-hover:text-white"
+            />
+          </button>
+        </div>
+        {qrOpen && (
+          <FloatingContainer open={qrOpen} setOpen={setQrOpen}>
+            <div className="flex flex-col items-center gap-4 bg-unicoop-black p-5">
+              <h2 className="text-bold text-2xl">Escanea el QR</h2>
+              <QRCodeSVG value={`${PAGE_URL}/?code=${room.roomPassword}`}  size={200} />
+            </div>
+          </FloatingContainer>
+        )}
         <h2>
           <span className="font-medium">Fecha de creación:</span>{" "}
           {formatDate(room.roomDate)}

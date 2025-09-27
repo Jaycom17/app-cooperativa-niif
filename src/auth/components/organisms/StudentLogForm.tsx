@@ -4,21 +4,30 @@ import type { Code } from "../../models/Code";
 import InputForm from "../../../components/atoms/InputForm";
 import { CodeSchema } from "../../models/Code";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useEffect } from "react";
 
 interface StudentLogFormProps {
   onSubmit: (data: Code) => void;
   roomError: string | null;
+  roomCode?: string;
 }
 
-function StudentLogForm({ onSubmit, roomError }: StudentLogFormProps) {
+function StudentLogForm({ onSubmit, roomError, roomCode }: StudentLogFormProps) {
 
   const {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
+    setValue,
   } = useForm({
     resolver: zodResolver(CodeSchema),
   });
+
+  useEffect(() => {
+    if (roomCode) {
+      setValue("roomPassword", roomCode);
+    }
+  }, [roomCode, setValue]);
 
   return (
     <form

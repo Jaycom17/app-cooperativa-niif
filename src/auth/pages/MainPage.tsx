@@ -3,11 +3,16 @@ import StudentLogForm from "../components/organisms/StudentLogForm";
 import logo from "../../assets/LogoUniversidadCooperativa.png";
 import type { Code } from "../models/Code";
 import { useRoomStore } from "../../stores/RoomStore";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 
 function MainPage() {
   const { checkRoom, roomError, currentRoom, initCheck } = useRoomStore();
   const hasNavigatedRef = useRef(false);
+
+  const [searchParams] = useSearchParams();
+
+  const [roomCode, setRoomCode] = useState<string | null>(null);
 
   const navigate = useNavigate();
 
@@ -26,6 +31,13 @@ function MainPage() {
   }, [initCheck]);
 
   useEffect(() => {
+    const roomCode = searchParams.get("code");
+    if (roomCode) {
+      setRoomCode(roomCode);
+    }
+  }, [searchParams]);
+
+  useEffect(() => {
     if (currentRoom && !hasNavigatedRef.current) {
       navigate("/middlewarestudent");
     }
@@ -39,7 +51,7 @@ function MainPage() {
         className="w-11/12 md:w-96"
       />
       <section className="p-6 w-11/12 md:w-[400px] bg-unicoop-black rounded-lg">
-        <StudentLogForm onSubmit={onSubmit} roomError={roomError} />
+        <StudentLogForm onSubmit={onSubmit} roomError={roomError} roomCode={roomCode!} />
       </section>
       <p className="text-unicoop mt-5 font-medium text-center">
         ¿No eres un estudiante?{" "}

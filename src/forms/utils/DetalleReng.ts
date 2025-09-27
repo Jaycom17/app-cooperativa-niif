@@ -1759,10 +1759,8 @@ const calculateRenglon104 = (data: any) => {
     let valueContable = 0;
     let valueFiscal = 0;
 
-    section?.InformacionPorEmpresa?.forEach((empresa: any) => {
-      valueContable += empresa?.SaldosContablesADiciembre31Parciales || 0;
-      valueFiscal += empresa?.SaldosFiscalesADiciembre31Parciales || 0;
-    });
+    valueContable += section?.InformacionPorEmpresa?.SaldosContablesADiciembre31Parciales || 0;
+    valueFiscal += section?.InformacionPorEmpresa?.SaldosFiscalesADiciembre31Parciales || 0;
 
     section[labelContable] = valueContable;
     section[labelFiscla] = valueFiscal;

@@ -80,7 +80,6 @@ const MainProfessorPage = () => {
           </div>
         </section>
         <section className="w-11/12 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 my-5 mx-auto justify-items-center">
-          {/* TODO: Verificar lo del usuId */}
           {rooms.map((room) => (
             <Room key={room.roomID} room={room} usuId={"someUsuId"} onRefresh={getRooms}/>
           ))}
