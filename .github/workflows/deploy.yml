@@ -46,5 +46,4 @@ jobs:
           key: ${{ secrets.VPS_KEY }}
           script: |
             cd /var/www/app/frontend
-            docker compose build
-            docker compose up -d
+            docker compose up -d --build
