@@ -46,5 +46,5 @@ jobs:
           key: ${{ secrets.VPS_KEY }}
           script: |
             cd /var/www/app/frontend
-            docker build -t mi-react-app .
-            docker run -d -p 80:80 --name mi-react-container mi-react-app
+            docker compose build
+            docker compose up -d

@@ -1,0 +1,39 @@
+version: "3.8"
+
+services:
+  nginx-proxy:
+    image: jwilder/nginx-proxy
+    container_name: nginx-proxy
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+      - ./certs:/etc/nginx/certs:ro
+      - ./vhost.d:/etc/nginx/vhost.d
+      - ./html:/usr/share/nginx/html
+
+  acme-companion:
+    image: nginxproxy/acme-companion
+    container_name: nginx-proxy-acme
+    restart: always
+    volumes_from:
+      - nginx-proxy
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ./certs:/etc/nginx/certs:rw
+      - ./acme:/etc/acme.sh
+
+  frontend:
+    build: .
+    container_name: frontend
+    restart: always
+    expose:
+      - "80"
+    environment:
+      - VIRTUAL_HOST=pruebasjaycom.shop,www.pruebasjaycom.shop
+      - LETSENCRYPT_HOST=pruebasjaycom.shop,www.pruebasjaycom.shop
+      - LETSENCRYPT_EMAIL=juanorejuela499@gmail.com
+      - VITE_API_URL=https://api.example.com
+      - VITE_PAGE_URL=https://www.example.com
