@@ -1,5 +1,5 @@
-import type { UserModel } from "../models/User";
-import axiosInstance from "../../config/axios";
+import type { UserModel } from "@/admin/models/User";
+import axiosInstance from "@/config/axios";
 
 type ProfessorDTO = Omit<UserModel, "usuID">;
 

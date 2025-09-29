@@ -1,11 +1,11 @@
 import { useState, useRef, useEffect } from "react";
 import { MdMenu } from "react-icons/md";
-import { Link } from "react-router-dom";
-import AccountDropdown from "../molecules/AccountDropdown";
-import { useNavigate } from "react-router-dom";
-import { AsideMenu } from "../molecules/AsideMenu";
-import type { NavButton } from "../types/componentsTypes";
-import { useAuthStore } from "../../stores/AuthStore";
+import { Link, useNavigate } from "react-router-dom";
+
+import AccountDropdown from "@/components/molecules/AccountDropdown";
+import { AsideMenu } from "@/components/molecules/AsideMenu";
+import type { NavButton } from "@/components/types/componentsTypes";
+import { useAuthStore } from "@/stores/AuthStore";
 
 interface NavbarProps {
   navButtons: NavButton[];

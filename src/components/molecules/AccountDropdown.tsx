@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { CloseButton } from "../atoms/CloseButton";
+import { CloseButton } from "@/components/atoms/CloseButton";
 
 /**
  * Componente desplegable de cuenta.

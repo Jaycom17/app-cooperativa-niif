@@ -1,9 +1,10 @@
-import Room from "../components/organisms/Room";
 import { useState, useEffect } from "react";
-import InfoBubble from "../../components/atoms/InfoBubble";
 import { IoIosArrowDown } from "react-icons/io";
-import { RoomService } from "../services/room.service";
-import ProfessorLayout from "../components/templates/ProfessorLayout";
+
+import Room from "@/professor/components/organisms/Room";
+import InfoBubble from "@/components/atoms/InfoBubble";
+import { RoomService } from "@/professor/services/room.service";
+import ProfessorLayout from "@/professor/components/templates/ProfessorLayout";
 
 import type { RoomModel } from "../models/Room";
 

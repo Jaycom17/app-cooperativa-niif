@@ -1,6 +1,6 @@
-import StudentLayout from "../../components/templates/StudentLayout";
-import FormItem from "../components/atoms/FormItem";
-import logo from '../../assets/LogoUniversidadCooperativa.png'
+import StudentLayout from "@/components/templates/StudentLayout";
+import FormItem from "@/student/components/atoms/FormItem";
+import logo from '@/assets/LogoUniversidadCooperativa.png'
 
 
 const MainStudent = () => {

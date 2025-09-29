@@ -1,9 +1,10 @@
 // FormRender.tsx
 import React from 'react';
-import type { JSONFormProps } from '../models/FormRender';
-import { isObject } from '../utils/formRender';
-import { ObjectFieldset } from './ObjectFieldset';
-import { PrimitiveInput } from './PrimitiveInput';
+
+import type { JSONFormProps } from '@/forms/models/FormRender';
+import { isObject } from '@/forms/utils/formRender';
+import { ObjectFieldset } from '@/forms/components/ObjectFieldset';
+import { PrimitiveInput } from '@/forms/components/PrimitiveInput';
 
 export const FormRender: React.FC<JSONFormProps> = ({
   value,

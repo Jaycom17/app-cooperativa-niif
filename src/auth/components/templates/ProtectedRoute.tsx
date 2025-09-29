@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { Navigate, Outlet } from "react-router-dom";
-import { useAuthStore } from "../../../stores/AuthStore";
+
+import { useAuthStore } from "@/stores/AuthStore";
 
 interface ProtectedRouteProps {
   allowedRoles: string[];

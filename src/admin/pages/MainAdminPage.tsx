@@ -1,9 +1,10 @@
 import { useState, useEffect } from "react";
-import Professor from "../components/organisms/Professor";
 import { FaSearch } from "react-icons/fa";
-import type { UserModel } from "../models/User";
-import AdminLayout from "../components/templates/AdminLayout";
-import { ProfessorService } from "../services/professor.service";
+
+import Professor from "@/admin/components/organisms/Professor";
+import type { UserModel } from "@/admin/models/User";
+import AdminLayout from "@/admin/components/templates/AdminLayout";
+import { ProfessorService } from "@/admin/services/professor.service";
 
 const MainAdminPage = () => {
   const [professors, setProfessors] = useState<UserModel[]>([]);

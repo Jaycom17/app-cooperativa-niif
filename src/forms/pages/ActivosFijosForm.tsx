@@ -1,16 +1,15 @@
-import StudentLayout from "../../components/templates/StudentLayout";
 import { useEffect, useRef, useState } from "react";
-import { ActivosFijosService } from "../services/activosFijos.service";
-import { FormRender } from "../components/FormRender";
 
-import { ActivosFijosInput } from "../models/ActivosFijosJson";
-
-import { mergeDeepPreservingOrder } from "../utils/mergeDeep";
+import StudentLayout from "@/components/templates/StudentLayout";
+import { ActivosFijosService } from "@/forms/services/activosFijos.service";
+import { FormRender } from "@/forms/components/FormRender";
+import { ActivosFijosInput } from "@/forms/models/ActivosFijosJson";
+import { mergeDeepPreservingOrder } from "@/forms/utils/mergeDeep";
 
 import {
   calculateTotals,
   calculateTotalsSources,
-} from "../utils/totalOperations";
+} from "@/forms/utils/totalOperations";
 import {
   calculateImporteNetoFinalPeriodoCosto,
   calculateImporteNetoFinalPeriodoAjustePorRevaluacion,
@@ -18,8 +17,8 @@ import {
   calculateTotalNetoAlFinalDelPeriodoFinanciero,
   calculateTotalNetoAlFinalDelPeriodoInformativo,
   config
-} from "../utils/ActivosFijos";
-import Loading from "../components/atoms/Loading";
+} from "@/forms/utils/ActivosFijos";
+import Loading from "@/forms/components/atoms/Loading";
 
 const ActivosFijosForm = () => {
   const [data, setData] = useState(ActivosFijosInput);

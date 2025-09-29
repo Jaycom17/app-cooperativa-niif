@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
-import { RoomService } from "../services/room.service";
-import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
-import { RoomSchema, type RoomFormSchema } from "../models/Room";
 import { zodResolver } from "@hookform/resolvers/zod";
-import type { RoomModel } from "../models/Room";
+import { useNavigate } from "react-router-dom";
+
+import { RoomService } from "@/professor/services/room.service";
+import { RoomSchema, type RoomFormSchema } from "@/professor/models/Room";
+import type { RoomModel } from "@/professor/models/Room";
 
 interface UseRoomFormOptions {
   room?: RoomModel;

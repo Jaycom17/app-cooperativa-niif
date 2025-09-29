@@ -1,6 +1,6 @@
 // store/useRoomStore.ts
 import { create } from "zustand";
-import { RoomService } from "../professor/services/room.service";
+import { RoomService } from "@/professor/services/room.service";
 
 
 interface currentRoom {
