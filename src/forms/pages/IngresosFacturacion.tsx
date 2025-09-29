@@ -1,16 +1,17 @@
 import { useState, useEffect, useRef } from "react";
-import StudentLayout from "../../components/templates/StudentLayout";
-import { IngresosFacturacionService } from "../services/ingresosFacturacion.service";
-import { FormRender } from "../components/FormRender";
 
-import { IngresosFacturacionInput } from "../models/IngFactJson";
+import StudentLayout from "@/components/templates/StudentLayout";
+import { IngresosFacturacionService } from "@/forms/services/ingresosFacturacion.service";
+import { FormRender } from "@/forms/components/FormRender";
 
-import { mergeDeepPreservingOrder } from "../utils/mergeDeep";
+import { IngresosFacturacionInput } from "@/forms/models/IngFactJson";
 
-import { calculateTotals } from "../utils/totalOperations";
+import { mergeDeepPreservingOrder } from "@/forms/utils/mergeDeep";
 
-import { config, calculateSaldofinalPeriodo, calculateValorTotalFacturacion, calculateValorTotalIngresoContable } from "../utils/IngresosFacturacion";
-import Loading from "../components/atoms/Loading";
+import { calculateTotals } from "@/forms/utils/totalOperations";
+
+import { config, calculateSaldofinalPeriodo, calculateValorTotalFacturacion, calculateValorTotalIngresoContable } from "@/forms/utils/IngresosFacturacion";
+import Loading from "@/forms/components/atoms/Loading";
 
 function IngresosFacturacionForm() {
   const [data, setData] = useState(IngresosFacturacionInput);

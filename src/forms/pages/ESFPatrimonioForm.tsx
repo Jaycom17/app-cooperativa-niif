@@ -1,19 +1,19 @@
 import { useState, useEffect, useRef } from "react";
-import StudentLayout from "../../components/templates/StudentLayout";
-import { EsfPatrimonioService } from "../services/esfPatrimonio.service";
-import { FormRender } from "../components/FormRender";
+import StudentLayout from "@/components/templates/StudentLayout";
+import { EsfPatrimonioService } from "@/forms/services/esfPatrimonio.service";
+import { FormRender } from "@/forms/components/FormRender";
 
-import { ESFPatrimonioInput } from "../models/EsfPatrimonioJson";
+import { ESFPatrimonioInput } from "@/forms/models/EsfPatrimonioJson";
 
-import { mergeDeepPreservingOrder } from "../utils/mergeDeep";
+import { mergeDeepPreservingOrder } from "@/forms/utils/mergeDeep";
 
 import {
   config,
   calculateAll,
   calculatedValorFiscal,
   calculateFirstValorFiscal
-} from "../utils/esfPatrimonio";
-import Loading from "../components/atoms/Loading";
+} from "@/forms/utils/esfPatrimonio";
+import Loading from "@/forms/components/atoms/Loading";
 
 const ESFpatrimonio = () => {
   const [data, setData] = useState(ESFPatrimonioInput);

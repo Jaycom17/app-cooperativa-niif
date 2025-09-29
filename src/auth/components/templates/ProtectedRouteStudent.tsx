@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { Navigate, Outlet } from "react-router-dom";
-import { useStudentStore } from "../../../stores/StudentStore";
+
+import { useStudentStore } from "@/stores/StudentStore";
 
 const ProtectedRouteStudent = ({ allowedRoles }: { allowedRoles: string[] }) => {
   const { student, loading, studentProfile } = useStudentStore();

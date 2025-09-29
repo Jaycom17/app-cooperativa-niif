@@ -1,10 +1,11 @@
 import { useForm } from "react-hook-form";
 import { IoMdLogIn } from "react-icons/io";
-import type { Code } from "../../models/Code";
-import InputForm from "../../../components/atoms/InputForm";
-import { CodeSchema } from "../../models/Code";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect } from "react";
+
+import type { Code } from "@/auth/models/Code";
+import InputForm from "@/components/atoms/InputForm";
+import { CodeSchema } from "@/auth/models/Code";
 
 interface StudentLogFormProps {
   onSubmit: (data: Code) => void;

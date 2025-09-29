@@ -1,10 +1,10 @@
-import { Link, useNavigate } from "react-router-dom";
-import StudentLogForm from "../components/organisms/StudentLogForm";
-import logo from "../../assets/LogoUniversidadCooperativa.png";
-import type { Code } from "../models/Code";
-import { useRoomStore } from "../../stores/RoomStore";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
-import { useSearchParams } from "react-router-dom";
+
+import StudentLogForm from "@/auth/components/organisms/StudentLogForm";
+import logo from "@/assets/LogoUniversidadCooperativa.png";
+import type { Code } from "@/auth/models/Code";
+import { useRoomStore } from "@/stores/RoomStore";
 
 function MainPage() {
   const { checkRoom, roomError, currentRoom, initCheck } = useRoomStore();

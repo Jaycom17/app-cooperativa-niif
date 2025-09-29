@@ -1,13 +1,14 @@
-import StudentLayout from "../../components/templates/StudentLayout";
 import { useState, useEffect, useRef } from "react";
-import { CaratulaService } from "../services/caratula.service";
-import { FormRender } from "../components/FormRender";
 
-import { CaratulaInput } from "../models/CaratulaJson";
+import StudentLayout from "@/components/templates/StudentLayout";
+import { CaratulaService } from "@/forms/services/caratula.service";
+import { FormRender } from "@/forms/components/FormRender";
 
-import { mergeDeepPreservingOrder } from "../utils/mergeDeep";
-import { config } from "../utils/caratula";
-import Loading from "../components/atoms/Loading";
+import { CaratulaInput } from "@/forms/models/CaratulaJson";
+
+import { mergeDeepPreservingOrder } from "@/forms/utils/mergeDeep";
+import { config } from "@/forms/utils/caratula";
+import Loading from "@/forms/components/atoms/Loading";
 
 function CaratulaForm() {
   const [data, setData] = useState(CaratulaInput);

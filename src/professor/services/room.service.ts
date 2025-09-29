@@ -1,5 +1,5 @@
-import type { RoomModel } from "../models/Room";
-import axiosInstance from "../../config/axios";
+import type { RoomModel } from "@/professor/models/Room";
+import axiosInstance from "@/config/axios";
 
 type CreateDto = Omit<RoomModel, "roomID" | "roomDate" | "roomStatus">;
 type UpdateDto = Omit<

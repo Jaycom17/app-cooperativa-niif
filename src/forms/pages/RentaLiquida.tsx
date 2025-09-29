@@ -1,15 +1,16 @@
-import StudentLayout from "../../components/templates/StudentLayout";
 import { useState, useEffect, useRef } from "react";
-import { RentaLiquidaService } from "../services/rentaLiquida.service";
-import { FormRender } from "../components/FormRender";
+
+import StudentLayout from "@/components/templates/StudentLayout";
+import { RentaLiquidaService } from "@/forms/services/rentaLiquida.service";
+import { FormRender } from "@/forms/components/FormRender";
 import { config, calculateOtras, calculateValorFiscalSolicitado, calculatedValorFiscal, calculateAllPartOne, calculateAllPartTwo, calculateFirstValorFiscal } from "../utils/RentaLiquida";
 
-import { RentaLiquidaInput } from "../models/RentaLiquidaJson";
+import { RentaLiquidaInput } from "@/forms/models/RentaLiquidaJson";
 
-import { mergeDeepPreservingOrder } from "../utils/mergeDeep";
+import { mergeDeepPreservingOrder } from "@/forms/utils/mergeDeep";
 
-import { calculateTotals } from "../utils/totalOperations";
-import Loading from "../components/atoms/Loading";
+import { calculateTotals } from "@/forms/utils/totalOperations";
+import Loading from "@/forms/components/atoms/Loading";
 
 function RentaLiquidaForm() {
   const [data, setData] = useState(RentaLiquidaInput);

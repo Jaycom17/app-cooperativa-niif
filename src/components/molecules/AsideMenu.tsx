@@ -1,7 +1,8 @@
 import { GrFormClose } from "react-icons/gr";
-import AccountDropdown from "./AccountDropdown";
 import { Link } from "react-router-dom";
-import type { NavButton } from "../types/componentsTypes";
+
+import type { NavButton } from "@/components/types/componentsTypes";
+import AccountDropdown from "@/components/molecules/AccountDropdown";
 
 interface AsideMenuProps {
   isMenuOpen: boolean;

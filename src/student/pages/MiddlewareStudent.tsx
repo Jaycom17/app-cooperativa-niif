@@ -2,12 +2,13 @@ import { useState, useEffect } from "react";
 import { IoCaretBackSharp } from "react-icons/io5";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
-import { OPTIONS } from "../utils/Options";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { StudentSchema, type StudentModel } from "../models/Student";
-import InputForm from "../../components/atoms/InputForm";
-import { useStudentStore } from "../../stores/StudentStore";
-import { useRoomStore } from "../../stores/RoomStore";
+
+import { OPTIONS } from "@/student/utils/Options";
+import { StudentSchema, type StudentModel } from "@/student/models/Student";
+import InputForm from "@/components/atoms/InputForm";
+import { useStudentStore } from "@/stores/StudentStore";
+import { useRoomStore } from "@/stores/RoomStore";
 
 function MiddlewareStudent() {
   const [firstTime, setFirstTime] = useState(OPTIONS.NOTHING);

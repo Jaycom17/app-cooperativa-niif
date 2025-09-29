@@ -1,20 +1,18 @@
-import StudentLayout from "../../components/templates/StudentLayout";
 import { useState, useEffect, useRef } from "react";
-import { DetalleReglonesService } from "../services/detalleReglones.service";
-import { FormRender } from "../components/FormRender";
+
+import StudentLayout from "@/components/templates/StudentLayout";
+import { DetalleReglonesService } from "@/forms/services/detalleReglones.service";
+import { FormRender } from "@/forms/components/FormRender";
 import {
   config,
   calculateTotalSaldos,
   calculateSaldosFiscalesParciales,
   calculateNonTotalData,
   calculateTotalData,
-} from "../utils/DetalleReng";
-
-import Loading from "../components/atoms/Loading";
-
-import { DetalleRenglonesInput } from "../models/DetalleRenglonesJson";
-
-import { mergeDeepPreservingOrder } from "../utils/mergeDeep";
+} from "@/forms/utils/DetalleReng";
+import Loading from "@/forms/components/atoms/Loading";
+import { DetalleRenglonesInput } from "@/forms/models/DetalleRenglonesJson";
+import { mergeDeepPreservingOrder } from "@/forms/utils/mergeDeep";
 
 const DetalleRenglones = () => {
   const [data, setData] = useState(DetalleRenglonesInput);

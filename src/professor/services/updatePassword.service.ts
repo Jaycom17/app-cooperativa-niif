@@ -1,5 +1,5 @@
-import axiosInstance from "../../config/axios";
-import type { PasswordModel } from "../models/Password";
+import axiosInstance from "@/config/axios";
+import type { PasswordModel } from "@/professor/models/Password";
 
 export const UpdatePasswordService = {
   updatePassword: async (data: PasswordModel): Promise<void>=>{

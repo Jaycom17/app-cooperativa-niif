@@ -1,17 +1,18 @@
-import StudentLayout from "../../components/templates/StudentLayout";
-import { ImpuestoDiferidoService } from "../services/impuestoDiferido.service";
 import { useState, useEffect, useRef } from "react";
-import { FormRender } from "../components/FormRender";
+
+import StudentLayout from "@/components/templates/StudentLayout";
+import { ImpuestoDiferidoService } from "@/forms/services/impuestoDiferido.service";
+import { FormRender } from "@/forms/components/FormRender";
 import {
   config,
   calculateAll,
   calculateFirstValues
-} from "../utils/impuestoDiferido";
+} from "@/forms/utils/impuestoDiferido";
 
-import { ImpuestoDiferidoInput } from "../models/ImpuestoDiferidoJson";
+import { ImpuestoDiferidoInput } from "@/forms/models/ImpuestoDiferidoJson";
 
-import { mergeDeepPreservingOrder } from "../utils/mergeDeep";
-import Loading from "../components/atoms/Loading";
+import { mergeDeepPreservingOrder } from "@/forms/utils/mergeDeep";
+import Loading from "@/forms/components/atoms/Loading";
 
 function ImpuestoDiferidoForm() {
   const [data, setData] = useState(ImpuestoDiferidoInput);

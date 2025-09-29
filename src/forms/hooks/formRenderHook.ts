@@ -1,5 +1,5 @@
 import { useMemo, useState, useCallback } from "react";
-import { humanizeKey } from '../utils/formRender';
+import { humanizeKey } from '@/forms/utils/formRender';
 
 export function useSearch(items: string[], searchTerm: string) {
   return useMemo(() => {

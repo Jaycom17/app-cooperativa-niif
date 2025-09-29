@@ -2,13 +2,14 @@ import { useForm } from "react-hook-form";
 import { useEffect, useState } from "react";
 import { FaCheckCircle } from "react-icons/fa";
 import { MdCreate } from "react-icons/md";
-import logo from "../../assets/LogoUniversidadCooperativa.png";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { UserEditSchema, type UserFormData } from "../models/User";
-import AdminLayout from "../components/templates/AdminLayout";
-import InputForm from "../../components/atoms/InputForm";
-import PasswordInput from "../../components/atoms/PasswordInput";
-import { AdminService } from "../services/admin.service";
+
+import logo from "@/assets/LogoUniversidadCooperativa.png";
+import { UserEditSchema, type UserFormData } from "@/admin/models/User";
+import AdminLayout from "@/admin/components/templates/AdminLayout";
+import InputForm from "@/components/atoms/InputForm";
+import PasswordInput from "@/components/atoms/PasswordInput";
+import { AdminService } from "@/admin/services/admin.service";
 
 function UpdateInfoAdminPage() {
   const [id, setId] = useState<string>("");

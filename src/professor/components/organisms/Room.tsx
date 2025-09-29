@@ -3,18 +3,17 @@ import { FaPencilAlt } from "react-icons/fa";
 import { AiOutlineQrcode } from "react-icons/ai";
 import { FaEye } from "react-icons/fa";
 import { useState, useEffect } from "react";
-import FloatingContainer from "../../../components/atoms/FloatingContainer";
-import RoomForm from "./RoomForm";
-import cutString from "../../../utils/CropName";
-import { Link } from "react-router-dom";
-import type { RoomModel } from "../../models/Room";
-import { RoomService } from "../../services/room.service";
-import { formatDate } from "../../../utils/Dates";
-
 import { QRCodeSVG } from "qrcode.react";
-import { PAGE_URL } from "../../../config/env";
 
-import CopyBox from "../../../components/atoms/CopyBox";
+import FloatingContainer from "@/components/atoms/FloatingContainer";
+import RoomForm from "@/professor/components/organisms/RoomForm";
+import cutString from "@/utils/CropName";
+import { Link } from "react-router-dom";
+import type { RoomModel } from "@/professor/models/Room";
+import { RoomService } from "@/professor/services/room.service";
+import { formatDate } from "@/utils/Dates";
+import { PAGE_URL } from "@/config/env";
+import CopyBox from "@/components/atoms/CopyBox";
 
 interface RoomProps {
   room: RoomModel;
