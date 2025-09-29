@@ -1,4 +1,5 @@
 import { useRoutes } from "react-router-dom";
+
 import LoginPage from "@/auth/pages/LoginPage";
 import MainPage from "@/auth/pages/MainPage";
 import MainStudent from "@/student/pages/MainStudent";
