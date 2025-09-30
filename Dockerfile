@@ -14,5 +14,8 @@ FROM nginx:alpine
 
 COPY --from=build /app/dist /usr/share/nginx/html
 
+ENV VITE_API_URL=https://api.pruebasjaycom.com/api
+ENV VITE_PAGE_URL=https://pruebasjaycom.com
+
 # NO expongas 80, el proxy se encarga
 CMD ["nginx", "-g", "daemon off;"]
