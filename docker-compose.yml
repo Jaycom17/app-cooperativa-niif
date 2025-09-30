@@ -11,7 +11,7 @@ services:
       - VIRTUAL_HOST=pruebasjaycom.shop,www.pruebasjaycom.shop
       - LETSENCRYPT_HOST=pruebasjaycom.shop,www.pruebasjaycom.shop
       - LETSENCRYPT_EMAIL=juanorejuela499@gmail.com
-      - VITE_API_URL=https://api.pruebasjaycom.com
+      - VITE_API_URL=https://api.pruebasjaycom.com/api
       - VITE_PAGE_URL=https://www.pruebasjaycom.com
     networks:
       - proxy-tier
