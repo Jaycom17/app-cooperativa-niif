@@ -19,9 +19,6 @@ RUN npm run build
 FROM nginx:alpine
 
 COPY --from=build /app/dist /usr/share/nginx/html
+COPY nginx.conf /etc/nginx/conf.d/default.conf
 
-ENV VITE_API_URL=https://api.pruebasjaycom.com/api
-ENV VITE_PAGE_URL=https://pruebasjaycom.com
-
-# NO expongas 80, el proxy se encarga
 CMD ["nginx", "-g", "daemon off;"]
