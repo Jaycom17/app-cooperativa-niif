@@ -1,15 +1,16 @@
 import { useForm } from "react-hook-form";
 import { MdCreate } from "react-icons/md";
 import { FaCheckCircle } from "react-icons/fa";
-import ProfessorLayout from "../components/templates/ProfessorLayout";
-import PasswordInput from "../../components/atoms/PasswordInput";
-
-import { type PasswordModel, PasswordSchema } from "../models/Password";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import { UpdatePasswordService } from "../services/updatePassword.service";
+import ProfessorLayout from "@/professor/components/templates/ProfessorLayout";
+import PasswordInput from "@/components/atoms/PasswordInput";
 
-import logo from "../../assets/LogoUniversidadCooperativa.png";
+import { type PasswordModel, PasswordSchema } from "@/professor/models/Password";
+
+import { UpdatePasswordService } from "@/professor/services/updatePassword.service";
+
+import logo from "@/assets/LogoUniversidadCooperativa.png";
 
 function ResetPasswordPage() {
 

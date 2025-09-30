@@ -1,4 +1,5 @@
 import { VscAccount } from "react-icons/vsc";
+
 interface CloseButtonProps {
     onClick: () => void;
 }

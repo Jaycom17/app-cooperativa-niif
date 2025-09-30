@@ -1,13 +1,12 @@
 import { useParams } from "react-router-dom";
 import { useState, useRef, useEffect } from "react";
-import { getStudentsByRoom } from "../../services/student.service";
-import { forms } from "../../utils/Report";
-
-import FloatingContainer from "../../../components/atoms/FloatingContainer";
-
 import { GrFormClose } from "react-icons/gr";
 import { MdMenu } from "react-icons/md";
 import { FaSearch } from "react-icons/fa";
+
+import { getStudentsByRoom } from "@/professor/services/student.service";
+import { forms } from "@/professor/utils/Report";
+import FloatingContainer from "@/components/atoms/FloatingContainer";
 
 // Definir interfaces para el tipado
 interface Student {

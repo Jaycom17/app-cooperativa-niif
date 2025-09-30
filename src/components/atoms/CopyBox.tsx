@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { FiCopy, FiCheck } from "react-icons/fi";
-import cutString from "../../utils/CropName";
+import cutString from "@/utils/CropName";
 
 type CopyBoxProps = {
   text: string;

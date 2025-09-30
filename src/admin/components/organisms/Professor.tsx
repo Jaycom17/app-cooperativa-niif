@@ -1,11 +1,12 @@
 import { FaRegTrashAlt } from "react-icons/fa";
 import { FaPencilAlt } from "react-icons/fa";
 import { useState } from "react";
-import FloatingContainer from "../../../components/atoms/FloatingContainer";
-import ProfForm from "./ProfForm";
-import cutString from "../../../utils/CropName";
-import type { UserModel } from "../../models/User";
-import { ProfessorService } from "../../services/professor.service";
+
+import FloatingContainer from "@/components/atoms/FloatingContainer";
+import ProfForm from "@/admin/components/organisms/ProfForm";
+import cutString from "@/utils/CropName";
+import type { UserModel } from "@/admin/models/User";
+import { ProfessorService } from "@/admin/services/professor.service";
 
 interface ProfessorProps {
   professor: UserModel;
@@ -41,7 +42,7 @@ const Professor = ({ professor, onRefresh }: ProfessorProps) => {
       </h1>
       <h2 className="text-lg text-center" title={professor.usuEmail}>
         <span className="font-medium">E-mail:</span>{" "}
-        {cutString(professor.usuEmail)}
+        {cutString(professor.usuEmail, 20)}
       </h2>
       <div className="flex items-center gap-3 mt-2 mb-3">
         <button

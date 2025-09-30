@@ -1,41 +1,42 @@
-import ProfessorLayout from "../components/templates/ProfessorLayout";
-import AsideProf from "../components/organisms/AsideProf";
 import { useParams } from "react-router-dom";
 import { useState } from "react";
-import { forms } from "../utils/Report";
-import logo from "../../assets/LogoUniversidadCooperativa.png";
-import { FormRender } from "../../forms/components/FormRender";
 
-import { CaratulaService } from "../../forms/services/caratula.service";
-import { ActivosFijosService } from "../../forms/services/activosFijos.service";
-import { RentaLiquidaService } from "../../forms/services/rentaLiquida.service";
-import { EsfPatrimonioService } from "../../forms/services/esfPatrimonio.service";
-import { DetalleReglonesService } from "../../forms/services/detalleReglones.service";
-import { ImpuestoDiferidoService } from "../../forms/services/impuestoDiferido.service";
-import { IngresosFacturacionService } from "../../forms/services/ingresosFacturacion.service";
-import { Form110Service } from "../../forms/services/form110.service";
-import { ResumenESFService } from "../../forms/services/resumenESF.service";
+import ProfessorLayout from "@/professor/components/templates/ProfessorLayout";
+import AsideProf from "@/professor/components/organisms/AsideProf";
+import { forms } from "@/professor/utils/Report";
+import logo from "@/assets/LogoUniversidadCooperativa.png";
+import { FormRender } from "@/forms/components/FormRender";
 
-import { CaratulaInput } from "../../forms/models/CaratulaJson";
-import { ActivosFijosInput } from "../../forms/models/ActivosFijosJson";
-import { RentaLiquidaInput } from "../../forms/models/RentaLiquidaJson";
-import { ESFPatrimonioInput } from "../../forms/models/EsfPatrimonioJson";
-import { DetalleRenglonesInput } from "../../forms/models/DetalleRenglonesJson";
-import { ImpuestoDiferidoInput } from "../../forms/models/ImpuestoDiferidoJson";
-import { IngresosFacturacionInput } from "../../forms/models/IngFactJson";
-import { Form110Input } from "../../forms/models/Form110Json";
-import { ResumenESFInput } from "../../forms/models/ResumenEsfJson";
+import { CaratulaService } from "@/forms/services/caratula.service";
+import { ActivosFijosService } from "@/forms/services/activosFijos.service";
+import { RentaLiquidaService } from "@/forms/services/rentaLiquida.service";
+import { EsfPatrimonioService } from "@/forms/services/esfPatrimonio.service";
+import { DetalleReglonesService } from "@/forms/services/detalleReglones.service";
+import { ImpuestoDiferidoService } from "@/forms/services/impuestoDiferido.service";
+import { IngresosFacturacionService } from "@/forms/services/ingresosFacturacion.service";
+import { Form110Service } from "@/forms/services/form110.service";
+import { ResumenESFService } from "@/forms/services/resumenESF.service";
 
-import { mergeDeepPreservingOrder } from "../../forms/utils/mergeDeep";
+import { CaratulaInput } from "@/forms/models/CaratulaJson";
+import { ActivosFijosInput } from "@/forms/models/ActivosFijosJson";
+import { RentaLiquidaInput } from "@/forms/models/RentaLiquidaJson";
+import { ESFPatrimonioInput } from "@/forms/models/EsfPatrimonioJson";
+import { DetalleRenglonesInput } from "@/forms/models/DetalleRenglonesJson";
+import { ImpuestoDiferidoInput } from "@/forms/models/ImpuestoDiferidoJson";
+import { IngresosFacturacionInput } from "@/forms/models/IngFactJson";
+import { Form110Input } from "@/forms/models/Form110Json";
+import { ResumenESFInput } from "@/forms/models/ResumenEsfJson";
 
-import { config as configForm110 } from "../../forms/utils/form110";
-import { config as configActivosFijos } from "../../forms/utils/ActivosFijos";
-import { config as configCaratula } from "../../forms/utils/caratula";
-import { config as configRentaLiquida } from "../../forms/utils/RentaLiquida";
-import { config as configESFPatrimonio } from "../../forms/utils/esfPatrimonio";
-import { config as configDetalleRenglones } from "../../forms/utils/DetalleReng";
-import { config as configImpuestoDiferido } from "../../forms/utils/impuestoDiferido";
-import { config as configIngresosFacturacion } from "../../forms/utils/IngresosFacturacion";
+import { mergeDeepPreservingOrder } from "@/forms/utils/mergeDeep";
+
+import { config as configForm110 } from "@/forms/utils/form110";
+import { config as configActivosFijos } from "@/forms/utils/ActivosFijos";
+import { config as configCaratula } from "@/forms/utils/caratula";
+import { config as configRentaLiquida } from "@/forms/utils/RentaLiquida";
+import { config as configESFPatrimonio } from "@/forms/utils/esfPatrimonio";
+import { config as configDetalleRenglones } from "@/forms/utils/DetalleReng";
+import { config as configImpuestoDiferido } from "@/forms/utils/impuestoDiferido";
+import { config as configIngresosFacturacion } from "@/forms/utils/IngresosFacturacion";
 
 function RoomReport() {
   const { roomID } = useParams();

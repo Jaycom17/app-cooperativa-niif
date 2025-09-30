@@ -1,9 +1,10 @@
 import { MdCreate } from "react-icons/md";
 import { MdAddHome } from "react-icons/md";
 import { FaCheckCircle } from "react-icons/fa";
-import { useRoomForm } from "../../hooks/useRoomForm";
-import type { RoomModel } from "../../models/Room";
-import InputForm from "../../../components/atoms/InputForm";
+
+import { useRoomForm } from "@/professor/hooks/useRoomForm";
+import type { RoomModel } from "@/professor/models/Room";
+import InputForm from "@/components/atoms/InputForm";
 
 interface RoomFormProps {
   room?: RoomModel;

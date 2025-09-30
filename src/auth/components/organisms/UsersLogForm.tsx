@@ -1,10 +1,11 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { IoLogInOutline } from "react-icons/io5";
-import { type LoginModel, LoginSchema } from "../../models/Login";
-import InputForm from "../../../components/atoms/InputForm";
-import PasswordInput from "../../../components/atoms/PasswordInput";
-import { useAuthStore } from "../../../stores/AuthStore";
+
+import { type LoginModel, LoginSchema } from "@/auth/models/Login";
+import InputForm from "@/components/atoms/InputForm";
+import PasswordInput from "@/components/atoms/PasswordInput";
+import { useAuthStore } from "@/stores/AuthStore";
 
 interface UsersLogFormProps {
   onSubmit: (data: LoginModel) => void;

@@ -1,13 +1,12 @@
-import StudentLayout from "../../components/templates/StudentLayout";
 import { useState, useEffect, useRef } from "react";
-import { Form110Service } from "../services/form110.service";
-import { FormRender } from "../components/FormRender";
-import { config } from "../utils/form110";
 
-import { Form110Input } from "../models/Form110Json";
-
-import { mergeDeepPreservingOrder } from "../utils/mergeDeep";
-import Loading from "../components/atoms/Loading";
+import StudentLayout from "@/components/templates/StudentLayout";
+import { Form110Service } from "@/forms/services/form110.service";
+import { FormRender } from "@/forms/components/FormRender";
+import { config } from "@/forms/utils/form110";
+import { Form110Input } from "@/forms/models/Form110Json";
+import { mergeDeepPreservingOrder } from "@/forms/utils/mergeDeep";
+import Loading from "@/forms/components/atoms/Loading";
 
 const Form110 = () => {
   const [data, setData] = useState(Form110Input);

@@ -1,8 +1,8 @@
 // store/useStudentStore.ts
 import { create } from "zustand";
-import { LoginService } from "../auth/services/login.service";
-import { StudentService } from "../student/services/student.service";
-import type { StudentModel } from "../student/models/Student";
+import { LoginService } from "@/auth/services/login.service";
+import { StudentService } from "@/student/services/student.service";
+import type { StudentModel } from "@/student/models/Student";
 
 interface StudentDTO {
   stuCedula: string;

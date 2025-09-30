@@ -1,12 +1,10 @@
 import { Link } from "react-router-dom";
-import logo from "../../assets/LogoUniversidadCooperativa.png";
 
-import UsersLogForm from "../components/organisms/UsersLogForm";
-import type { LoginModel } from "../models/Login";
-
-import { useAuthStore } from "../../stores/AuthStore";
-
-import { useAuthNavigate } from "../hooks/useAuthNavigate";
+import logo from "@/assets/LogoUniversidadCooperativa.png";
+import UsersLogForm from "@/auth/components/organisms/UsersLogForm";
+import type { LoginModel } from "@/auth/models/Login";
+import { useAuthStore } from "@/stores/AuthStore";
+import { useAuthNavigate } from "@/auth/hooks/useAuthNavigate";
 
 function LoginPage() {
   const { signin } = useAuthStore();

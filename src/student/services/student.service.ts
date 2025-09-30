@@ -1,5 +1,5 @@
-import axiosInstance from "../../config/axios"
-import type { StudentModel } from "../models/Student";
+import axiosInstance from "@/config/axios"
+import type { StudentModel } from "@/student/models/Student";
 
 type StudentDTO =  StudentModel & { roomID: string };
 

@@ -4,11 +4,12 @@ import { useForm } from "react-hook-form";
 import { IoPersonAddSharp } from "react-icons/io5";
 import { FaCheckCircle } from "react-icons/fa";
 import { MdCreate } from "react-icons/md";
-import { type UserModel, type UserFormData, UserEditSchema, UserCreateSchema } from "../../models/User";
 import { zodResolver } from "@hookform/resolvers/zod";
-import InputForm from "../../../components/atoms/InputForm";
-import PasswordInput from "../../../components/atoms/PasswordInput";
-import { ProfessorService } from "../../services/professor.service";
+
+import { type UserModel, type UserFormData, UserEditSchema, UserCreateSchema } from "@/admin/models/User";
+import InputForm from "@/components/atoms/InputForm";
+import PasswordInput from "@/components/atoms/PasswordInput";
+import { ProfessorService } from "@/admin/services/professor.service";
 
 interface ProfFormProps {
   professor?: UserModel;

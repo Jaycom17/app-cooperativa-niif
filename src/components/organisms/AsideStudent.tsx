@@ -1,10 +1,10 @@
 import { useState, useRef, useEffect } from "react";
 import { Link } from "react-router-dom";
-
 import { GrFormClose } from "react-icons/gr";
 import { MdMenu } from "react-icons/md";
-import { useRoomStore } from "../../stores/RoomStore";
-import { useStudentStore } from "../../stores/StudentStore";
+
+import { useRoomStore } from "@/stores/RoomStore";
+import { useStudentStore } from "@/stores/StudentStore";
 
 function AsideStudent() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);

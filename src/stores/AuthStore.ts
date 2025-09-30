@@ -1,7 +1,7 @@
 // store/useAuthStore.ts
 import { create } from "zustand";
-import { LoginService } from "../auth/services/login.service";
-import type { LoginModel } from "../auth/models/Login";
+import { LoginService } from "@/auth/services/login.service";
+import type { LoginModel } from "@/auth/models/Login";
 
 interface User {
   usuID: string;

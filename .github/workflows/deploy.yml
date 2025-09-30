@@ -3,6 +3,8 @@ name: CI/CD Frontend with Docker
 on:
   push:
     branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
 
 jobs:
   build-test:
@@ -21,6 +23,9 @@ jobs:
 
       - name: Run lint
         run: npm run lint
+
+      - name: Run tests
+        run: npm run test:run
 
   deploy:
     runs-on: ubuntu-latest

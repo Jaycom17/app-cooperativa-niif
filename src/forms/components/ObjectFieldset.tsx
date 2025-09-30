@@ -1,11 +1,12 @@
 import React, { memo, useState, useCallback, useMemo } from 'react';
 import { IoIosArrowDroprightCircle, IoIosArrowDropdownCircle } from "react-icons/io";
-import type { JSONObject, JSONFormConfig } from '../models/FormRender';
-import { isObject, humanizeKey, pathToString } from '../utils/formRender';
-import { useSearch, usePagination } from '../hooks/formRenderHook';
-import { Pagination } from './Pagination';
-import { SearchBox } from './SearchBox';
-import { PrimitiveInput } from './PrimitiveInput';
+
+import type { JSONObject, JSONFormConfig } from '@/forms/models/FormRender';
+import { isObject, humanizeKey, pathToString } from '@/forms/utils/formRender';
+import { useSearch, usePagination } from '@/forms/hooks/formRenderHook';
+import { Pagination } from '@/forms/components/Pagination';
+import { SearchBox } from '@/forms/components/SearchBox';
+import { PrimitiveInput } from '@/forms/components/PrimitiveInput';
 
 export const ObjectFieldset: React.FC<{
   obj: JSONObject;

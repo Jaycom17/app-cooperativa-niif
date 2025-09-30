@@ -1,12 +1,13 @@
-import StudentLayout from "../../components/templates/StudentLayout";
 import { useState, useEffect, useRef } from "react";
-import { ResumenESFService } from "../services/resumenESF.service";
-import { FormRender } from "../components/FormRender";
 
-import { ResumenESFInput } from "../models/ResumenEsfJson";
+import StudentLayout from "@/components/templates/StudentLayout";
+import { ResumenESFService } from "@/forms/services/resumenESF.service";
+import { FormRender } from "@/forms/components/FormRender";
 
-import { mergeDeepPreservingOrder } from "../utils/mergeDeep";
-import Loading from "../components/atoms/Loading";
+import { ResumenESFInput } from "@/forms/models/ResumenEsfJson";
+
+import { mergeDeepPreservingOrder } from "@/forms/utils/mergeDeep";
+import Loading from "@/forms/components/atoms/Loading";
 
 function ResumenESFForm() {
   const [data, setData] = useState(ResumenESFInput);

@@ -1,6 +1,6 @@
 import React, { memo, useState } from 'react';
-import type { JSONValue, FieldConfig } from '../models/FormRender';
-import { humanizeKey, pathToString, formatCurrency, parseCurrencyInput, isTypingNegative } from '../utils/formRender';
+import type { JSONValue, FieldConfig } from '@/forms/models/FormRender';
+import { humanizeKey, pathToString, formatCurrency, parseCurrencyInput, isTypingNegative } from '@/forms/utils/formRender';
 
 export const PrimitiveInput: React.FC<{
   value: JSONValue;
