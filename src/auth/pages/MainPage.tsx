@@ -6,6 +6,8 @@ import logo from "@/assets/LogoUniversidadCooperativa.png";
 import type { Code } from "@/auth/models/Code";
 import { useRoomStore } from "@/stores/RoomStore";
 
+import { API_URL } from "@/config/env";
+
 function MainPage() {
   const { checkRoom, roomError, currentRoom, initCheck } = useRoomStore();
   const hasNavigatedRef = useRef(false);
@@ -28,6 +30,7 @@ function MainPage() {
 
   useEffect(() => {
     initCheck();
+    console.log(API_URL);
   }, [initCheck]);
 
   useEffect(() => {
