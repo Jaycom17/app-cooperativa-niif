@@ -81,7 +81,6 @@ export const calculateValorTotalFacturacion = (data: any) => {
 
 export const calculateValorTotalIngresoContable = (data: any) => {
   if (data?.IngresoContableDevengadoEnElPeriodo?.ValorTotal == null) {
-    console.log("first");
     return;
   }
 

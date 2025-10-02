@@ -5,10 +5,13 @@ import Professor from "@/admin/components/organisms/Professor";
 import type { UserModel } from "@/admin/models/User";
 import AdminLayout from "@/admin/components/templates/AdminLayout";
 import { ProfessorService } from "@/admin/services/professor.service";
+import { useAuthStore } from "@/stores/AuthStore";
 
 const MainAdminPage = () => {
   const [professors, setProfessors] = useState<UserModel[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
+
+  const { user } = useAuthStore();
 
   const loadProfessors = () => {
     ProfessorService.getProfessors()
@@ -24,7 +27,9 @@ const MainAdminPage = () => {
   };
 
   useEffect(() => {
-    loadProfessors();
+    if (user) {
+      loadProfessors();
+    }
   }, []);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {

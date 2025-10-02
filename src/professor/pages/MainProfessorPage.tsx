@@ -7,11 +7,14 @@ import { RoomService } from "@/professor/services/room.service";
 import ProfessorLayout from "@/professor/components/templates/ProfessorLayout";
 
 import type { RoomModel } from "../models/Room";
+import { useAuthStore } from "@/stores/AuthStore";
 
 const MainProfessorPage = () => {
   const [rooms, setRooms] = useState<RoomModel[]>([]);
   const [isDateAscending, setIsDateAscending] = useState(false);
   const [isNameAscending, setIsNameAscending] = useState(false);
+
+  const { user } = useAuthStore();
 
   const dateInfo = "La fecha se encuentra en formato: - Día / Mes / Año";
 
@@ -26,7 +29,9 @@ const MainProfessorPage = () => {
   };
 
   useEffect(() => {
-    getRooms();
+    if (user) {
+      getRooms();
+    }
   }, []);  
 
   const orderByDate = () => {

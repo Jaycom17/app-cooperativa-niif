@@ -42,7 +42,6 @@ const DetalleRenglones = () => {
   const handleChange = (newData: any, changedPath?: string) => {
     const arrayPath = changedPath?.split(".");
 
-    console.log(arrayPath)
 
     if (arrayPath) {
       const element = arrayPath.reduce((acc, key) => acc?.[key], newData);
