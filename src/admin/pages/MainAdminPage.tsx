@@ -29,8 +29,10 @@ const MainAdminPage = () => {
   useEffect(() => {
     if (user) {
       loadProfessors();
+    }else {
+      setProfessors([]);
     }
-  }, []);
+  }, [user]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value);

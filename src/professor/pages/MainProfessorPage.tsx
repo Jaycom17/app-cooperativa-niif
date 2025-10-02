@@ -31,8 +31,11 @@ const MainProfessorPage = () => {
   useEffect(() => {
     if (user) {
       getRooms();
+    } else {
+      setRooms([]);
     }
-  }, []);  
+  }, [user]);
+
 
   const orderByDate = () => {
     const sortedRooms = [...rooms].sort((a, b) =>
@@ -67,9 +70,8 @@ const MainProfessorPage = () => {
             >
               Ordenar por fecha
               <IoIosArrowDown
-                className={`ml-1 md:text-lg transition-transform duration-300 ${
-                  isDateAscending ? "rotate-180" : ""
-                }`}
+                className={`ml-1 md:text-lg transition-transform duration-300 ${isDateAscending ? "rotate-180" : ""
+                  }`}
               />
             </button>
             <button
@@ -78,16 +80,15 @@ const MainProfessorPage = () => {
             >
               Ordenar por nombre
               <IoIosArrowDown
-                className={`ml-1 md:text-lg transition-transform duration-300 ${
-                  isNameAscending ? "rotate-180" : ""
-                }`}
+                className={`ml-1 md:text-lg transition-transform duration-300 ${isNameAscending ? "rotate-180" : ""
+                  }`}
               />
             </button>
           </div>
         </section>
         <section className="w-11/12 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 my-5 mx-auto justify-items-center">
           {rooms.map((room) => (
-            <Room key={room.roomID} room={room} usuId={"someUsuId"} onRefresh={getRooms}/>
+            <Room key={room.roomID} room={room} usuId={"someUsuId"} onRefresh={getRooms} />
           ))}
         </section>
       </main>
