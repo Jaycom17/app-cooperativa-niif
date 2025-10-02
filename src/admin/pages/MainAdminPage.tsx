@@ -21,18 +21,20 @@ const MainAdminPage = () => {
         );
         setProfessors(sortedProfessors);
       })
-      .catch(() => {
-        alert("Error al cargar los profesores");
+      .catch((err: any) => {
+        if (err?.response?.status === 401) {
+          setProfessors([]);
+          return;
+        }
+        if (user) {
+          alert("Error al cargar los profesores");
+        }
       });
   };
 
   useEffect(() => {
-    if (user) {
-      loadProfessors();
-    }else {
-      setProfessors([]);
-    }
-  }, [user]);
+    loadProfessors();
+  }, []);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value);

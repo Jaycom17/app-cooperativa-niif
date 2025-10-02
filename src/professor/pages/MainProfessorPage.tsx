@@ -23,18 +23,20 @@ const MainProfessorPage = () => {
       .then((rooms) => {
         setRooms(rooms);
       })
-      .catch(() => {
-        alert("Error al cargar las salas");
+      .catch((err: any) => {
+        if (err?.response?.status === 401) {
+          setRooms([]);
+          return;
+        }
+        if (user) {
+          alert("Error al cargar las salas");
+        }
       });
   };
 
   useEffect(() => {
-    if (user) {
-      getRooms();
-    } else {
-      setRooms([]);
-    }
-  }, [user]);
+    getRooms();
+  }, []);
 
 
   const orderByDate = () => {
