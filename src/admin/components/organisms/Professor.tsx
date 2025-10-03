@@ -42,7 +42,7 @@ const Professor = ({ professor, onRefresh }: ProfessorProps) => {
       </h1>
       <h2 className="text-lg text-center" title={professor.usuEmail}>
         <span className="font-medium">E-mail:</span>{" "}
-        {cutString(professor.usuEmail, 20)}
+        {cutString(professor.usuEmail, 30)}
       </h2>
       <div className="flex items-center gap-3 mt-2 mb-3">
         <button
