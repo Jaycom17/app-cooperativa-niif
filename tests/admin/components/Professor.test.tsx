@@ -12,6 +12,24 @@ const professorMock = {
   usuEmail: "juan@example.com",
 };
 
+vi.mock("@/stores/StatusStore", () => ({
+  useStatusStore: () => ({
+    setStatus: vi.fn(),
+  }),
+}));
+
+vi.mock("@/components/molecules/ConfirmDialog", () => ({
+  __esModule: true,
+  default: ({ onConfirm, onCancel, title, message }: any) => (
+    <div>
+      <p>{title}</p>
+      <p>{message}</p>
+      <button onClick={onConfirm}>Confirmar</button>
+      <button onClick={onCancel}>Cancelar</button>
+    </div>
+  ),
+}));
+
 describe("Professor component", () => {
   beforeEach(() => {
     vi.clearAllMocks();
@@ -41,21 +59,43 @@ describe("Professor component", () => {
     });
   });
 
-  describe("Botón de eliminación", () => {
-    it("llama a deleteProfessor y onRefresh si se confirma la eliminación", async () => {
-      const onRefresh = vi.fn();
-      vi.spyOn(window, "confirm").mockReturnValue(true);
-      vi.spyOn(window, "alert").mockImplementation(() => {});
-      vi.spyOn(ProfessorService, "deleteProfessor").mockResolvedValueOnce();
+  describe("Botón de eliminación con ConfirmDialog", () => {
+  const professorMock = {
+    usuID: "123",
+    usuName: "Juan Pérez",
+    usuEmail: "juan@correo.com",
+  };
 
-      render(<Professor professor={professorMock} onRefresh={onRefresh} />);
+  it("llama a deleteProfessor y onRefresh si se confirma la eliminación", async () => {
+    const onRefresh = vi.fn();
 
-      fireEvent.click(screen.getByRole("button", { name: /eliminar/i }));
+    vi.spyOn(ProfessorService, "deleteProfessor").mockResolvedValueOnce();
 
-      await waitFor(() => {
-        expect(ProfessorService.deleteProfessor).toHaveBeenCalledWith("123");
-        expect(onRefresh).toHaveBeenCalled();
-      });
+    render(<Professor professor={professorMock} onRefresh={onRefresh} />);
+
+    fireEvent.click(screen.getByRole("button", { name: /eliminar/i }));
+
+    fireEvent.click(screen.getByText("Confirmar"));
+
+    await waitFor(() => {
+      expect(ProfessorService.deleteProfessor).toHaveBeenCalledWith("123");
+      expect(onRefresh).toHaveBeenCalled();
     });
   });
+
+  it("no llama al servicio si se cancela la eliminación", async () => {
+    const onRefresh = vi.fn();
+    vi.spyOn(ProfessorService, "deleteProfessor").mockResolvedValueOnce();
+
+    render(<Professor professor={professorMock} onRefresh={onRefresh} />);
+
+    fireEvent.click(screen.getByRole("button", { name: /eliminar/i }));
+    fireEvent.click(screen.getByText("Cancelar"));
+
+    await waitFor(() => {
+      expect(ProfessorService.deleteProfessor).not.toHaveBeenCalled();
+      expect(onRefresh).not.toHaveBeenCalled();
+    });
+  });
+});
 });
