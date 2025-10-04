@@ -14,6 +14,9 @@ import { RoomService } from "@/professor/services/room.service";
 import { formatDate } from "@/utils/Dates";
 import { PAGE_URL } from "@/config/env";
 import CopyBox from "@/components/atoms/CopyBox";
+import ConfirmDialog from "@/components/molecules/ConfirmDialog";
+
+import { useStatusStore } from "@/stores/StatusStore";
 
 interface RoomProps {
   room: RoomModel;
@@ -26,6 +29,28 @@ const Room = ({ room, usuId, onRefresh }: RoomProps) => {
   const [formOpen, setFormOpen] = useState(false);
   const [qrOpen, setQrOpen] = useState(false);
 
+  const [open, setOpen] = useState(false);
+
+  const { setStatus } = useStatusStore();
+
+  const handleDelete = () => setOpen(true);
+
+  const handleConfirm = () => {
+    RoomService.delete(room.roomID)
+      .then(() => {
+        setStatus({ show: true, title: "Sala eliminada", message: "La sala ha sido eliminada correctamente", type: "success" });
+        onRefresh();
+      })
+      .catch(() => {
+        setStatus({ show: true, title: "Error", message: "Error al eliminar la sala", type: "error" });
+      });
+    setOpen(false);
+  };
+
+  const handleCancel = () => {
+    setOpen(false);
+  };
+
   useEffect(() => {
     setActivated(room.roomStatus.toLowerCase() === "open");
   }, [room.roomStatus]);
@@ -37,22 +62,6 @@ const Room = ({ room, usuId, onRefresh }: RoomProps) => {
       setActivated(!activated);
     } catch (error) {
       console.error("Error al actualizar el estado de la sala:", error);
-    }
-  };
-
-  const handleDelete = () => {
-    const confirmDelete = window.confirm(
-      `¿Estás seguro de que deseas eliminar la sala ${room.roomName}?`
-    );
-    if (confirmDelete) {
-      RoomService.delete(room.roomID)
-        .then(() => {
-          alert("Se ha eliminado la sala correctamente");
-          onRefresh();
-        })
-        .catch(() => {
-          alert("Error al eliminar la sala");
-        });
     }
   };
 
@@ -78,7 +87,7 @@ const Room = ({ room, usuId, onRefresh }: RoomProps) => {
           <FloatingContainer open={qrOpen} setOpen={setQrOpen}>
             <div className="flex flex-col items-center gap-4 bg-unicoop-black p-5">
               <h2 className="text-bold text-2xl">Escanea el QR</h2>
-              <QRCodeSVG value={`${PAGE_URL}/?code=${room.roomPassword}`}  size={200} />
+              <QRCodeSVG value={`${PAGE_URL}/?code=${room.roomPassword}`} size={200} />
             </div>
           </FloatingContainer>
         )}
@@ -102,14 +111,12 @@ const Room = ({ room, usuId, onRefresh }: RoomProps) => {
           />
           {/* El interruptor deslizante */}
           <div
-            className={`toggle-wrapper relative w-10 h-6 mt-0.5 rounded-full transition-colors duration-150 ${
-              activated ? "bg-[green]/40" : "bg-[red]/40"
-            } `}
+            className={`toggle-wrapper relative w-10 h-6 mt-0.5 rounded-full transition-colors duration-150 ${activated ? "bg-[green]/40" : "bg-[red]/40"
+              } `}
           >
             <div
-              className={`toggle absolute left-1 top-1 w-4 h-4 rounded-full shadow-md transform transition-all duration-300 ${
-                activated ? "translate-x-full bg-[green]" : "bg-[red]"
-              }`}
+              className={`toggle absolute left-1 top-1 w-4 h-4 rounded-full shadow-md transform transition-all duration-300 ${activated ? "translate-x-full bg-[green]" : "bg-[red]"
+                }`}
             ></div>
           </div>
         </label>
@@ -145,6 +152,14 @@ const Room = ({ room, usuId, onRefresh }: RoomProps) => {
           />
         </FloatingContainer>
       )}
+
+      <ConfirmDialog
+        isOpen={open}
+        title="¿Seguro que deseas eliminar la sala?"
+        message="No podrás recuperar esta información después."
+        onConfirm={handleConfirm}
+        onCancel={handleCancel}
+      />
     </section>
   );
 };

@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { RoomService } from "@/professor/services/room.service";
 import { RoomSchema, type RoomFormSchema } from "@/professor/models/Room";
 import type { RoomModel } from "@/professor/models/Room";
+import { useStatusStore } from "@/stores/StatusStore";
 
 interface UseRoomFormOptions {
   room?: RoomModel;
@@ -23,6 +24,8 @@ export function useRoomForm({
   const navigate = useNavigate();
   const isUpdate = Boolean(room);
   const [roomErrors, setRoomErrors] = useState("");
+
+  const { setStatus } = useStatusStore();
 
   const {
     register,
@@ -52,7 +55,7 @@ export function useRoomForm({
           roomName: values.roomName,
           roomPassword: values.roomPassword,
         });
-        alert("Sala actualizada");
+        setStatus({ show: true, title: "Sala actualizada", message: "La sala ha sido actualizada correctamente", type: "success" });
         onRefresh?.();
         closeModal?.();
       } else {
@@ -60,7 +63,7 @@ export function useRoomForm({
           ...values,
           usuID,
         });
-        alert("Sala creada");
+        setStatus({ show: true, title: "Sala creada", message: "La sala ha sido creada correctamente", type: "success" });
         navigate("/professor");
       }
     } catch (error: any) {

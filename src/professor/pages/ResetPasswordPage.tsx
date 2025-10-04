@@ -10,7 +10,11 @@ import { type PasswordModel, PasswordSchema } from "@/professor/models/Password"
 
 import { UpdatePasswordService } from "@/professor/services/updatePassword.service";
 
+import { useStatusStore } from "@/stores/StatusStore";
+
 import logo from "@/assets/LogoUniversidadCooperativa.png";
+
+import PopUpMessage from "@/components/molecules/PopUpMessage";
 
 function ResetPasswordPage() {
 
@@ -23,18 +27,29 @@ function ResetPasswordPage() {
     resolver: zodResolver(PasswordSchema),
   });
 
-  //TODO: cambiar el await por un then catch
+  const { setStatus, message, show, title, type } = useStatusStore();
+
   const onSubmit = async (data: PasswordModel) => {
-    try {
-      UpdatePasswordService.updatePassword(data);
-      alert("Contraseña cambiada correctamente");
-      setValue("usuOldPassword", "");
-      setValue("usuPassword", "");
-      setValue("confirmPassword", "");
-    } catch (error) {
-      alert("Error al cambiar la contraseña");
-      console.error(error);
-    }
+      UpdatePasswordService.updatePassword(data).then(() => {
+        setStatus({
+          show: true,
+          message: "La contraseña ha sido actualizada correctamente",
+          title: "Contraseña actualizada",
+          type: "success",
+        });
+        setValue("usuOldPassword", "");
+        setValue("usuPassword", "");
+        setValue("confirmPassword", "");
+      }).catch((err: unknown) => {
+        console.log(err);
+        const error = err as { response?: { data?: { error?: { message?: string } } } };
+        setStatus({
+          show: true,
+          message: error.response?.data?.error?.message || "Error al actualizar la contraseña",
+          title: "Error",
+          type: "error",
+        });
+    });
   };
   return (
     <ProfessorLayout>
@@ -84,6 +99,13 @@ function ResetPasswordPage() {
             <FaCheckCircle className="bg-transparent" /> Confirmar
           </button>
         </form>
+        {show && 
+        <PopUpMessage
+          message={message}
+          title={title}
+          type={type}
+          onClose={() => setStatus({ show: false, message: "", title: "", type: "info" })}
+        />}
       </main>
     </ProfessorLayout>
   );

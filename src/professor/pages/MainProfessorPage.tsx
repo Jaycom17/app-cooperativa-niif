@@ -6,13 +6,19 @@ import InfoBubble from "@/components/atoms/InfoBubble";
 import { RoomService } from "@/professor/services/room.service";
 import ProfessorLayout from "@/professor/components/templates/ProfessorLayout";
 
-import type { RoomModel } from "../models/Room";
+import type { RoomModel } from "@/professor/models/Room";
 import { useAuthStore } from "@/stores/AuthStore";
+
+import PopUpMessage from "@/components/molecules/PopUpMessage";
+
+import { useStatusStore } from "@/stores/StatusStore";
 
 const MainProfessorPage = () => {
   const [rooms, setRooms] = useState<RoomModel[]>([]);
   const [isDateAscending, setIsDateAscending] = useState(false);
   const [isNameAscending, setIsNameAscending] = useState(false);
+
+  const { show, setStatus, title, message, type } = useStatusStore();
 
   const { user } = useAuthStore();
 
@@ -62,7 +68,6 @@ const MainProfessorPage = () => {
   return (
     <ProfessorLayout>
       <main className="flex flex-col items-center min-h-screen bg-background">
-        {/**Aquí, en esta sección la idea sería poner los filtros (Barra de busqueda, ordenar por?) */}
         <section className="flex justify-between items-center w-11/12 mt-5">
           <InfoBubble info={dateInfo} />
           <div className="flex gap-4 text-background text-xs md:text-base">
@@ -93,6 +98,14 @@ const MainProfessorPage = () => {
             <Room key={room.roomID} room={room} usuId={"someUsuId"} onRefresh={getRooms} />
           ))}
         </section>
+        {show && (
+          <PopUpMessage
+            title={title}
+            message={message}
+            type={type}
+            onClose={() => setStatus({ show: false, message: "", type: "info", title: "" })}
+          />
+        )}
       </main>
     </ProfessorLayout>
   );

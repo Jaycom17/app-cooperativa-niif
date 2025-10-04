@@ -7,6 +7,9 @@ import ProfForm from "@/admin/components/organisms/ProfForm";
 import cutString from "@/utils/CropName";
 import type { UserModel } from "@/admin/models/User";
 import { ProfessorService } from "@/admin/services/professor.service";
+import { useStatusStore } from "@/stores/StatusStore";
+
+import ConfirmDialog from "@/components/molecules/ConfirmDialog";
 
 interface ProfessorProps {
   professor: UserModel;
@@ -15,21 +18,31 @@ interface ProfessorProps {
 
 const Professor = ({ professor, onRefresh }: ProfessorProps) => {
   const [formOpen, setFormOpen] = useState(false);
+  const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false);
+
+  const { setStatus } = useStatusStore();
 
   const handleDelete = (profId: string) => {
-    const confirmDelete = window.confirm(
-      `¿Estás seguro de que deseas eliminar al profesor ${professor.usuName}?`
-    );
-    if (confirmDelete) {
-      ProfessorService.deleteProfessor(profId)
-        .then(() => {
-          alert("Se ha eliminado el profesor correctamente");
-          onRefresh();
-        })
-        .catch(() => {
-          alert("Error al eliminar al profesor");
+
+    ProfessorService.deleteProfessor(profId)
+      .then(() => {
+        setStatus({
+          show: true,
+          title: "Profesor eliminado",
+          message: "El profesor ha sido eliminado correctamente",
+          type: "success",
         });
-    }
+        setConfirmDeleteOpen(false);
+        onRefresh();
+      })
+      .catch(() => {
+        setStatus({
+          show: true,
+          title: "Error",
+          message: "Error al eliminar al profesor",
+          type: "error",
+        });
+      });
   };
 
   return (
@@ -52,7 +65,7 @@ const Professor = ({ professor, onRefresh }: ProfessorProps) => {
           <FaPencilAlt className="bg-transparent" /> Actualizar
         </button>
         <button
-          onClick={() => handleDelete(professor.usuID)}
+          onClick={() => setConfirmDeleteOpen(true)}
           className="flex items-center p-1.5 bg-buttons-delete-red hover:bg-buttons-delete-red-h duration-150 rounded"
         >
           <FaRegTrashAlt className="bg-transparent" /> Eliminar
@@ -67,6 +80,16 @@ const Professor = ({ professor, onRefresh }: ProfessorProps) => {
             setOpen={setFormOpen}
           />
         </FloatingContainer>
+      )}
+
+      {confirmDeleteOpen && (
+        <ConfirmDialog
+          isOpen={confirmDeleteOpen}
+          onCancel={() => setConfirmDeleteOpen(false)}
+          onConfirm={() => handleDelete(professor.usuID)}
+          title="¿Seguro que deseas eliminar al profesor?"
+          message="No podrás recuperar esta información después."
+        />
       )}
     </section>
   );

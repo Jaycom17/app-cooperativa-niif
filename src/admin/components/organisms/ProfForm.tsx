@@ -10,6 +10,7 @@ import { type UserModel, type UserFormData, UserEditSchema, UserCreateSchema } f
 import InputForm from "@/components/atoms/InputForm";
 import PasswordInput from "@/components/atoms/PasswordInput";
 import { ProfessorService } from "@/admin/services/professor.service";
+import { useStatusStore } from "@/stores/StatusStore";
 
 interface ProfFormProps {
   professor?: UserModel;
@@ -20,6 +21,8 @@ interface ProfFormProps {
 const ProfForm = ({ professor, onRefresh, setOpen }: ProfFormProps) => {
   const isUpdate = Boolean(professor);
   const [profErrors, setProfErrors] = useState("");
+
+  const { setStatus } = useStatusStore();
 
   const navigate = useNavigate();
 
@@ -49,7 +52,12 @@ const ProfForm = ({ professor, onRefresh, setOpen }: ProfFormProps) => {
 
     if (isUpdate) {
       ProfessorService.updateProfessor(professor!.usuID, professorData).then(() => {
-        alert("Se han actualizado los datos del profesor");
+        setStatus({
+          show: true,
+          message: "Los datos del profesor han sido actualizados correctamente",
+          title: "Profesor actualizado",
+          type: "success",
+        });
         onRefresh!();
         setOpen!(false);
       }).catch((error: { response?: { data?: { error?: { message?: string } } } }) => {
@@ -61,7 +69,12 @@ const ProfForm = ({ professor, onRefresh, setOpen }: ProfFormProps) => {
     }
     else {
       ProfessorService.createProfessor(professorData).then(() => {
-        alert("Profesor creado exitosamente");
+        setStatus({
+          show: true,
+          message: "El profesor ha sido creado correctamente",
+          title: "Profesor creado",
+          type: "success",
+        });
         navigate("/admin");
       }).catch((error: { response?: { data?: { error?: { message?: string } } } }) => {
         setProfErrors( error.response?.data?.error?.message || "Error al crear el profesor");

@@ -6,12 +6,16 @@ import type { UserModel } from "@/admin/models/User";
 import AdminLayout from "@/admin/components/templates/AdminLayout";
 import { ProfessorService } from "@/admin/services/professor.service";
 import { useAuthStore } from "@/stores/AuthStore";
+import { useStatusStore } from "@/stores/StatusStore";
+
+import PopUpMessage from "@/components/molecules/PopUpMessage";
 
 const MainAdminPage = () => {
   const [professors, setProfessors] = useState<UserModel[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
 
   const { user } = useAuthStore();
+  const { setStatus, message, show, title, type } = useStatusStore();
 
   const loadProfessors = () => {
     ProfessorService.getProfessors()
@@ -65,6 +69,14 @@ const MainAdminPage = () => {
             />
           ))}
         </section>
+        {show && 
+        <PopUpMessage
+          message={message}
+          title={title}
+          onClose={() => setStatus({ show: false, message: "", title: "", type: "info" })}
+          type={type}
+        />
+      }
       </main>
     </AdminLayout>
   );
