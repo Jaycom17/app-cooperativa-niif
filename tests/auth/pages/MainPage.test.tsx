@@ -29,7 +29,6 @@ import "@testing-library/jest-dom";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
 
 import MainPage from "../../../src/auth/pages/MainPage";
-import type { Code } from "../../../src/auth/models/Code";
 
 /**
  * MOCK DATA: Datos de sala y código
@@ -39,10 +38,6 @@ const mockRoomData = {
   roomID: "room-123",
   roomName: "Sala de Prueba",
   roomCode: "ABC123",
-};
-
-const mockCodeData: Code = {
-  roomPassword: "ABC123",
 };
 
 /**

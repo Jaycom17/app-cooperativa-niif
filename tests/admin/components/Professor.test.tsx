@@ -22,7 +22,6 @@
 
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import { vi, beforeEach, afterEach, describe, it, expect } from "vitest";
-import { MemoryRouter } from "react-router-dom";
 import "@testing-library/jest-dom";
 
 import Professor from "../../../src/admin/components/organisms/Professor";
@@ -72,7 +71,7 @@ vi.mock("@/components/atoms/FloatingContainer", () => ({
 // Mock del ProfForm
 vi.mock("@/admin/components/organisms/ProfForm", () => ({
   __esModule: true,
-  default: ({ professor, onRefresh, setOpen }: any) => (
+  default: ({ professor, setOpen }: any) => (
     <div data-testid="prof-form">
       <h2>Formulario de edición</h2>
       <p>E-mail: {professor.usuEmail}</p>
