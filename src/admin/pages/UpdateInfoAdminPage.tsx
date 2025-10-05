@@ -11,8 +11,14 @@ import InputForm from "@/components/atoms/InputForm";
 import PasswordInput from "@/components/atoms/PasswordInput";
 import { AdminService } from "@/admin/services/admin.service";
 
+import { useStatusStore } from "@/stores/StatusStore";
+
+import PopUpMessage from "@/components/molecules/PopUpMessage";
+
 function UpdateInfoAdminPage() {
   const [id, setId] = useState<string>("");
+
+  const { setStatus, message, show, title, type } = useStatusStore();
 
   const {
     register,
@@ -34,11 +40,21 @@ function UpdateInfoAdminPage() {
             setValue("usuEmail", user.usuEmail);
           })
           .catch(() => {
-            alert("Error al cargar la información del usuario");
+            setStatus({
+              show: true,
+              title: "Error",
+              message: "Error al cargar la información del usuario",
+              type: "error",
+            });
           });
       })
       .catch(() => {
-        alert("Error al cargar la información del usuario");
+        setStatus({
+          show: true,
+          title: "Error",
+          message: "Error al cargar la información del usuario",
+          type: "error",
+        });
       });
   }, [setValue]);
 
@@ -51,14 +67,25 @@ function UpdateInfoAdminPage() {
 
     AdminService.updateAdmin(userData, id)
       .then(() => {
-        alert("Se han actualizado los datos del usuario");
+        setStatus({
+          show: true,
+          title: "Datos actualizados",
+          message: "Se han actualizado los datos del usuario",
+          type: "success",
+        });
         setValue("usuName", userData.usuName);
         setValue("usuEmail", userData.usuEmail);
         setValue("usuPassword", "");
         setValue("confirmPassword", "");
       })
-      .catch(() => {
-        alert("Error al actualizar los datos del usuario");
+      .catch((err: unknown) => {
+        const error = err as { response?: { data?: { error?: { message?: string } } } };
+        setStatus({
+          show: true,
+          title: "Error",
+          message: error.response?.data?.error?.message || "Error al actualizar los datos del usuario",
+          type: "error",
+        });
       });
   };
 
@@ -125,6 +152,13 @@ function UpdateInfoAdminPage() {
             <FaCheckCircle className="bg-transparent" /> Confirmar
           </button>
         </form>
+        {show &&
+          <PopUpMessage
+            message={message}
+            title={title}
+            onClose={() => setStatus({ show: false, message: "", title: "", type: "info" })}
+            type={type}
+          />}
       </main>
     </AdminLayout>
   );

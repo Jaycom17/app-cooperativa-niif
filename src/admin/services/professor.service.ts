@@ -14,8 +14,7 @@ export const ProfessorService = {
   updateProfessor: (id: string, professorData: ProfessorDTO): Promise<void> => {
     return axiosInstance.put(`/users/professor/${id}`, professorData);
   },
-  //TODO: verificar si esa es la ruta correcta
   deleteProfessor: (id: string): Promise<void> => {
-    return axiosInstance.delete(`/users/professor/${id}`);
+    return axiosInstance.delete(`/users/${id}`);
   },
 };

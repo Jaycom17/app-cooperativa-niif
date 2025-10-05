@@ -2,7 +2,11 @@ version: "3.8"
 
 services:
   frontend:
-    build: .
+    build: 
+      context: .
+      args:
+        VITE_API_URL: "https://api.pruebasjaycom.shop/api"
+        VITE_PAGE_URL: "https://www.pruebasjaycom.shop"
     container_name: frontend
     restart: always
     expose:
@@ -11,8 +15,6 @@ services:
       - VIRTUAL_HOST=pruebasjaycom.shop,www.pruebasjaycom.shop
       - LETSENCRYPT_HOST=pruebasjaycom.shop,www.pruebasjaycom.shop
       - LETSENCRYPT_EMAIL=juanorejuela499@gmail.com
-      - VITE_API_URL=https://api.pruebasjaycom.com/api
-      - VITE_PAGE_URL=https://www.pruebasjaycom.com
     networks:
       - proxy-tier
 

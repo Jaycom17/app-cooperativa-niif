@@ -72,7 +72,7 @@ const AccountDropdown = ({
     <div
       className="relative inline-block  mt-5 md:my-auto md:mx-0"
       ref={dropdownRef}
-      style={{ zIndex: 100 }}
+      style={{ zIndex: 70 }}
     >
       <CloseButton onClick={handleAccOpt} />
       {isAccountOptOpen && (

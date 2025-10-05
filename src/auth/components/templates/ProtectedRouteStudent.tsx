@@ -18,7 +18,6 @@ const ProtectedRouteStudent = ({ allowedRoles }: { allowedRoles: string[] }) => 
   }
 
   if (!student) {
-    console.log("No student found, redirecting to middleware");
     return <Navigate to="/middlewarestudent" replace />;
   }
 

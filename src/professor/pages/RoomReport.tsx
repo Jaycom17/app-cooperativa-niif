@@ -38,130 +38,130 @@ import { config as configDetalleRenglones } from "@/forms/utils/DetalleReng";
 import { config as configImpuestoDiferido } from "@/forms/utils/impuestoDiferido";
 import { config as configIngresosFacturacion } from "@/forms/utils/IngresosFacturacion";
 
+import Loading from "@/components/atoms/Loading";
+
 function RoomReport() {
   const { roomID } = useParams();
   const [form, setForm] = useState("");
   const [selectedStudent, setSelectedStudent] = useState<string | null>(null);
   const [data, setData] = useState({});
   const [config, setConfig] = useState({});
+  const [loading, setLoading] = useState(false); // 👈 estado para loading
 
-  const toNav = (formTo: string, stuID:  string | undefined) => {
+  const toNav = (formTo: string, stuID: string | undefined) => {
     setForm(formTo);
 
     if (formTo === "stuSelect") {
       setSelectedStudent(stuID || null);
       setData({});
       setConfig({});
+      return;
     }
+
+    setLoading(true);
+    setData({});
+    setConfig({});
+
+    const finishLoading = () => setLoading(false);
 
     switch (formTo) {
       case "form110":
-        setData({});
         Form110Service.getForm110ForProfessor(stuID!, roomID!)
           .then((res) => {
             const mergedData = mergeDeepPreservingOrder(Form110Input, res.data.r110Content);
             setData(mergedData);
             setConfig(configForm110);
           })
-          .catch((error) => {
-            console.log(error);
-          });  
+          .catch(console.log)
+          .finally(finishLoading);
         break;
+
       case "detalleReng":
-        setData({});
         DetalleReglonesService.getDetalleReglonesFormProfessor(stuID!, roomID!)
           .then((res) => {
             const mergedData = mergeDeepPreservingOrder(DetalleRenglonesInput, res.data.detContent);
             setData(mergedData);
             setConfig(configDetalleRenglones);
           })
-          .catch((error) => {
-            console.log(error);
-          });
+          .catch(console.log)
+          .finally(finishLoading);
         break;
+
       case "caratulaform":
-        setData({});
         CaratulaService.getCaratulaForProfessor(stuID!, roomID!)
           .then((res) => {
             const mergedData = mergeDeepPreservingOrder(CaratulaInput, res.data.carContent);
             setData(mergedData);
             setConfig(configCaratula);
           })
-          .catch((error) => {
-            console.log(error);
-          });
+          .catch(console.log)
+          .finally(finishLoading);
         break;
+
       case "esfpatrimonioform":
-        setData({});
         EsfPatrimonioService.getEsfPatrimonioFormProfessor(stuID!, roomID!)
           .then((res) => {
             const mergedData = mergeDeepPreservingOrder(ESFPatrimonioInput, res.data.esfContent);
             setData(mergedData);
             setConfig(configESFPatrimonio);
           })
-          .catch((error) => {
-            console.log(error);
-          });
+          .catch(console.log)
+          .finally(finishLoading);
         break;
+
       case "rentaliquida":
-        setData({});
         RentaLiquidaService.getRentaLiquidaForProfessor(stuID!, roomID!)
           .then((res) => {
             const mergedData = mergeDeepPreservingOrder(RentaLiquidaInput, res.data.rentContent);
             setData(mergedData);
             setConfig(configRentaLiquida);
           })
-          .catch((error) => {
-            console.log(error);
-          });
+          .catch(console.log)
+          .finally(finishLoading);
         break;
+
       case "impuestodiferido":
-        setData({});
         ImpuestoDiferidoService.getImpuestoDiferidoForProfessor(stuID!, roomID!)
           .then((res) => {
             const mergedData = mergeDeepPreservingOrder(ImpuestoDiferidoInput, res.data.impContent);
             setData(mergedData);
             setConfig(configImpuestoDiferido);
           })
-          .catch((error) => {
-            console.log(error);
-          });
+          .catch(console.log)
+          .finally(finishLoading);
         break;
+
       case "ingrefactform":
-        setData({});
         IngresosFacturacionService.getIngresosFacturacionForProfessor(stuID!, roomID!)
           .then((res) => {
             const mergedData = mergeDeepPreservingOrder(IngresosFacturacionInput, res.data.ingContent);
             setData(mergedData);
             setConfig(configIngresosFacturacion);
           })
-          .catch((error) => {
-            console.log(error);
-          });
+          .catch(console.log)
+          .finally(finishLoading);
         break;
+
       case "activosfijos":
-        setData({});
         ActivosFijosService.getActivosFijosFormProfessor(stuID!, roomID!)
           .then((res) => {
             const mergedData = mergeDeepPreservingOrder(ActivosFijosInput, res.data.actContent);
             setData(mergedData);
             setConfig(configActivosFijos);
           })
-          .catch((error) => {
-            console.log(error);
-          });
+          .catch(console.log)
+          .finally(finishLoading);
         break;
+
       case "resumenesf":
-        setData({});
         ResumenESFService.getResumenESFForProfessor(stuID!, roomID!)
           .then((res) => {
             const mergedData = mergeDeepPreservingOrder(ResumenESFInput, res.data.resContent);
             setData(mergedData);
             setConfig({});
           })
-          .catch((error) => {
-            console.log(error);
-          });
+          .catch(console.log)
+          .finally(finishLoading);
         break;
     }
   };
@@ -170,31 +170,20 @@ function RoomReport() {
     <ProfessorLayout>
       <main className="flex">
         <AsideProf toNav={toNav} />
+
         {form === "" && (
           <div className="flex flex-col items-center justify-center mb-32 text-center w-10/12 md:w-5/12 md:mx-auto">
-            <img
-              src={logo}
-              alt="Logo universidad cooperativa"
-              className="w-11/12 md:w-96"
-            />
-            <h1 className="text-4xl font-semibold">
-              Bienvenido al reporte de la sala
-            </h1>
+            <img src={logo} alt="Logo universidad cooperativa" className="w-11/12 md:w-96" />
+            <h1 className="text-4xl font-semibold">Bienvenido al reporte de la sala</h1>
             <h2 className="text-lg lg:text-xl">
-              Para empezar a revisar los avances de un estudiante en los
-              formularios, escoge uno dando clic en el botón &quot;
-              <span className="text-unicoop-blue font-medium">Estudiantes</span>
-              &quot;, en la barra de navegación lateral.
+              Para empezar a revisar los avances de un estudiante en los formularios, escoge uno en la barra lateral.
             </h2>
           </div>
         )}
+
         {form === "stuSelect" && selectedStudent && (
           <div className="flex flex-col items-center text-center w-full h-screen justify-center">
-            <img
-              className="w-[300px] md:w-[400px] rounded-[20%]"
-              src={logo}
-              alt="Logo universidad cooperativa"
-            />
+            <img className="w-[300px] md:w-[400px] rounded-[20%]" src={logo} alt="Logo universidad cooperativa" />
             <h2 className="text-2xl font-semibold pb-8 text-center">
               Selecciona el formulario que desea revisar
             </h2>
@@ -216,15 +205,19 @@ function RoomReport() {
             </section>
           </div>
         )}
-        {form !== "" && Object.keys(data).length > 0 && (
+
+        
+        {loading && (
+          <div className="flex w-full h-svh items-center justify-center">
+            <Loading message="Cargando formulario..." fullscreen={false}/>
+          </div>
+        )}
+
+        
+        {!loading && form !== "" && Object.keys(data).length > 0 && (
           <main className="w-full pt-9 md:p-10 max-h-screen overflow-auto">
-          <FormRender
-            value={data}
-            canEdit={false}
-            defaultOpen={false}
-            config={config}
-          />
-        </main>
+            <FormRender value={data} canEdit={false} defaultOpen={false} config={config} />
+          </main>
         )}
       </main>
     </ProfessorLayout>

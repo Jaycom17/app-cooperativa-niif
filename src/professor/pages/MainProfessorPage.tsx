@@ -6,12 +6,21 @@ import InfoBubble from "@/components/atoms/InfoBubble";
 import { RoomService } from "@/professor/services/room.service";
 import ProfessorLayout from "@/professor/components/templates/ProfessorLayout";
 
-import type { RoomModel } from "../models/Room";
+import type { RoomModel } from "@/professor/models/Room";
+import { useAuthStore } from "@/stores/AuthStore";
+
+import PopUpMessage from "@/components/molecules/PopUpMessage";
+
+import { useStatusStore } from "@/stores/StatusStore";
 
 const MainProfessorPage = () => {
   const [rooms, setRooms] = useState<RoomModel[]>([]);
   const [isDateAscending, setIsDateAscending] = useState(false);
   const [isNameAscending, setIsNameAscending] = useState(false);
+
+  const { show, setStatus, title, message, type } = useStatusStore();
+
+  const { user } = useAuthStore();
 
   const dateInfo = "La fecha se encuentra en formato: - Día / Mes / Año";
 
@@ -20,14 +29,21 @@ const MainProfessorPage = () => {
       .then((rooms) => {
         setRooms(rooms);
       })
-      .catch(() => {
-        alert("Error al cargar las salas");
+      .catch((err: any) => {
+        if (err?.response?.status === 401) {
+          setRooms([]);
+          return;
+        }
+        if (user) {
+          alert("Error al cargar las salas");
+        }
       });
   };
 
   useEffect(() => {
     getRooms();
-  }, []);  
+  }, []);
+
 
   const orderByDate = () => {
     const sortedRooms = [...rooms].sort((a, b) =>
@@ -52,7 +68,6 @@ const MainProfessorPage = () => {
   return (
     <ProfessorLayout>
       <main className="flex flex-col items-center min-h-screen bg-background">
-        {/**Aquí, en esta sección la idea sería poner los filtros (Barra de busqueda, ordenar por?) */}
         <section className="flex justify-between items-center w-11/12 mt-5">
           <InfoBubble info={dateInfo} />
           <div className="flex gap-4 text-background text-xs md:text-base">
@@ -62,9 +77,8 @@ const MainProfessorPage = () => {
             >
               Ordenar por fecha
               <IoIosArrowDown
-                className={`ml-1 md:text-lg transition-transform duration-300 ${
-                  isDateAscending ? "rotate-180" : ""
-                }`}
+                className={`ml-1 md:text-lg transition-transform duration-300 ${isDateAscending ? "rotate-180" : ""
+                  }`}
               />
             </button>
             <button
@@ -73,18 +87,25 @@ const MainProfessorPage = () => {
             >
               Ordenar por nombre
               <IoIosArrowDown
-                className={`ml-1 md:text-lg transition-transform duration-300 ${
-                  isNameAscending ? "rotate-180" : ""
-                }`}
+                className={`ml-1 md:text-lg transition-transform duration-300 ${isNameAscending ? "rotate-180" : ""
+                  }`}
               />
             </button>
           </div>
         </section>
         <section className="w-11/12 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 my-5 mx-auto justify-items-center">
           {rooms.map((room) => (
-            <Room key={room.roomID} room={room} usuId={"someUsuId"} onRefresh={getRooms}/>
+            <Room key={room.roomID} room={room} usuId={"someUsuId"} onRefresh={getRooms} />
           ))}
         </section>
+        {show && (
+          <PopUpMessage
+            title={title}
+            message={message}
+            type={type}
+            onClose={() => setStatus({ show: false, message: "", type: "info", title: "" })}
+          />
+        )}
       </main>
     </ProfessorLayout>
   );
