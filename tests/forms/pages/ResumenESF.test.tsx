@@ -276,7 +276,8 @@ describe("ResumenESFForm component", () => {
       // Avanzar 2 segundos
       await vi.advanceTimersByTimeAsync(2000);
 
-      expect(mockUpdateData).not.toHaveBeenCalled();
+      // Verificar que aún no se ha guardado
+      expect(mockUpdateData).toHaveBeenCalledTimes(0);
 
       // Segundo cambio (reinicia el debounce)
       triggerButton.click();
@@ -284,14 +285,14 @@ describe("ResumenESFForm component", () => {
       // Avanzar 2 segundos más
       await vi.advanceTimersByTimeAsync(2000);
 
-      expect(mockUpdateData).not.toHaveBeenCalled();
+      // Aún no debería haberse guardado
+      expect(mockUpdateData).toHaveBeenCalledTimes(0);
 
       // Avanzar 3.5 segundos más para completar los 5s desde el segundo click
       await vi.advanceTimersByTimeAsync(3500);
 
-      await waitFor(() => {
-        expect(mockUpdateData).toHaveBeenCalledTimes(1);
-      });
+      // Debe haberse guardado exactamente 1 vez
+      expect(mockUpdateData).toHaveBeenCalledTimes(1);
 
       vi.useRealTimers();
     }, 12000);
