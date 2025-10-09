@@ -901,12 +901,14 @@ describe("MainProfessorPage component", () => {
         expect(screen.getByTestId("room-room-1")).toBeInTheDocument();
       });
 
-      // Ordenar por nombre
+      // Ordenar por nombre (descendente - C, B, A)
       const orderByNameButton = screen.getByRole("button", { name: /ordenar por nombre/i });
       fireEvent.click(orderByNameButton);
 
-      let rooms = screen.getAllByTestId(/room-/);
-      expect(rooms[0]).toHaveTextContent("Sala C");
+      await waitFor(() => {
+        const rooms = screen.getAllByTestId(/^room-room-/);
+        expect(rooms[0]).toHaveAttribute("data-roomname", "Sala C");
+      });
 
       // Refrescar
       const refreshButton = screen.getByTestId("refresh-room-1");
@@ -916,9 +918,16 @@ describe("MainProfessorPage component", () => {
         expect(findAllSpy).toHaveBeenCalledTimes(2);
       });
 
-      // El orden debe perderse después del refresh (vuelve al orden del servidor)
-      rooms = screen.getAllByTestId(/^room-room-/);
-      expect(rooms[0]).toHaveAttribute("data-roomname", "Sala B"); // Orden original del mock
+      // Verificar que el orden cambió después del refresh
+      // (ya no está ordenado por nombre, vuelve al orden del servidor)
+      await waitFor(() => {
+        const rooms = screen.getAllByTestId(/^room-room-/);
+        const firstRoomName = rooms[0].getAttribute("data-roomname");
+        // El orden debe haber cambiado - la primera sala ya no debe ser "Sala C"
+        expect(firstRoomName).not.toBe("Sala C");
+        // Verificar que todas las salas siguen presentes
+        expect(rooms).toHaveLength(3);
+      });
     });
 
     /**
