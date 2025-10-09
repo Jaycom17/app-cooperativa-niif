@@ -282,9 +282,6 @@ describe("CaratulaForm component", () => {
     it("cancela el guardado anterior si hay un nuevo cambio antes de 5 segundos", async () => {
       vi.useFakeTimers({ shouldAdvanceTime: true });
       
-      // Limpiar mocks antes de esta prueba específica
-      mockUpdateCaratula.mockClear();
-      
       render(
         <MemoryRouter>
           <CaratulaForm />
@@ -295,7 +292,14 @@ describe("CaratulaForm component", () => {
         expect(mockGetCaratula).toHaveBeenCalled();
       });
 
+      // Limpiar todos los timers pendientes de tests anteriores
+      vi.clearAllTimers();
+      vi.runAllTimers(); // Ejecutar y limpiar cualquier timer pendiente de tests anteriores
+      
       const triggerButton = screen.getByTestId("trigger-change");
+
+      // Limpiar mocks justo ANTES del primer click
+      mockUpdateCaratula.mockClear();
 
       // Primer cambio
       triggerButton.click();
@@ -304,7 +308,7 @@ describe("CaratulaForm component", () => {
       await vi.advanceTimersByTimeAsync(2000);
 
       // Verificar que aún no se ha guardado
-      expect(mockUpdateCaratula).not.toHaveBeenCalled();
+      expect(mockUpdateCaratula).toHaveBeenCalledTimes(0);
 
       // Segundo cambio antes de que se complete el primero (reinicia el debounce)
       triggerButton.click();
@@ -313,14 +317,13 @@ describe("CaratulaForm component", () => {
       await vi.advanceTimersByTimeAsync(2000);
 
       // Aún no debería haberse guardado
-      expect(mockUpdateCaratula).not.toHaveBeenCalled();
+      expect(mockUpdateCaratula).toHaveBeenCalledTimes(0);
 
-      // Avanzar 3.5 segundos más para completar los 5 segundos desde el segundo click
+      // Avanzar 3.5 segundos más para completar los 5.5 segundos desde el segundo click
       await vi.advanceTimersByTimeAsync(3500);
 
-      await waitFor(() => {
-        expect(mockUpdateCaratula).toHaveBeenCalledTimes(1);
-      });
+      // Debe haberse guardado exactamente 1 vez
+      expect(mockUpdateCaratula).toHaveBeenCalledTimes(1);
 
       vi.useRealTimers();
     }, 12000);
