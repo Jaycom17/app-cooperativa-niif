@@ -92,14 +92,11 @@ vi.mock("@/forms/models/ImpuestoDiferidoJson", () => ({
 describe("ImpuestoDiferidoForm component", () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    vi.useFakeTimers();
     mockGetData.mockResolvedValue(mockApiResponse);
     mockUpdateData.mockResolvedValue({ success: true });
   });
 
   afterEach(() => {
-    vi.runOnlyPendingTimers();
-    vi.useRealTimers();
     vi.restoreAllMocks();
   });
 
@@ -185,11 +182,34 @@ describe("ImpuestoDiferidoForm component", () => {
       const triggerButton = screen.getByTestId("trigger-change");
       triggerButton.click();
 
-      expect(screen.getByTestId("loading-status")).toHaveTextContent("saving");
+      // Esperar a que el estado cambie a 'saving'
+      await waitFor(() => {
+        expect(screen.getByTestId("loading-status")).toHaveTextContent("saving");
+      });
     });
   });
 
   describe("Auto-guardado con debounce", () => {
+    it("no guarda inmediatamente después de un cambio", async () => {
+      render(
+        <MemoryRouter>
+          <ImpuestoDiferidoForm />
+        </MemoryRouter>
+      );
+
+      await waitFor(() => {
+        expect(mockGetData).toHaveBeenCalled();
+      });
+
+      mockUpdateData.mockClear();
+
+      const triggerButton = screen.getByTestId("trigger-change");
+      triggerButton.click();
+
+      // Verificar inmediatamente que no se ha guardado (aparte del guardado inicial)
+      expect(mockUpdateData).not.toHaveBeenCalled();
+    });
+
     it("guarda los datos después de 5 segundos", async () => {
       render(
         <MemoryRouter>
@@ -206,12 +226,11 @@ describe("ImpuestoDiferidoForm component", () => {
       const triggerButton = screen.getByTestId("trigger-change");
       triggerButton.click();
 
-      vi.advanceTimersByTime(5000);
-
+      // Esperar 5 segundos + tiempo para guardado
       await waitFor(() => {
         expect(mockUpdateData).toHaveBeenCalled();
-      });
-    });
+      }, { timeout: 7000 });
+    }, 8000);
 
     it("cambia el estado a 'saved' después de guardar exitosamente", async () => {
       render(
@@ -227,21 +246,67 @@ describe("ImpuestoDiferidoForm component", () => {
       const triggerButton = screen.getByTestId("trigger-change");
       triggerButton.click();
 
-      vi.advanceTimersByTime(5000);
-
+      // Esperar a que se guarde y cambie el estado
       await waitFor(() => {
         expect(screen.getByTestId("loading-status")).toHaveTextContent("saved");
+      }, { timeout: 7000 });
+    }, 8000);
+
+    it("cancela el guardado anterior si hay un nuevo cambio antes de 5 segundos", async () => {
+      render(
+        <MemoryRouter>
+          <ImpuestoDiferidoForm />
+        </MemoryRouter>
+      );
+
+      await waitFor(() => {
+        expect(mockGetData).toHaveBeenCalled();
       });
-    });
+
+      mockUpdateData.mockClear();
+
+      const triggerButton = screen.getByTestId("trigger-change");
+
+      // Primer cambio
+      triggerButton.click();
+      
+      // Esperar 2 segundos (menos de 5, para que no se guarde)
+      await new Promise((resolve) => setTimeout(resolve, 2000));
+
+      // Verificar que aún no se ha guardado
+      expect(mockUpdateData).not.toHaveBeenCalled();
+
+      // Segundo cambio antes de que se complete el primero (reinicia el debounce)
+      triggerButton.click();
+      
+      // Esperar 2 segundos más (total 4s desde primer click, 2s desde segundo)
+      await new Promise((resolve) => setTimeout(resolve, 2000));
+
+      // Aún no debería haberse guardado
+      expect(mockUpdateData).not.toHaveBeenCalled();
+
+      // Esperar 3.5 segundos más para completar los 5 segundos desde el segundo click
+      await waitFor(() => {
+        expect(mockUpdateData).toHaveBeenCalledTimes(1);
+      }, { timeout: 4000 });
+    }, 12000);
   });
 
   describe("Manejo de errores en guardado", () => {
-    it("mantiene el estado como 'idle' si falla el guardado", async () => {
-      await waitFor(() => {
-        mockUpdateData.mockClear();
-      });
+    beforeEach(() => {
+      vi.useFakeTimers({ shouldAdvanceTime: true });
+    });
 
-      mockUpdateData.mockRejectedValueOnce(new Error("Save error"));
+    afterEach(() => {
+      vi.runOnlyPendingTimers();
+      vi.useRealTimers();
+    });
+
+    it("mantiene el estado como 'idle' si falla el guardado", async () => {
+      // Primer guardado exitoso (carga inicial), luego falla el siguiente
+      mockUpdateData
+        .mockResolvedValueOnce({ success: true })
+        .mockRejectedValueOnce(new Error("Save error"));
 
       render(
         <MemoryRouter>
@@ -256,12 +321,48 @@ describe("ImpuestoDiferidoForm component", () => {
       const triggerButton = screen.getByTestId("trigger-change");
       triggerButton.click();
 
-      vi.advanceTimersByTime(5000);
+      await vi.advanceTimersByTimeAsync(5000);
 
       await waitFor(() => {
         expect(screen.getByTestId("loading-status")).toHaveTextContent("idle");
       });
-    });
+    }, 10000);
+
+    it("permite reintentar el guardado después de un error", async () => {
+      // Primer guardado exitoso (carga inicial), luego falla, luego éxito
+      mockUpdateData
+        .mockResolvedValueOnce({ success: true })
+        .mockRejectedValueOnce(new Error("Save error"))
+        .mockResolvedValueOnce({ success: true });
+
+      render(
+        <MemoryRouter>
+          <ImpuestoDiferidoForm />
+        </MemoryRouter>
+      );
+
+      await waitFor(() => {
+        expect(mockGetData).toHaveBeenCalled();
+      });
+
+      const triggerButton = screen.getByTestId("trigger-change");
+
+      // Primer intento (falla)
+      triggerButton.click();
+      await vi.advanceTimersByTimeAsync(5000);
+
+      await waitFor(() => {
+        expect(screen.getByTestId("loading-status")).toHaveTextContent("idle");
+      });
+
+      // Segundo intento (éxito)
+      triggerButton.click();
+      await vi.advanceTimersByTimeAsync(5000);
+
+      await waitFor(() => {
+        expect(screen.getByTestId("loading-status")).toHaveTextContent("saved");
+      });
+    }, 15000);
   });
 
   describe("Estructura del layout", () => {

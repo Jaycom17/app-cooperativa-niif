@@ -94,14 +94,11 @@ vi.mock("@/forms/models/EsfPatrimonioJson", () => ({
 describe("ESFPatrimonio component", () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    vi.useFakeTimers();
     mockGetData.mockResolvedValue(mockApiResponse);
     mockUpdateData.mockResolvedValue({ success: true });
   });
 
   afterEach(() => {
-    vi.runOnlyPendingTimers();
-    vi.useRealTimers();
     vi.restoreAllMocks();
   });
 
@@ -242,13 +239,20 @@ describe("ESFPatrimonio component", () => {
   });
 
   describe("Manejo de errores en guardado", () => {
-    it("mantiene el estado como 'idle' si falla el guardado", async () => {
-      // Primer guardado exitoso (carga inicial)
-      await waitFor(() => {
-        mockUpdateData.mockClear();
-      });
+    beforeEach(() => {
+      vi.useFakeTimers({ shouldAdvanceTime: true });
+    });
 
-      mockUpdateData.mockRejectedValueOnce(new Error("Save error"));
+    afterEach(() => {
+      vi.runOnlyPendingTimers();
+      vi.useRealTimers();
+    });
+
+    it("mantiene el estado como 'idle' si falla el guardado", async () => {
+      // Primer guardado exitoso (carga inicial), luego falla el siguiente
+      mockUpdateData
+        .mockResolvedValueOnce({ success: true })
+        .mockRejectedValueOnce(new Error("Save error"));
 
       render(
         <MemoryRouter>
@@ -263,10 +267,73 @@ describe("ESFPatrimonio component", () => {
       const triggerButton = screen.getByTestId("trigger-change");
       triggerButton.click();
 
-      // Esperar a que falle el guardado
+      await vi.advanceTimersByTimeAsync(5000);
+
       await waitFor(() => {
         expect(screen.getByTestId("loading-status")).toHaveTextContent("idle");
-      }, { timeout: 7000 });
-    }, 8000);
+      });
+    }, 10000);
+
+    it("permite reintentar el guardado después de un error", async () => {
+      // Primer guardado exitoso (carga inicial), luego falla, luego éxito
+      mockUpdateData
+        .mockResolvedValueOnce({ success: true })
+        .mockRejectedValueOnce(new Error("Save error"))
+        .mockResolvedValueOnce({ success: true });
+
+      render(
+        <MemoryRouter>
+          <ESFPatrimonio />
+        </MemoryRouter>
+      );
+
+      await waitFor(() => {
+        expect(mockGetData).toHaveBeenCalled();
+      });
+
+      const triggerButton = screen.getByTestId("trigger-change");
+
+      // Primer intento (falla)
+      triggerButton.click();
+      await vi.advanceTimersByTimeAsync(5000);
+
+      await waitFor(() => {
+        expect(screen.getByTestId("loading-status")).toHaveTextContent("idle");
+      });
+
+      // Segundo intento (éxito)
+      triggerButton.click();
+      await vi.advanceTimersByTimeAsync(5000);
+
+      await waitFor(() => {
+        expect(screen.getByTestId("loading-status")).toHaveTextContent("saved");
+      });
+    }, 15000);
+  });
+
+  describe("Estructura y componentes del layout", () => {
+    it("renderiza dentro de StudentLayout", async () => {
+      render(
+        <MemoryRouter>
+          <ESFPatrimonio />
+        </MemoryRouter>
+      );
+
+      await waitFor(() => {
+        expect(screen.getByTestId("student-layout")).toBeInTheDocument();
+      });
+    });
+
+    it("muestra el componente Loading con el estado correcto", async () => {
+      render(
+        <MemoryRouter>
+          <ESFPatrimonio />
+        </MemoryRouter>
+      );
+
+      await waitFor(() => {
+        expect(screen.getByTestId("loading-status")).toBeInTheDocument();
+      });
+    });
   });
 });
