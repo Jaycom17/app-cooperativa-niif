@@ -254,6 +254,8 @@ describe("ResumenESFForm component", () => {
     }, 8000);
 
     it("cancela el guardado anterior si hay un nuevo cambio antes de 5 segundos", async () => {
+      vi.useFakeTimers({ shouldAdvanceTime: true });
+      
       mockUpdateData.mockClear();
 
       render(
@@ -271,26 +273,27 @@ describe("ResumenESFForm component", () => {
       // Primer cambio
       triggerButton.click();
 
-      // Esperar 2 segundos
-      await new Promise((resolve) => setTimeout(resolve, 2000));
+      // Avanzar 2 segundos
+      await vi.advanceTimersByTimeAsync(2000);
 
       expect(mockUpdateData).not.toHaveBeenCalled();
 
       // Segundo cambio (reinicia el debounce)
       triggerButton.click();
 
-      // Esperar 2 segundos más
-      await new Promise((resolve) => setTimeout(resolve, 2000));
+      // Avanzar 2 segundos más
+      await vi.advanceTimersByTimeAsync(2000);
 
       expect(mockUpdateData).not.toHaveBeenCalled();
 
-      // Esperar 3.5 segundos más para completar los 5s desde el segundo click
-      await waitFor(
-        () => {
-          expect(mockUpdateData).toHaveBeenCalledTimes(1);
-        },
-        { timeout: 4000 }
-      );
+      // Avanzar 3.5 segundos más para completar los 5s desde el segundo click
+      await vi.advanceTimersByTimeAsync(3500);
+
+      await waitFor(() => {
+        expect(mockUpdateData).toHaveBeenCalledTimes(1);
+      });
+
+      vi.useRealTimers();
     }, 12000);
 
     it("cambia el estado a 'saved' después de guardar exitosamente", async () => {

@@ -345,6 +345,8 @@ describe("ActivosFijosForm component", () => {
     }, 8000);
 
     it("cancela el guardado anterior si hay un nuevo cambio antes de 5 segundos", async () => {
+      vi.useFakeTimers({ shouldAdvanceTime: true });
+      
       // Limpiar mocks antes de esta prueba específica
       mockUpdateActivosFijos.mockClear();
       
@@ -363,8 +365,8 @@ describe("ActivosFijosForm component", () => {
       // Primer cambio
       triggerButton.click();
       
-      // Esperar 2 segundos (menos de 5, para que no se guarde)
-      await new Promise((resolve) => setTimeout(resolve, 2000));
+      // Avanzar 2 segundos (menos de 5, para que no se guarde)
+      await vi.advanceTimersByTimeAsync(2000);
 
       // Verificar que aún no se ha guardado
       expect(mockUpdateActivosFijos).not.toHaveBeenCalled();
@@ -372,20 +374,21 @@ describe("ActivosFijosForm component", () => {
       // Segundo cambio antes de que se complete el primero (reinicia el debounce)
       triggerButton.click();
       
-      // Esperar 2 segundos más (total 4s desde primer click, 2s desde segundo)
-      await new Promise((resolve) => setTimeout(resolve, 2000));
+      // Avanzar 2 segundos más (total 4s desde primer click, 2s desde segundo)
+      await vi.advanceTimersByTimeAsync(2000);
 
       // Aún no debería haberse guardado (han pasado 4s desde el primer click,
       // pero solo 2s desde el segundo click que reinició el contador)
       expect(mockUpdateActivosFijos).not.toHaveBeenCalled();
 
-      // Esperar 3.5 segundos más para completar los 5 segundos desde el segundo click
-      await waitFor(
-        () => {
-          expect(mockUpdateActivosFijos).toHaveBeenCalledTimes(1);
-        },
-        { timeout: 4000 }
-      );
+      // Avanzar 3.5 segundos más para completar los 5 segundos desde el segundo click
+      await vi.advanceTimersByTimeAsync(3500);
+
+      await waitFor(() => {
+        expect(mockUpdateActivosFijos).toHaveBeenCalledTimes(1);
+      });
+
+      vi.useRealTimers();
     }, 12000);
 
     it("cambia el estado a 'saved' después de guardar exitosamente", async () => {
