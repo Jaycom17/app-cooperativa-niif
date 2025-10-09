@@ -172,7 +172,7 @@ function RoomReport() {
         <AsideProf toNav={toNav} />
 
         {form === "" && (
-          <div className="flex flex-col items-center justify-center mb-32 text-center w-10/12 md:w-5/12 md:mx-auto">
+          <div className="flex flex-col items-center justify-center mb-32 text-center w-full h-dvh md:w-5/12 md:mx-auto">
             <img src={logo} alt="Logo universidad cooperativa" className="w-11/12 md:w-96" />
             <h1 className="text-4xl font-semibold">Bienvenido al reporte de la sala</h1>
             <h2 className="text-lg lg:text-xl">

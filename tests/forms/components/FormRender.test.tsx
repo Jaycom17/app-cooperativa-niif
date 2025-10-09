@@ -769,7 +769,7 @@ describe("FormRender", () => {
     it("maneja undefined sin errores", () => {
       const undefinedValue = undefined;
 
-      const { container } = render(
+      render(
         <FormRender value={undefinedValue as any} onChange={mockOnChange} />
       );
 

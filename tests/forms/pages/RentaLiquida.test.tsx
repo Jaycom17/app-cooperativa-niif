@@ -27,13 +27,31 @@ import { MemoryRouter } from "react-router-dom";
 import RentaLiquidaForm from "../../../src/forms/pages/RentaLiquida";
 
 const mockData = {
-  rentaLiquida: {
-    ingresos: 1000,
-    deducciones: 500,
+  Ingresos: {
+    TotalIngresos: {
+      MayorValorFiscalPorReconocimientoExencionesLimitaciones: 0,
+      ValorFiscal: 0,
+      TarifaDel9Porciento: 0,
+    },
+    MenosIngresosNoConstitutivosDeRentaNiGananciaOcasional: {
+      MayorValorFiscalPorReconocimientoExencionesLimitaciones: 0,
+      ValorFiscal: 0,
+      TarifaDel9Porciento: 0,
+    },
+    IngresosPorRendimientosFinancieros: {},
+    DividendosYParticipaciones: {},
+    OtrosIngresos: {},
+    GananciasNetasEnOperacionesDiscontinuas: 0,
   },
   InventarioFinal: {
-    total: 200,
+    Total: 200,
   },
+  DiferenciasTemporalesDeducibles: {},
+  DiferenciasTemporalesImponibles: {},
+  OtrasDiferenciasTemporales: {},
+  Autorretenciones: {},
+  OtrasRetenciones: {},
+  IngresoImpuestoDiferido: {},
 };
 
 const mockApiResponse = {
@@ -60,18 +78,39 @@ const mockCalculateAllPartTwo = vi.fn();
 const mockCalculateFirstValorFiscal = vi.fn();
 const mockCalculateTotals = vi.fn();
 
-vi.mock("../utils/RentaLiquida", () => ({
+vi.mock("@/forms/utils/RentaLiquida", () => ({
   config: {},
-  calculateOtras: (element: any) => mockCalculateOtras(element),
-  calculateValorFiscalSolicitado: (element: any) => mockCalculateValorFiscalSolicitado(element),
-  calculatedValorFiscal: (element: any) => mockCalculatedValorFiscal(element),
-  calculateAllPartOne: (data: any) => mockCalculateAllPartOne(data),
-  calculateAllPartTwo: (data: any) => mockCalculateAllPartTwo(data),
-  calculateFirstValorFiscal: (...args: any[]) => mockCalculateFirstValorFiscal(...args),
+  calculateOtras: (element: any) => {
+    mockCalculateOtras(element);
+    return element;
+  },
+  calculateValorFiscalSolicitado: (element: any) => {
+    mockCalculateValorFiscalSolicitado(element);
+    return element;
+  },
+  calculatedValorFiscal: (element: any) => {
+    mockCalculatedValorFiscal(element);
+    return element;
+  },
+  calculateAllPartOne: (data: any) => {
+    mockCalculateAllPartOne(data);
+    return data;
+  },
+  calculateAllPartTwo: (data: any) => {
+    mockCalculateAllPartTwo(data);
+    return data;
+  },
+  calculateFirstValorFiscal: (...args: any[]) => {
+    mockCalculateFirstValorFiscal(...args);
+    return args[0]; // Return the data object
+  },
 }));
+
+const mockCalculateTotalsSources = vi.fn();
 
 vi.mock("@/forms/utils/totalOperations", () => ({
   calculateTotals: (...args: any[]) => mockCalculateTotals(...args),
+  calculateTotalsSources: (...args: any[]) => mockCalculateTotalsSources(...args),
 }));
 
 vi.mock("@/forms/components/FormRender", () => ({
@@ -108,14 +147,11 @@ vi.mock("@/forms/models/RentaLiquidaJson", () => ({
 describe("RentaLiquidaForm component", () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    vi.useFakeTimers();
     mockGetData.mockResolvedValue(mockApiResponse);
     mockUpdateData.mockResolvedValue({ success: true });
   });
 
   afterEach(() => {
-    vi.runOnlyPendingTimers();
-    vi.useRealTimers();
     vi.restoreAllMocks();
   });
 
@@ -232,11 +268,32 @@ describe("RentaLiquidaForm component", () => {
       const triggerButton = screen.getByTestId("trigger-change");
       triggerButton.click();
 
-      expect(screen.getByTestId("loading-status")).toHaveTextContent("saving");
+      await waitFor(() => {
+        expect(screen.getByTestId("loading-status")).toHaveTextContent("saving");
+      });
     });
   });
 
   describe("Auto-guardado con debounce", () => {
+    it("no guarda inmediatamente después de un cambio", async () => {
+      render(
+        <MemoryRouter>
+          <RentaLiquidaForm />
+        </MemoryRouter>
+      );
+
+      await waitFor(() => {
+        expect(mockGetData).toHaveBeenCalled();
+      });
+
+      mockUpdateData.mockClear();
+
+      const triggerButton = screen.getByTestId("trigger-change");
+      triggerButton.click();
+
+      expect(mockUpdateData).not.toHaveBeenCalled();
+    });
+
     it("guarda los datos después de 5 segundos", async () => {
       render(
         <MemoryRouter>
@@ -253,12 +310,59 @@ describe("RentaLiquidaForm component", () => {
       const triggerButton = screen.getByTestId("trigger-change");
       triggerButton.click();
 
-      vi.advanceTimersByTime(5000);
+      await waitFor(
+        () => {
+          expect(mockUpdateData).toHaveBeenCalled();
+        },
+        { timeout: 7000 }
+      );
+    }, 8000);
+
+    it("cancela el guardado anterior si hay un nuevo cambio antes de 5 segundos", async () => {
+      render(
+        <MemoryRouter>
+          <RentaLiquidaForm />
+        </MemoryRouter>
+      );
 
       await waitFor(() => {
-        expect(mockUpdateData).toHaveBeenCalled();
+        expect(mockGetData).toHaveBeenCalled();
       });
-    });
+
+      // Esperar a que termine el guardado inicial (si existe)
+      await new Promise((resolve) => setTimeout(resolve, 6000));
+
+      // Limpiar el mock después del guardado inicial
+      mockUpdateData.mockClear();
+
+      const triggerButton = screen.getByTestId("trigger-change");
+
+      // Primer cambio
+      triggerButton.click();
+
+      // Esperar 3 segundos (menos que los 5 del debounce)
+      await new Promise((resolve) => setTimeout(resolve, 3000));
+
+      // Verificar que no se ha guardado aún
+      expect(mockUpdateData).not.toHaveBeenCalled();
+
+      // Segundo cambio (reinicia el debounce)
+      triggerButton.click();
+
+      // Esperar 3 segundos más (total 6s desde el primer click, pero solo 3s desde el segundo)
+      await new Promise((resolve) => setTimeout(resolve, 3000));
+
+      // Aún no debe haber guardado
+      expect(mockUpdateData).not.toHaveBeenCalled();
+
+      // Esperar 3 segundos más para completar los 5s desde el segundo click
+      await waitFor(
+        () => {
+          expect(mockUpdateData).toHaveBeenCalledTimes(1);
+        },
+        { timeout: 3500 }
+      );
+    }, 16000);
 
     it("cambia el estado a 'saved' después de guardar exitosamente", async () => {
       render(
@@ -274,21 +378,28 @@ describe("RentaLiquidaForm component", () => {
       const triggerButton = screen.getByTestId("trigger-change");
       triggerButton.click();
 
-      vi.advanceTimersByTime(5000);
-
-      await waitFor(() => {
-        expect(screen.getByTestId("loading-status")).toHaveTextContent("saved");
-      });
-    });
+      await waitFor(
+        () => {
+          expect(screen.getByTestId("loading-status")).toHaveTextContent("saved");
+        },
+        { timeout: 7000 }
+      );
+    }, 8000);
   });
 
   describe("Manejo de errores en guardado", () => {
-    it("mantiene el estado como 'idle' si falla el guardado", async () => {
-      await waitFor(() => {
-        mockUpdateData.mockClear();
-      });
+    beforeEach(() => {
+      vi.useFakeTimers({ shouldAdvanceTime: true });
+    });
 
-      mockUpdateData.mockRejectedValueOnce(new Error("Save error"));
+    afterEach(() => {
+      vi.runOnlyPendingTimers();
+      vi.useRealTimers();
+    });
+
+    it("mantiene el estado como 'idle' si falla el guardado", async () => {
+      mockUpdateData.mockClear();
+      mockUpdateData.mockRejectedValue(new Error("Save error"));
 
       render(
         <MemoryRouter>
@@ -303,12 +414,58 @@ describe("RentaLiquidaForm component", () => {
       const triggerButton = screen.getByTestId("trigger-change");
       triggerButton.click();
 
-      vi.advanceTimersByTime(5000);
+      await vi.advanceTimersByTimeAsync(5000);
 
       await waitFor(() => {
         expect(screen.getByTestId("loading-status")).toHaveTextContent("idle");
       });
-    });
+    }, 10000);
+
+    it("permite reintentar el guardado después de un error", async () => {
+      mockUpdateData.mockClear();
+      
+      // Configurar para que el guardado inicial también falle
+      mockUpdateData.mockRejectedValue(new Error("Save error"));
+
+      render(
+        <MemoryRouter>
+          <RentaLiquidaForm />
+        </MemoryRouter>
+      );
+
+      await waitFor(() => {
+        expect(mockGetData).toHaveBeenCalled();
+      });
+
+      // Avanzar el tiempo para que el guardado inicial falle
+      await vi.advanceTimersByTimeAsync(5000);
+
+      await waitFor(() => {
+        expect(screen.getByTestId("loading-status")).toHaveTextContent("idle");
+      });
+
+      mockUpdateData.mockClear();
+
+      const triggerButton = screen.getByTestId("trigger-change");
+
+      // Primer intento (falla)
+      triggerButton.click();
+      await vi.advanceTimersByTimeAsync(5000);
+
+      await waitFor(() => {
+        expect(screen.getByTestId("loading-status")).toHaveTextContent("idle");
+      });
+
+      // Segundo intento (éxito)
+      mockUpdateData.mockClear();
+      mockUpdateData.mockResolvedValue({ data: { success: true } });
+      triggerButton.click();
+      await vi.advanceTimersByTimeAsync(5000);
+
+      await waitFor(() => {
+        expect(screen.getByTestId("loading-status")).toHaveTextContent("saved");
+      });
+    }, 15000);
   });
 
   describe("Estructura del layout", () => {

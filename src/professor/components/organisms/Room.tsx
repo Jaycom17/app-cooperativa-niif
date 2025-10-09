@@ -55,13 +55,13 @@ const Room = ({ room, usuId, onRefresh }: RoomProps) => {
     setActivated(room.roomStatus.toLowerCase() === "open");
   }, [room.roomStatus]);
 
-  const toggleActivated = () => {
+  const toggleActivated = async () => {
     const roomState = !activated ? "open" : "closed";
     try {
-      RoomService.updateRoomState({ roomState }, room.roomID);
+      await RoomService.updateRoomState({ roomState }, room.roomID);
       setActivated(!activated);
-    } catch (error) {
-      console.error("Error al actualizar el estado de la sala:", error);
+    } catch {
+      setStatus({ show: true, title: "Error", message: "Error al actualizar el estado de la sala", type: "error" });
     }
   };
 

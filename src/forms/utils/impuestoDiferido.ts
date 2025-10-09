@@ -166,14 +166,12 @@ export const calculateAll = (changedPath: string, newData: any) => {
       newData.ActivosPorCreditosTributariosSaldosAfavorEImpuestosPagadosEnElEsterior;
 
     basePath.SaldosAFavor.Variacion =
-      basePath.SaldosAFavor.Saldo31VigenciaActual ||
-      0 - basePath.SaldosAFavor.Saldo31VigenciaAnterior ||
-      0;
+      (basePath.SaldosAFavor.Saldo31VigenciaActual || 0) -
+      (basePath.SaldosAFavor.Saldo31VigenciaAnterior || 0);
 
     basePath.ImpuestosPagadosEnELExterior.Variacion =
-      basePath.ImpuestosPagadosEnELExterior.Saldo31VigenciaActual ||
-      0 - basePath.ImpuestosPagadosEnELExterior.Saldo31VigenciaAnterior ||
-      0;
+      (basePath.ImpuestosPagadosEnELExterior.Saldo31VigenciaActual || 0) -
+      (basePath.ImpuestosPagadosEnELExterior.Saldo31VigenciaAnterior || 0);
 
     basePath.SaldosAFavor.ExplicacionDeLaVariacion.ReduccionCompensacionApliacion =
       basePath.SaldosAFavor.Variacion || 0;

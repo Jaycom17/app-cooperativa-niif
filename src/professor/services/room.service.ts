@@ -26,8 +26,8 @@ export const RoomService = {
     const response = await axiosInstance.get("/rooms");
     return response.data;
   },
-  updateRoomState: (roomData: { roomState: string }, roomID: string) =>{
-    axiosInstance.put(`/rooms/change-state/${roomID}`, roomData);
+  updateRoomState: (roomData: { roomState: string }, roomID: string): Promise<void> =>{
+    return axiosInstance.put(`/rooms/change-state/${roomID}`, roomData);
   },
   validatePassword: async (roomPassword: string): Promise<{roomID: string, stuID: string}> => {
     const response = await axiosInstance.post(`/rooms/validate-password`, { roomPassword });

@@ -71,7 +71,7 @@ vi.mock("@/forms/services/activosFijos.service", () => ({
  * PROPÓSITO: Aislar las pruebas del componente FormRender
  */
 vi.mock("@/forms/components/FormRender", () => ({
-  FormRender: ({ value, onChange, canEdit, config }: any) => (
+  FormRender: ({ value, onChange, canEdit }: any) => (
     <div data-testid="form-render">
       <div data-testid="form-value">{JSON.stringify(value)}</div>
       <button
