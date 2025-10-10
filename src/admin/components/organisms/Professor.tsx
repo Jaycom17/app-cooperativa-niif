@@ -51,7 +51,7 @@ const Professor = ({ professor, onRefresh }: ProfessorProps) => {
         className="text-2xl font-bold text-center mx-1"
         title={professor.usuName}
       >
-        {cutString(professor.usuName)}
+        {cutString(professor.usuName, 20)}
       </h1>
       <h2 className="text-lg text-center" title={professor.usuEmail}>
         <span className="font-medium">E-mail:</span>{" "}
