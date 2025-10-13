@@ -16,9 +16,12 @@ import {
   calculateSubtotalAlFinalDelPeriodo,
   calculateTotalNetoAlFinalDelPeriodoFinanciero,
   calculateTotalNetoAlFinalDelPeriodoInformativo,
-  config
+  config,
 } from "@/forms/utils/ActivosFijos";
 import Loading from "@/forms/components/atoms/Loading";
+
+import { useStatusStore } from "@/stores/StatusStore";
+import PopUpMessage from "@/components/molecules/PopUpMessage";
 
 const ActivosFijosForm = () => {
   const [data, setData] = useState(ActivosFijosInput);
@@ -27,6 +30,8 @@ const ActivosFijosForm = () => {
   );
 
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const { setStatus, message, show, title, type } = useStatusStore();
 
   useEffect(() => {
     ActivosFijosService.getActivosFijosFormStudent()
@@ -49,11 +54,10 @@ const ActivosFijosForm = () => {
 
     if (Object.prototype.hasOwnProperty.call(element, "DatosContables")) {
       calculateImporteNetoFinalPeriodoCosto(element.DatosContables);
-    }else {
+    } else {
       calculateImporteNetoFinalPeriodoCosto(element);
     }
 
-    
     calculateImporteNetoFinalPeriodoAjustePorRevaluacion(element);
     calculateSubtotalAlFinalDelPeriodo(element);
     calculateTotalNetoAlFinalDelPeriodoFinanciero(element);
@@ -71,26 +75,29 @@ const ActivosFijosForm = () => {
       calculateTotals(arrayPath, newData, "TotalPorpiedadesDeInversion");
       calculateTotals(arrayPath, newData, "TotalActivosIntangibles");
       calculateTotalsSources(
-      newData,
-      [
-        newData?.PropiedadesPlantasYEquipos?.TotalPropiedadesPlantasEquipo,
-        newData?.PropiedadesDeInversión?.TotalPorpiedadesDeInversion,
-        newData?.ANCMV,
-      ],
-      "TotalPPEPIANCMV"
-    );
+        newData,
+        [
+          newData?.PropiedadesPlantasYEquipos?.TotalPropiedadesPlantasEquipo,
+          newData?.PropiedadesDeInversión?.TotalPorpiedadesDeInversion,
+          newData?.ANCMV,
+        ],
+        "TotalPPEPIANCMV"
+      );
 
-    calculateTotalsSources(
-      newData,
-      [
-        newData?.TotalPPEPIANCMV,
-        newData?.ActivosIntangibles?.TotalActivosIntangibles,
-      ],
-      "TotalPPEPIANCMVYINTANGIBLES"
-    );
+      calculateTotalsSources(
+        newData,
+        [
+          newData?.TotalPPEPIANCMV,
+          newData?.ActivosIntangibles?.TotalActivosIntangibles,
+        ],
+        "TotalPPEPIANCMVYINTANGIBLES"
+      );
       ActivosFijosService.updateACtivosFijosFormStudent(newData)
         .then(() => setSaveStatus("saved"))
-        .catch(() => setSaveStatus("idle"));
+        .catch((error) => {
+          setSaveStatus("idle");
+          setStatus({ show: true, message: error.response?.data?.message || "Error al guardar el formulario", title: "Error", type: "error" });
+        });
       timeoutRef.current = null;
     }, 5000);
   };
@@ -98,17 +105,26 @@ const ActivosFijosForm = () => {
   return (
     <StudentLayout>
       <main className="w-full pt-7 md:p-8 max-h-screen overflow-auto">
-        
+        {show && (
+        <PopUpMessage
+          message={message}
+          title={title}
+          onClose={() =>
+            setStatus({ show: false, message: "", title: "", type: "info" })
+          }
+          type={type}
+        />
+      )}
         <Loading saveStatus={saveStatus} />
 
         <div className="min-w-[500px]">
           <FormRender
-          value={data}
-          onChange={handleChange}
-          canEdit={true}
-          config={config}
-          defaultOpen={false}
-        />
+            value={data}
+            onChange={handleChange}
+            canEdit={true}
+            config={config}
+            defaultOpen={false}
+          />
         </div>
       </main>
     </StudentLayout>

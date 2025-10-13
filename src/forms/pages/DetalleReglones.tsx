@@ -14,6 +14,9 @@ import Loading from "@/forms/components/atoms/Loading";
 import { DetalleRenglonesInput } from "@/forms/models/DetalleRenglonesJson";
 import { mergeDeepPreservingOrder } from "@/forms/utils/mergeDeep";
 
+import { useStatusStore } from "@/stores/StatusStore";
+import PopUpMessage from "@/components/molecules/PopUpMessage";
+
 const DetalleRenglones = () => {
   const [data, setData] = useState(DetalleRenglonesInput);
   const [saveStatus, setSaveStatus] = useState<"idle" | "saving" | "saved">(
@@ -21,6 +24,8 @@ const DetalleRenglones = () => {
   );
 
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const { setStatus, message, show, title, type } = useStatusStore();
 
   useEffect(() => {
     DetalleReglonesService.getDetalleReglonesFormStudent()
@@ -63,7 +68,10 @@ const DetalleRenglones = () => {
       calculateTotalData(newData);
       DetalleReglonesService.updateADetalleReglonesFormStudent(newData)
         .then(() => setSaveStatus("saved"))
-        .catch(() => setSaveStatus("idle"));
+        .catch((error) => {
+          setSaveStatus("idle");
+          setStatus({ show: true, message: error.response?.data?.message || "Error al guardar el formulario", title: "Error", type: "error" });
+        });
       timeoutRef.current = null;
     }, 5000);
   };
@@ -71,6 +79,16 @@ const DetalleRenglones = () => {
   return (
     <StudentLayout>
       <main className="w-full pt-7 md:p-8 max-h-screen overflow-auto">
+        {show && (
+        <PopUpMessage
+          message={message}
+          title={title}
+          onClose={() =>
+            setStatus({ show: false, message: "", title: "", type: "info" })
+          }
+          type={type}
+        />
+      )}
 
         <Loading saveStatus={saveStatus} />
         

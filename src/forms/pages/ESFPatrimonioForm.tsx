@@ -15,6 +15,9 @@ import {
 } from "@/forms/utils/esfPatrimonio";
 import Loading from "@/forms/components/atoms/Loading";
 
+import { useStatusStore } from "@/stores/StatusStore";
+import PopUpMessage from "@/components/molecules/PopUpMessage";
+
 const ESFpatrimonio = () => {
   const [data, setData] = useState(ESFPatrimonioInput);
   const [saveStatus, setSaveStatus] = useState<"idle" | "saving" | "saved">(
@@ -22,6 +25,8 @@ const ESFpatrimonio = () => {
   );
 
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const { setStatus, message, show, title, type } = useStatusStore();
 
   useEffect(() => {
     EsfPatrimonioService.getEsfPatrimonioFormStudent()
@@ -62,7 +67,10 @@ const ESFpatrimonio = () => {
     timeoutRef.current = setTimeout(() => {
       EsfPatrimonioService.updateAEsfPatrimonioFormStudent(newData)
         .then(() => setSaveStatus("saved"))
-        .catch(() => setSaveStatus("idle"));
+        .catch((error) => {
+          setSaveStatus("idle");
+          setStatus({ show: true, message: error.response?.data?.message || "Error al guardar el formulario", title: "Error", type: "error" });
+        });
       timeoutRef.current = null;
     }, 5000);
   };
@@ -70,6 +78,16 @@ const ESFpatrimonio = () => {
   return (
     <StudentLayout>
       <main className="w-full pt-7 md:p-8 max-h-screen overflow-auto">
+        {show && (
+        <PopUpMessage
+          message={message}
+          title={title}
+          onClose={() =>
+            setStatus({ show: false, message: "", title: "", type: "info" })
+          }
+          type={type}
+        />
+      )}
         
         <Loading saveStatus={saveStatus} />
         

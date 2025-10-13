@@ -10,6 +10,9 @@ import { mergeDeepPreservingOrder } from "@/forms/utils/mergeDeep";
 import { config } from "@/forms/utils/caratula";
 import Loading from "@/forms/components/atoms/Loading";
 
+import { useStatusStore } from "@/stores/StatusStore";
+import PopUpMessage from "@/components/molecules/PopUpMessage";
+
 function CaratulaForm() {
   const [data, setData] = useState(CaratulaInput);
   const [saveStatus, setSaveStatus] = useState<"idle" | "saving" | "saved">(
@@ -17,6 +20,8 @@ function CaratulaForm() {
   );
 
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const { setStatus, message, show, title, type } = useStatusStore();
 
   useEffect(() => {
     CaratulaService.getCaratulaForStudent()
@@ -43,7 +48,10 @@ function CaratulaForm() {
     timeoutRef.current = setTimeout(() => {
       CaratulaService.updateCaratulaForStudent(newData)
         .then(() => setSaveStatus("saved"))
-        .catch(() => setSaveStatus("idle"));
+        .catch((error) => {
+          setSaveStatus("idle");
+          setStatus({ show: true, message: error.response?.data?.message || "Error al guardar el formulario", title: "Error", type: "error" });
+        });
       timeoutRef.current = null;
     }, 5000);
   };
@@ -51,6 +59,16 @@ function CaratulaForm() {
   return (
     <StudentLayout>
       <main className="w-full pt-7 md:p-8 max-h-screen overflow-auto">
+        {show && (
+        <PopUpMessage
+          message={message}
+          title={title}
+          onClose={() =>
+            setStatus({ show: false, message: "", title: "", type: "info" })
+          }
+          type={type}
+        />
+      )}
         
         <Loading saveStatus={saveStatus} />
 

@@ -8,6 +8,9 @@ import { Form110Input } from "@/forms/models/Form110Json";
 import { mergeDeepPreservingOrder } from "@/forms/utils/mergeDeep";
 import Loading from "@/forms/components/atoms/Loading";
 
+import { useStatusStore } from "@/stores/StatusStore";
+import PopUpMessage from "@/components/molecules/PopUpMessage";
+
 const Form110 = () => {
   const [data, setData] = useState(Form110Input);
   const [saveStatus, setSaveStatus] = useState<"idle" | "saving" | "saved">(
@@ -15,6 +18,8 @@ const Form110 = () => {
   );
 
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const { setStatus, message, show, title, type } = useStatusStore();
 
   useEffect(() => {
     Form110Service.getForm110ForStudent()
@@ -38,7 +43,10 @@ const Form110 = () => {
     timeoutRef.current = setTimeout(() => {
       Form110Service.updateForm110ForStudent(newData)
         .then(() => setSaveStatus("saved"))
-        .catch(() => setSaveStatus("idle"));
+        .catch((error) => {
+          setSaveStatus("idle");
+          setStatus({ show: true, message: error.response?.data?.message || "Error al guardar el formulario", title: "Error", type: "error" });
+        });
       timeoutRef.current = null;
     }, 5000);
   };
@@ -46,6 +54,16 @@ const Form110 = () => {
   return (
     <StudentLayout>
       <main className="w-full pt-7 md:p-8 max-h-screen overflow-auto">
+        {show && (
+        <PopUpMessage
+          message={message}
+          title={title}
+          onClose={() =>
+            setStatus({ show: false, message: "", title: "", type: "info" })
+          }
+          type={type}
+        />
+      )}
 
         <Loading saveStatus={saveStatus} />
 
