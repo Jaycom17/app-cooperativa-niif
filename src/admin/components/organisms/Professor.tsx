@@ -35,11 +35,11 @@ const Professor = ({ professor, onRefresh }: ProfessorProps) => {
         setConfirmDeleteOpen(false);
         onRefresh();
       })
-      .catch(() => {
+      .catch((error: any) => {
         setStatus({
           show: true,
           title: "Error",
-          message: "Error al eliminar al profesor",
+          message: error.response?.data?.error?.message || "Error al eliminar al profesor",
           type: "error",
         });
       });

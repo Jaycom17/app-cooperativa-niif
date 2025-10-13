@@ -9,20 +9,20 @@ interface PopUpMessageProps {
 
 const colors = {
   info: {
-    bg: "bg-blue-50 dark:bg-gray-800",
-    text: "text-blue-800 dark:text-blue-400",
+    bg: "bg-gray-800",
+    text: "text-blue-400",
   },
   success: {
-    bg: "bg-green-50 dark:bg-gray-800",
-    text: "text-green-800 dark:text-green-400",
+    bg: "bg-gray-800",
+    text: "text-green-400",
   },
   warning: {
-    bg: "bg-yellow-50 dark:bg-gray-800",
-    text: "text-yellow-800 dark:text-yellow-400",
+    bg: "bg-gray-800",
+    text: "text-yellow-400",
   },
   error: {
-    bg: "bg-red-50 dark:bg-gray-800",
-    text: "text-red-800 dark:text-red-400",
+    bg: "bg-gray-800",
+    text: "text-red-400",
   },
 };
 

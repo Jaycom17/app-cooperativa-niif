@@ -41,8 +41,8 @@ const Room = ({ room, usuId, onRefresh }: RoomProps) => {
         setStatus({ show: true, title: "Sala eliminada", message: "La sala ha sido eliminada correctamente", type: "success" });
         onRefresh();
       })
-      .catch(() => {
-        setStatus({ show: true, title: "Error", message: "Error al eliminar la sala", type: "error" });
+      .catch((error: any) => {
+        setStatus({ show: true, title: "Error", message: error.response?.data?.error?.message || "Error al eliminar la sala", type: "error" });
       });
     setOpen(false);
   };
