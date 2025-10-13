@@ -36,6 +36,7 @@ const Professor = ({ professor, onRefresh }: ProfessorProps) => {
         onRefresh();
       })
       .catch((error: any) => {
+        console.log(error);
         setStatus({
           show: true,
           title: "Error",
