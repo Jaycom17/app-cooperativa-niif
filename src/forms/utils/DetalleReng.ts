@@ -547,7 +547,8 @@ export const config = {
     "Renglon61.TotalIngresosNetosSaldosContablesADiciembre31": {
       readonly: true,
     },
-    "Renglon61.TotalIngresosNetosSaldosFiscalesADiciembre31": {
+"Renglon62.61CostosDeLasMercanciasFabricadasYVendidas.InventarioInicialDeTrabajoEnProceso":{
+label: "Mercaderías"},   "Renglon61.TotalIngresosNetosSaldosFiscalesADiciembre31": {
       readonly: true,
     },
     "61CostosDeLasMercanciasFabricadasYVendidas.AsistenciaTecnica.MasCostoDeFabricacionDelPeriodo.SaldosContablesADiciembre31Parciales":
