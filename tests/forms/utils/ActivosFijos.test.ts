@@ -7,6 +7,8 @@ import {
   calculateTotalNetoAlFinalDelPeriodoInformativo,
 } from '../../../src/forms/utils/ActivosFijos';
 
+//
+
 describe('calculateImporteNetoFinalPeriodoCosto', () => {
   it('debería calcular correctamente el importe neto con todos los valores presentes', () => {
     const data = {
