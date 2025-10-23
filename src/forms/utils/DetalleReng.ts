@@ -987,11 +987,11 @@ const calculateImpuestoPorPagarDeRentaYComplementarios = (data: any) => {
 //Renglon 46 - Total Patrimonio Liquido Positivo
 const calculateTotalPatrimonioLiquidoPositivo = (data: any) => {
   data.Renglon46.TotalPatrimonioLiquidoPositivoSaldosContablesADiciembre31 =
-    (data?.Renglon44?.TotalSaldosContablesADiciembre31 || 0) -
+    (data?.Renglon44TotalPatrimonioBruto?.TotalSaldosContablesADiciembre31 || 0) -
     (data?.Renglon45?.TotalPasivosSaldosContablesADiciembre31 || 0);
 
   data.Renglon46.TotalPatrimonioLiquidoPositivoSaldosFiscalesADiciembre31 =
-    (data?.Renglon44?.TotalSaldosFiscalesADiciembre31 || 0) -
+    (data?.Renglon44TotalPatrimonioBruto?.TotalSaldosFiscalesADiciembre31 || 0) -
     (data?.Renglon45?.TotalPasivosSaldosFiscalesADiciembre31 || 0);
 };
 
