@@ -10,13 +10,13 @@ function Loading({ saveStatus }: LoadingProps) {
       {saveStatus === "saving" && (
         <>
           <FiLoader className="animate-spin" />
-          <span>Guardando y calculando totales...</span>
+          <span>Guardando...</span>
         </>
       )}
       {saveStatus === "saved" && (
         <>
           <FiCheckCircle />
-          <span>Guardado y totales calculados</span>
+          <span>Guardado</span>
         </>
       )}
       {saveStatus === "idle" && (

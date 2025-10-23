@@ -53,7 +53,7 @@ function CaratulaForm() {
           setStatus({ show: true, message: error.response?.data?.message || "Error al guardar el formulario", title: "Error", type: "error" });
         });
       timeoutRef.current = null;
-    }, 5000);
+    }, 2000);
   };
 
   return (

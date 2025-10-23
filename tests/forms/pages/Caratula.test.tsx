@@ -14,7 +14,7 @@
  * 1. Carga inicial de datos desde la API
  * 2. Integración con mergeDeepPreservingOrder
  * 3. Manejo de cambios simples sin cálculos
- * 4. Auto-guardado con debounce de 5 segundos
+ * 4. Auto-guardado con debounce de 2 segundos
  * 5. Estados de guardado (idle/saving/saved)
  * 6. Manejo de errores en carga y guardado
  * ============================================================================
@@ -237,7 +237,7 @@ describe("CaratulaForm component", () => {
   /**
    * GRUPO 3: Auto-guardado con debounce
    */
-  describe("Auto-guardado con debounce de 5 segundos", () => {
+  describe("Auto-guardado con debounce de 2 segundos", () => {
     it("no guarda inmediatamente después de un cambio", async () => {
       render(
         <MemoryRouter>
@@ -256,7 +256,7 @@ describe("CaratulaForm component", () => {
       expect(mockUpdateCaratula).not.toHaveBeenCalled();
     });
 
-    it("guarda los datos después de 5 segundos", async () => {
+    it("guarda los datos después de 2 segundos", async () => {
       render(
         <MemoryRouter>
           <CaratulaForm />
@@ -270,16 +270,16 @@ describe("CaratulaForm component", () => {
       const triggerButton = screen.getByTestId("trigger-change");
       triggerButton.click();
 
-      // Esperar 5 segundos + tiempo para que se ejecute el guardado
+      // Esperar 2 segundos + tiempo para que se ejecute el guardado
       await waitFor(
         () => {
           expect(mockUpdateCaratula).toHaveBeenCalled();
         },
-        { timeout: 7000 }
+        { timeout: 5000 }
       );
-    }, 8000);
+    }, 6000);
 
-    it("cancela el guardado anterior si hay un nuevo cambio antes de 5 segundos", async () => {
+    it("cancela el guardado anterior si hay un nuevo cambio antes de 2 segundos", async () => {
       vi.useFakeTimers({ shouldAdvanceTime: true });
       
       render(
@@ -304,8 +304,8 @@ describe("CaratulaForm component", () => {
       // Primer cambio
       triggerButton.click();
       
-      // Avanzar 2 segundos (menos de 5, para que no se guarde)
-      await vi.advanceTimersByTimeAsync(2000);
+      // Avanzar 0.5 segundos (menos de 2, para que no se guarde)
+      await vi.advanceTimersByTimeAsync(500);
 
       // Verificar que aún no se ha guardado
       expect(mockUpdateCaratula).toHaveBeenCalledTimes(0);
@@ -313,14 +313,14 @@ describe("CaratulaForm component", () => {
       // Segundo cambio antes de que se complete el primero (reinicia el debounce)
       triggerButton.click();
       
-      // Avanzar 2 segundos más (total 4s desde primer click, 2s desde segundo)
-      await vi.advanceTimersByTimeAsync(2000);
+      // Avanzar 1 segundo más (total 1.5s desde primer click, 1s desde segundo)
+      await vi.advanceTimersByTimeAsync(1000);
 
       // Aún no debería haberse guardado
       expect(mockUpdateCaratula).toHaveBeenCalledTimes(0);
 
-      // Avanzar 3.5 segundos más para completar los 5.5 segundos desde el segundo click
-      await vi.advanceTimersByTimeAsync(3500);
+      // Avanzar 0.5 segundos más para completar los 2 segundos desde el segundo click
+      await vi.advanceTimersByTimeAsync(1000);
 
       // Debe haberse guardado exactamente 1 vez
       expect(mockUpdateCaratula).toHaveBeenCalledTimes(1);
@@ -347,9 +347,9 @@ describe("CaratulaForm component", () => {
         () => {
           expect(screen.getByTestId("loading-status")).toHaveTextContent("saved");
         },
-        { timeout: 7000 }
+        { timeout: 5000 }
       );
-    }, 8000);
+    }, 6000);
   });
 
   /**
@@ -381,7 +381,7 @@ describe("CaratulaForm component", () => {
       const triggerButton = screen.getByTestId("trigger-change");
       triggerButton.click();
 
-      await vi.advanceTimersByTimeAsync(5000);
+      await vi.advanceTimersByTimeAsync(2000);
 
       await waitFor(() => {
         expect(screen.getByTestId("loading-status")).toHaveTextContent("idle");
@@ -407,7 +407,7 @@ describe("CaratulaForm component", () => {
 
       // Primer intento (falla)
       triggerButton.click();
-      await vi.advanceTimersByTimeAsync(5000);
+      await vi.advanceTimersByTimeAsync(2000);
 
       await waitFor(() => {
         expect(screen.getByTestId("loading-status")).toHaveTextContent("idle");
@@ -415,7 +415,7 @@ describe("CaratulaForm component", () => {
 
       // Segundo intento (éxito)
       triggerButton.click();
-      await vi.advanceTimersByTimeAsync(5000);
+      await vi.advanceTimersByTimeAsync(2000);
 
       await waitFor(() => {
         expect(screen.getByTestId("loading-status")).toHaveTextContent("saved");

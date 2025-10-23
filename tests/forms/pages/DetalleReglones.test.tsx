@@ -12,7 +12,7 @@
  * FUNCIONALIDADES CUBIERTAS:
  * 1. Carga inicial con cálculos automáticos
  * 2. Múltiples cálculos condicionales en handleChange
- * 3. Auto-guardado con debounce de 5 segundos
+ * 3. Auto-guardado con debounce de 2 segundos
  * 4. Estados de guardado (idle/saving/saved)
  * 5. Manejo de errores
  * ============================================================================
@@ -195,12 +195,12 @@ describe("DetalleRenglones component", () => {
       const triggerButton = screen.getByTestId("trigger-change");
       triggerButton.click();
 
-      // Esperar 5 segundos + tiempo para cálculos y guardado
+      // Esperar 2 segundos + tiempo para cálculos y guardado
       await waitFor(() => {
         expect(mockCalculateTotalData).toHaveBeenCalled();
         expect(mockUpdateData).toHaveBeenCalled();
-      }, { timeout: 7000 });
-    }, 8000);
+      }, { timeout: 5000 });
+    }, 6000);
 
     it("cambia el estado a 'saved' después de guardar exitosamente", async () => {
       render(
@@ -219,8 +219,8 @@ describe("DetalleRenglones component", () => {
       // Esperar a que se guarde y cambie el estado
       await waitFor(() => {
         expect(screen.getByTestId("loading-status")).toHaveTextContent("saved");
-      }, { timeout: 7000 });
-    }, 8000);
+      }, { timeout: 5000 });
+    }, 6000);
   });
 
   describe("Manejo de errores en guardado", () => {
@@ -249,7 +249,7 @@ describe("DetalleRenglones component", () => {
       const triggerButton = screen.getByTestId("trigger-change");
       triggerButton.click();
 
-      await vi.advanceTimersByTimeAsync(5000);
+      await vi.advanceTimersByTimeAsync(2000);
 
       await waitFor(() => {
         expect(screen.getByTestId("loading-status")).toHaveTextContent("idle");
@@ -275,7 +275,7 @@ describe("DetalleRenglones component", () => {
 
       // Primer intento (falla)
       triggerButton.click();
-      await vi.advanceTimersByTimeAsync(5000);
+      await vi.advanceTimersByTimeAsync(2000);
 
       await waitFor(() => {
         expect(screen.getByTestId("loading-status")).toHaveTextContent("idle");
@@ -283,7 +283,7 @@ describe("DetalleRenglones component", () => {
 
       // Segundo intento (éxito)
       triggerButton.click();
-      await vi.advanceTimersByTimeAsync(5000);
+      await vi.advanceTimersByTimeAsync(2000);
 
       await waitFor(() => {
         expect(screen.getByTestId("loading-status")).toHaveTextContent("saved");

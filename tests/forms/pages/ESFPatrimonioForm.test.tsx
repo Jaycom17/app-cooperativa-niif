@@ -195,7 +195,7 @@ describe("ESFPatrimonio component", () => {
   });
 
   describe("Auto-guardado con debounce", () => {
-    it("guarda los datos después de 5 segundos", async () => {
+    it("guarda los datos después de 2 segundos", async () => {
       render(
         <MemoryRouter>
           <ESFPatrimonio />
@@ -211,11 +211,11 @@ describe("ESFPatrimonio component", () => {
       const triggerButton = screen.getByTestId("trigger-change");
       triggerButton.click();
 
-      // Esperar 5 segundos + tiempo para guardado
+      // Esperar 2 segundos + tiempo para guardado
       await waitFor(() => {
         expect(mockUpdateData).toHaveBeenCalled();
-      }, { timeout: 7000 });
-    }, 8000);
+      }, { timeout: 5000 });
+    }, 6000);
 
     it("cambia el estado a 'saved' después de guardar exitosamente", async () => {
       render(
@@ -234,8 +234,8 @@ describe("ESFPatrimonio component", () => {
       // Esperar a que se guarde y cambie el estado
       await waitFor(() => {
         expect(screen.getByTestId("loading-status")).toHaveTextContent("saved");
-      }, { timeout: 7000 });
-    }, 8000);
+      }, { timeout: 5000 });
+    }, 6000);
   });
 
   describe("Manejo de errores en guardado", () => {
@@ -267,7 +267,7 @@ describe("ESFPatrimonio component", () => {
       const triggerButton = screen.getByTestId("trigger-change");
       triggerButton.click();
 
-      await vi.advanceTimersByTimeAsync(5000);
+      await vi.advanceTimersByTimeAsync(2000);
 
       await waitFor(() => {
         expect(screen.getByTestId("loading-status")).toHaveTextContent("idle");
@@ -295,7 +295,7 @@ describe("ESFPatrimonio component", () => {
 
       // Primer intento (falla)
       triggerButton.click();
-      await vi.advanceTimersByTimeAsync(5000);
+      await vi.advanceTimersByTimeAsync(2000);
 
       await waitFor(() => {
         expect(screen.getByTestId("loading-status")).toHaveTextContent("idle");
@@ -303,7 +303,7 @@ describe("ESFPatrimonio component", () => {
 
       // Segundo intento (éxito)
       triggerButton.click();
-      await vi.advanceTimersByTimeAsync(5000);
+      await vi.advanceTimersByTimeAsync(2000);
 
       await waitFor(() => {
         expect(screen.getByTestId("loading-status")).toHaveTextContent("saved");

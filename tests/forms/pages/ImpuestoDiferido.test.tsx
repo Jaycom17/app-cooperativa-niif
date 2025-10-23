@@ -210,7 +210,7 @@ describe("ImpuestoDiferidoForm component", () => {
       expect(mockUpdateData).not.toHaveBeenCalled();
     });
 
-    it("guarda los datos después de 5 segundos", async () => {
+    it("guarda los datos después de 2 segundos", async () => {
       render(
         <MemoryRouter>
           <ImpuestoDiferidoForm />
@@ -226,11 +226,11 @@ describe("ImpuestoDiferidoForm component", () => {
       const triggerButton = screen.getByTestId("trigger-change");
       triggerButton.click();
 
-      // Esperar 5 segundos + tiempo para guardado
+      // Esperar 2 segundos + tiempo para guardado
       await waitFor(() => {
         expect(mockUpdateData).toHaveBeenCalled();
-      }, { timeout: 7000 });
-    }, 8000);
+      }, { timeout: 5000 });
+    }, 6000);
 
     it("cambia el estado a 'saved' después de guardar exitosamente", async () => {
       render(
@@ -249,10 +249,10 @@ describe("ImpuestoDiferidoForm component", () => {
       // Esperar a que se guarde y cambie el estado
       await waitFor(() => {
         expect(screen.getByTestId("loading-status")).toHaveTextContent("saved");
-      }, { timeout: 7000 });
-    }, 8000);
+      }, { timeout: 5000 });
+    }, 6000);
 
-    it("cancela el guardado anterior si hay un nuevo cambio antes de 5 segundos", async () => {
+    it("cancela el guardado anterior si hay un nuevo cambio antes de 2 segundos", async () => {
       render(
         <MemoryRouter>
           <ImpuestoDiferidoForm />
@@ -270,8 +270,8 @@ describe("ImpuestoDiferidoForm component", () => {
       // Primer cambio
       triggerButton.click();
       
-      // Esperar 2 segundos (menos de 5, para que no se guarde)
-      await new Promise((resolve) => setTimeout(resolve, 2000));
+      // Esperar 1 segundo (menos de 2, para que no se guarde)
+      await new Promise((resolve) => setTimeout(resolve, 1000));
 
       // Verificar que aún no se ha guardado
       expect(mockUpdateData).not.toHaveBeenCalled();
@@ -279,16 +279,16 @@ describe("ImpuestoDiferidoForm component", () => {
       // Segundo cambio antes de que se complete el primero (reinicia el debounce)
       triggerButton.click();
       
-      // Esperar 2 segundos más (total 4s desde primer click, 2s desde segundo)
-      await new Promise((resolve) => setTimeout(resolve, 2000));
+      // Esperar 1 segundo más (total 2s desde primer click, 1s desde segundo)
+      await new Promise((resolve) => setTimeout(resolve, 1000));
 
       // Aún no debería haberse guardado
       expect(mockUpdateData).not.toHaveBeenCalled();
 
-      // Esperar 3.5 segundos más para completar los 5 segundos desde el segundo click
+      // Esperar 1.5 segundos más para completar los 2 segundos desde el segundo click
       await waitFor(() => {
         expect(mockUpdateData).toHaveBeenCalledTimes(1);
-      }, { timeout: 4000 });
+      }, { timeout: 2000 });
     }, 12000);
   });
 
@@ -321,7 +321,7 @@ describe("ImpuestoDiferidoForm component", () => {
       const triggerButton = screen.getByTestId("trigger-change");
       triggerButton.click();
 
-      await vi.advanceTimersByTimeAsync(5000);
+      await vi.advanceTimersByTimeAsync(2000);
 
       await waitFor(() => {
         expect(screen.getByTestId("loading-status")).toHaveTextContent("idle");
@@ -349,7 +349,7 @@ describe("ImpuestoDiferidoForm component", () => {
 
       // Primer intento (falla)
       triggerButton.click();
-      await vi.advanceTimersByTimeAsync(5000);
+      await vi.advanceTimersByTimeAsync(2000);
 
       await waitFor(() => {
         expect(screen.getByTestId("loading-status")).toHaveTextContent("idle");
@@ -357,7 +357,7 @@ describe("ImpuestoDiferidoForm component", () => {
 
       // Segundo intento (éxito)
       triggerButton.click();
-      await vi.advanceTimersByTimeAsync(5000);
+      await vi.advanceTimersByTimeAsync(2000);
 
       await waitFor(() => {
         expect(screen.getByTestId("loading-status")).toHaveTextContent("saved");

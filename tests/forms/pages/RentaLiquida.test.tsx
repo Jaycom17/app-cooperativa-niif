@@ -294,7 +294,7 @@ describe("RentaLiquidaForm component", () => {
       expect(mockUpdateData).not.toHaveBeenCalled();
     });
 
-    it("guarda los datos después de 5 segundos", async () => {
+    it("guarda los datos después de 2 segundos", async () => {
       render(
         <MemoryRouter>
           <RentaLiquidaForm />
@@ -314,11 +314,11 @@ describe("RentaLiquidaForm component", () => {
         () => {
           expect(mockUpdateData).toHaveBeenCalled();
         },
-        { timeout: 7000 }
+        { timeout: 5000 }
       );
-    }, 8000);
+    }, 6000);
 
-    it("cancela el guardado anterior si hay un nuevo cambio antes de 5 segundos", async () => {
+    it("cancela el guardado anterior si hay un nuevo cambio antes de 2 segundos", async () => {
       render(
         <MemoryRouter>
           <RentaLiquidaForm />
@@ -330,7 +330,7 @@ describe("RentaLiquidaForm component", () => {
       });
 
       // Esperar a que termine el guardado inicial (si existe)
-      await new Promise((resolve) => setTimeout(resolve, 6000));
+      await new Promise((resolve) => setTimeout(resolve, 3000));
 
       // Limpiar el mock después del guardado inicial
       mockUpdateData.mockClear();
@@ -340,8 +340,8 @@ describe("RentaLiquidaForm component", () => {
       // Primer cambio
       triggerButton.click();
 
-      // Esperar 3 segundos (menos que los 5 del debounce)
-      await new Promise((resolve) => setTimeout(resolve, 3000));
+      // Esperar 1 segundo (menos que los 2 del debounce)
+      await new Promise((resolve) => setTimeout(resolve, 1000));
 
       // Verificar que no se ha guardado aún
       expect(mockUpdateData).not.toHaveBeenCalled();
@@ -349,20 +349,20 @@ describe("RentaLiquidaForm component", () => {
       // Segundo cambio (reinicia el debounce)
       triggerButton.click();
 
-      // Esperar 3 segundos más (total 6s desde el primer click, pero solo 3s desde el segundo)
-      await new Promise((resolve) => setTimeout(resolve, 3000));
+      // Esperar 1 segundo más (total 2s desde el primer click, pero solo 1s desde el segundo)
+      await new Promise((resolve) => setTimeout(resolve, 1000));
 
       // Aún no debe haber guardado
       expect(mockUpdateData).not.toHaveBeenCalled();
 
-      // Esperar 3 segundos más para completar los 5s desde el segundo click
+      // Esperar 1.5 segundos más para completar los 2s desde el segundo click
       await waitFor(
         () => {
           expect(mockUpdateData).toHaveBeenCalledTimes(1);
         },
-        { timeout: 3500 }
+        { timeout: 2000 }
       );
-    }, 16000);
+    }, 12000);
 
     it("cambia el estado a 'saved' después de guardar exitosamente", async () => {
       render(
@@ -382,9 +382,9 @@ describe("RentaLiquidaForm component", () => {
         () => {
           expect(screen.getByTestId("loading-status")).toHaveTextContent("saved");
         },
-        { timeout: 7000 }
+        { timeout: 5000 }
       );
-    }, 8000);
+    }, 6000);
   });
 
   describe("Manejo de errores en guardado", () => {
@@ -414,7 +414,7 @@ describe("RentaLiquidaForm component", () => {
       const triggerButton = screen.getByTestId("trigger-change");
       triggerButton.click();
 
-      await vi.advanceTimersByTimeAsync(5000);
+      await vi.advanceTimersByTimeAsync(2000);
 
       await waitFor(() => {
         expect(screen.getByTestId("loading-status")).toHaveTextContent("idle");
@@ -438,7 +438,7 @@ describe("RentaLiquidaForm component", () => {
       });
 
       // Avanzar el tiempo para que el guardado inicial falle
-      await vi.advanceTimersByTimeAsync(5000);
+      await vi.advanceTimersByTimeAsync(2000);
 
       await waitFor(() => {
         expect(screen.getByTestId("loading-status")).toHaveTextContent("idle");
@@ -450,7 +450,7 @@ describe("RentaLiquidaForm component", () => {
 
       // Primer intento (falla)
       triggerButton.click();
-      await vi.advanceTimersByTimeAsync(5000);
+      await vi.advanceTimersByTimeAsync(2000);
 
       await waitFor(() => {
         expect(screen.getByTestId("loading-status")).toHaveTextContent("idle");
@@ -460,7 +460,7 @@ describe("RentaLiquidaForm component", () => {
       mockUpdateData.mockClear();
       mockUpdateData.mockResolvedValue({ data: { success: true } });
       triggerButton.click();
-      await vi.advanceTimersByTimeAsync(5000);
+      await vi.advanceTimersByTimeAsync(2000);
 
       await waitFor(() => {
         expect(screen.getByTestId("loading-status")).toHaveTextContent("saved");

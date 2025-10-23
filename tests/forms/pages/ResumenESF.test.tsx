@@ -231,7 +231,7 @@ describe("ResumenESFForm component", () => {
       expect(mockUpdateData).not.toHaveBeenCalled();
     });
 
-    it("guarda los datos después de 5 segundos", async () => {
+    it("guarda los datos después de 2 segundos", async () => {
       render(
         <MemoryRouter>
           <ResumenESFForm />
@@ -249,11 +249,11 @@ describe("ResumenESFForm component", () => {
         () => {
           expect(mockUpdateData).toHaveBeenCalled();
         },
-        { timeout: 7000 }
+        { timeout: 5000 }
       );
-    }, 8000);
+    }, 6000);
 
-    it("cancela el guardado anterior si hay un nuevo cambio antes de 5 segundos", async () => {
+    it("cancela el guardado anterior si hay un nuevo cambio antes de 2 segundos", async () => {
       vi.useFakeTimers({ shouldAdvanceTime: true });
       
       mockUpdateData.mockClear();
@@ -273,8 +273,8 @@ describe("ResumenESFForm component", () => {
       // Primer cambio
       triggerButton.click();
 
-      // Avanzar 2 segundos
-      await vi.advanceTimersByTimeAsync(2000);
+      // Avanzar 1 segundo
+      await vi.advanceTimersByTimeAsync(1000);
 
       // Verificar que aún no se ha guardado
       expect(mockUpdateData).toHaveBeenCalledTimes(0);
@@ -282,14 +282,14 @@ describe("ResumenESFForm component", () => {
       // Segundo cambio (reinicia el debounce)
       triggerButton.click();
 
-      // Avanzar 2 segundos más
-      await vi.advanceTimersByTimeAsync(2000);
+      // Avanzar 1 segundo más
+      await vi.advanceTimersByTimeAsync(1000);
 
       // Aún no debería haberse guardado
       expect(mockUpdateData).toHaveBeenCalledTimes(0);
 
-      // Avanzar 3.5 segundos más para completar los 5s desde el segundo click
-      await vi.advanceTimersByTimeAsync(3500);
+      // Avanzar 1.5 segundos más para completar los 2s desde el segundo click
+      await vi.advanceTimersByTimeAsync(1500);
 
       // Debe haberse guardado exactamente 1 vez
       expect(mockUpdateData).toHaveBeenCalledTimes(1);
@@ -315,9 +315,9 @@ describe("ResumenESFForm component", () => {
         () => {
           expect(screen.getByTestId("loading-status")).toHaveTextContent("saved");
         },
-        { timeout: 7000 }
+        { timeout: 5000 }
       );
-    }, 8000);
+    }, 6000);
   });
 
   describe("Manejo de errores en guardado", () => {
@@ -346,7 +346,7 @@ describe("ResumenESFForm component", () => {
       const triggerButton = screen.getByTestId("trigger-change");
       triggerButton.click();
 
-      await vi.advanceTimersByTimeAsync(5000);
+      await vi.advanceTimersByTimeAsync(2000);
 
       await waitFor(() => {
         expect(screen.getByTestId("loading-status")).toHaveTextContent("idle");
@@ -372,7 +372,7 @@ describe("ResumenESFForm component", () => {
 
       // Primer intento (falla)
       triggerButton.click();
-      await vi.advanceTimersByTimeAsync(5000);
+      await vi.advanceTimersByTimeAsync(2000);
 
       await waitFor(() => {
         expect(screen.getByTestId("loading-status")).toHaveTextContent("idle");
@@ -380,7 +380,7 @@ describe("ResumenESFForm component", () => {
 
       // Segundo intento (éxito)
       triggerButton.click();
-      await vi.advanceTimersByTimeAsync(5000);
+      await vi.advanceTimersByTimeAsync(2000);
 
       await waitFor(() => {
         expect(screen.getByTestId("loading-status")).toHaveTextContent("saved");
